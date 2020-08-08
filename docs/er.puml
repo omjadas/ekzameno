@@ -1,0 +1,75 @@
+@startuml ER Diagram
+
+entity Users {
+    * id : INTEGER <<generated>>
+    --
+    * name : TEXT
+    * passwordHash : TEXT
+    * userType : TEXT
+}
+
+entity Subjects {
+    * id : INTEGER <<generated>>
+    --
+    * name : TEXT
+}
+
+entity Exams {
+    * id : INTEGER <<generated>>
+    --
+    * name : TEXT
+    * subjectId : INTEGER <<FK>>
+}
+
+entity Questions {
+    * id : INTEGER <<generated>>
+    --
+    * question : TEXT
+    * questionType : TEXT
+    * marks : INTEGER
+    * examId : INTEGER <<FK>>
+}
+
+entity ExamSubmissions {
+    * id : INTEGER <<generated>>
+    --
+    * userId : INTEGER <<FK>>
+    * examId : INTEGER <<FK>>
+}
+
+entity QuestionSubmissions {
+    * id : INTEGER <<generated>>
+    --
+    * answer : TEXT
+    * examSubmissionId : INTEGER <<FK>>
+    * questionId : INTEGER <<FK>>
+}
+
+entity InstructorSubjects {
+    * id : INTEGER <<generated>>
+    --
+    * userId : INTEGER <<FK>>
+    * subjectId : INTEGER <<FK>>
+}
+
+entity StudentSubjects {
+    * id : INTEGER <<generated>>
+    --
+    * userId : INTEGER <<FK>>
+    * subjectId : INTEGER <<FK>>
+}
+
+Subjects ||--o{ Exams
+Exams ||--|{ Questions
+Users ||--o{ ExamSubmissions
+Exams ||--o{ ExamSubmissions
+ExamSubmissions ||--o{ QuestionSubmissions
+Questions ||--o{ QuestionSubmissions
+
+Users ||--o{ InstructorSubjects
+Users ||--o{ StudentSubjects
+
+Subjects ||-|{ InstructorSubjects
+Subjects ||-|{ StudentSubjects
+
+@enduml
