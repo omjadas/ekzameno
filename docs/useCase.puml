@@ -1,9 +1,0 @@
-@startuml Use Case Diagram
-
-left to right direction
-
-actor Student
-actor Administrator
-actor Instructor
-
-@enduml
