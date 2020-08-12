@@ -6,4 +6,40 @@ actor Student
 actor Administrator
 actor Instructor
 
+package System {
+    usecase "Submit exam" as UC1
+    usecase "Create exam" as UC2
+    usecase "Mark exams" as UC3
+    usecase "Publish exam results" as UC4
+    usecase "Add subjects" as UC5
+    usecase "View all subjects" as UC6
+    usecase "Delete exam" as UC7
+    usecase "Edit exam" as UC8
+    usecase "Close exam" as UC9
+    usecase "View published exams" as UC10
+    usecase "Answer question" as UC11
+    usecase "View subjects" as UC12
+    usecase "Publish exam" as UC13
+    usecase "View all exams" as UC14
+    usecase "Create question" as UC15
+}
+
+Student --> UC1
+Student --> UC10
+Student --> UC11
+Student --> UC12
+
+Instructor --> UC2
+Instructor --> UC3
+Instructor --> UC4
+Instructor --> UC7
+Instructor --> UC8
+Instructor --> UC9
+Instructor --> UC13
+Instructor --> UC14
+Instructor --> UC15
+
+Administrator --> UC5
+Administrator --> UC6
+
 @enduml
