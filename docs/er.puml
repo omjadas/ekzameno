@@ -19,6 +19,7 @@ entity Exams {
     --
     * name : TEXT
     * subjectId : INTEGER <<FK>>
+    * published : BOOLEAN
 }
 
 entity Questions {
