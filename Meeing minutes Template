@@ -1,11 +1,25 @@
-Projects  : Group1
-Time	    : Wed 15:15 - 16:15
-Location	: Online meeting
-Scribe	  : Mohammed Muzamil Kallarakodi
-Attendees	: Omja Das, Joao ,Mohammed Muzamil Kallarakodi
-To-Do     : 
-            1 - Creating a Git Repository 
-            2 - Giving permissions to subject staffs
-            3 - 
-            
-          
+---
+start_time: 2020-08-12T15:15:00
+end_time: 2020-08-12T16:15:00
+scribe: Mohammed Muzamil Kallarakodi
+attendees:
+  - Omja Das
+  - Joao Pereira
+  - Mohammed Muzamil Kallarakodi
+---
+
+## Notes
+
+### Item Name
+
+Notes for item here
+
+## Action Items
+
+1. Item 1
+2. Item 2
+
+## Decisions
+
+1. Decision 1
+2. Decision 2
