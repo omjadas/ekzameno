@@ -6,7 +6,7 @@ actor Student
 actor Administrator
 actor Instructor
 
-package System {
+package Ekzameno {
     usecase "Submit exam" as UC01
     usecase "Create exam" as UC02
     usecase "Mark exams" as UC03
