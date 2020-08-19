@@ -22,6 +22,8 @@ package Ekzameno {
     usecase "Publish exam" as UC13
     usecase "View all exams" as UC14
     usecase "Create question" as UC15
+    usecase "Add instructor" as UC16
+    usecase "Add student" as UC17
 }
 
 Student --> UC01
@@ -38,8 +40,11 @@ Instructor --> UC09
 Instructor --> UC13
 Instructor --> UC14
 Instructor --> UC15
+Instructor --> UC17
 
 Administrator --> UC05
 Administrator --> UC06
+Administrator --> UC16
+Administrator --> UC17
 
 @enduml
