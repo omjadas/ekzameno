@@ -1,6 +1,6 @@
 ---
-start_time: 2020-08-12T15:15:00
-end_time: 2020-08-12T16:15:00
+start_time: 2020-08-12T15:15:00+10:00
+end_time: 2020-08-12T16:15:00+10:00
 scribe: Mohammed Muzamil Kallarakodi
 attendees:
   - Omja Das
