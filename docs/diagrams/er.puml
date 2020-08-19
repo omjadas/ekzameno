@@ -36,6 +36,7 @@ entity ExamSubmissions {
     --
     * userId : INTEGER <<FK>>
     * examId : INTEGER <<FK>>
+    * marks : INTEGER
 }
 
 entity QuestionSubmissions {
