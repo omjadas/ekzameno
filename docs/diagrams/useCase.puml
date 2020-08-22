@@ -7,44 +7,47 @@ actor Administrator
 actor Instructor
 
 package Ekzameno {
-    usecase "Submit exam" as UC01
-    usecase "Create exam" as UC02
-    usecase "Mark exams" as UC03
-    usecase "Publish exam results" as UC04
-    usecase "Add subjects" as UC05
-    usecase "View all subjects" as UC06
-    usecase "Delete exam" as UC07
-    usecase "Edit exam" as UC08
-    usecase "Close exam" as UC09
-    usecase "View published exams" as UC10
-    usecase "Answer question" as UC11
-    usecase "View subjects" as UC12
-    usecase "Publish exam" as UC13
+    usecase "View subjects" as UC01
+    usecase "Submit exam" as UC02
+    usecase "View published exams" as UC03
+    usecase "Answer question" as UC04
+
+    usecase "View all subjects" as UC05
+    usecase "Add instructor" as UC06
+    usecase "Add subjects" as UC07
+    usecase "Add student to system" as UC08
+    usecase "Add student to subject" as UC09
+
+    usecase "Publish exam" as UC10
+    usecase "Create exam" as UC11
+    usecase "Mark exam" as UC12
+    usecase "Publish exam results" as UC13
     usecase "View all exams" as UC14
     usecase "Create question" as UC15
-    usecase "Add instructor" as UC16
-    usecase "Add student" as UC17
+    usecase "Delete exam" as UC16
+    usecase "Edit exam" as UC17
+    usecase "Close exam" as UC18
 }
 
 Student --> UC01
-Student --> UC10
-Student --> UC11
-Student --> UC12
-
-Instructor --> UC02
-Instructor --> UC03
-Instructor --> UC04
-Instructor --> UC07
-Instructor --> UC08
-Instructor --> UC09
-Instructor --> UC13
-Instructor --> UC14
-Instructor --> UC15
-Instructor --> UC17
+Student --> UC02
+Student --> UC03
+Student --> UC04
 
 Administrator --> UC05
 Administrator --> UC06
-Administrator --> UC16
-Administrator --> UC17
+Administrator --> UC07
+Administrator --> UC08
+Administrator --> UC09
+
+Instructor --> UC10
+Instructor --> UC11
+Instructor --> UC12
+Instructor --> UC13
+Instructor --> UC14
+Instructor --> UC15
+Instructor --> UC16
+Instructor --> UC17
+Instructor --> UC18
 
 @enduml
