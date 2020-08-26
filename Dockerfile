@@ -12,11 +12,7 @@ COPY src/main/client/package*.json ./src/main/client/
 
 RUN cd src/main/client/ && npm ci
 
-COPY src/main/client ./src/main/client/
-
-RUN cd src/main/client/ && npm run build
-
-COPY src ./src
+COPY . ./
 
 RUN mvn -B -T 1C package -DskipTests
 
