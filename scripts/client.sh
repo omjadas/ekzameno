@@ -10,4 +10,4 @@ cd "${BASH_SOURCE%/*}/../src/main/client" || exit
 
 [[ ! -d "./node_modules" ]] && npm ci
 
-npm run build
+npm run "$1"

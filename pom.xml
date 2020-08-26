@@ -50,6 +50,22 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <commandlineArgs>build</commandlineArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-client</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <commandlineArgs>test</commandlineArgs>
+                            <environmentVariables>
+                                <CI>true</CI>
+                            </environmentVariables>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
