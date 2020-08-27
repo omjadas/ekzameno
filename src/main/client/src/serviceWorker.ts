@@ -15,8 +15,8 @@ const isLocalhost = Boolean(
     // [::1] is the IPv6 localhost address.
     window.location.hostname === "[::1]" ||
     // 127.0.0.0/8 are considered localhost for IPv4.
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/.exec(
+      window.location.hostname
     )
 );
 
@@ -79,7 +79,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config): void {
       const contentType = response.headers.get("content-type");
       if (
         response.status === 404 ||
-        (contentType !== null && contentType !== undefined && contentType.indexOf("javascript") === -1)
+        (contentType !== null && contentType !== undefined && !contentType.includes("javascript"))
       ) {
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then(registration => {
