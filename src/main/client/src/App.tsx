@@ -13,7 +13,7 @@ export const App = (): JSX.Element => {
       })
       .catch(e => {
         console.error(e);
-      })
+      });
   }, []);
 
   return (
