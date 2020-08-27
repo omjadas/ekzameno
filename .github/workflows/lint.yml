@@ -1,0 +1,40 @@
+name: Lint
+
+on: [push]
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: cd src/main/client && npm ci
+      - name: eslint
+        uses: reviewdog/action-eslint@v1
+        with:
+          reporter: github-check
+          eslint_flags: 'src/**/*.ts{x,}'
+          workdir: './src/main/client'
+          level: error
+          fail_on_error: true
+
+  checkstyle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: checkstyle
+        uses: dbelyaev/action-checkstyle@v0.1.1
+        with:
+          checkstyle_config: ./checkstyle.xml
+          reporter: github-check
+          level: error
+          fail_on_error: true
