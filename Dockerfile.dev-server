@@ -1,0 +1,11 @@
+FROM maven:3-jdk-11
+
+WORKDIR /app
+
+COPY pom.xml ./
+
+RUN mvn -B -T 1C -Dmaven.repo.local=/m2 dependency:go-offline
+
+COPY . ./
+
+CMD ["mvn", "-Dmaven.repo.local=/m2", "tomcat7:run"]

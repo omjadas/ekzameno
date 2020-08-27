@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  ekzameno:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev-server
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target:/app/target
+      - maven_cache:/m2
+
+  ekzameno-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev-client
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/main/client/src:/app/src
+
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_PASSWORD=postgres"
+
+volumes:
+  maven_cache:

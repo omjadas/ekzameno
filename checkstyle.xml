@@ -8,7 +8,6 @@
     <module name="FileTabCharacter">
         <property name="eachLine" value="true" />
     </module>
-    <module name="JavadocPackage" />
     <module name="LineLength" />
     <module name="NewlineAtEndOfFile">
         <property name="lineSeparator" value="lf" />
@@ -57,7 +56,6 @@
         <module name="MethodParamPad" />
         <module name="MethodTypeParameterName" />
         <module name="MissingJavadocMethod" />
-        <module name="MissingJavadocPackage" />
         <module name="MissingJavadocType" />
         <module name="MissingSwitchDefault" />
         <module name="ModifierOrder" />

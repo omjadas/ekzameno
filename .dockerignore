@@ -1,0 +1,12 @@
+.settings
+.vscode
+.git
+.classpath
+.project
+docs
+out
+target
+**/.DS_Store
+**/.gitignore
+**/build
+**/node_modules
