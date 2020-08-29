@@ -1,7 +1,7 @@
 @startuml ER Diagram
 
 entity Users {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
     * name : TEXT
     * passwordHash : TEXT
@@ -9,56 +9,64 @@ entity Users {
 }
 
 entity Subjects {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
     * name : TEXT
 }
 
 entity Exams {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
     * name : TEXT
-    * subjectId : INTEGER <<FK>>
-    * published : BOOLEAN
+    * subjectId : UUID <<FK>>
+    publishDate : TIMESTAMP
+    closeDate : TIMESTAMP
 }
 
 entity Questions {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
     * question : TEXT
     * type : TEXT
     * marks : INTEGER
-    * examId : INTEGER <<FK>>
+    * examId : UUID <<FK>>
+}
+
+entity Answers {
+    * id : UUID <<generated>>
+    --
+    * answer : TEXT
+    * questionId : UUID <<FK>>
 }
 
 entity ExamSubmissions {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
-    * userId : INTEGER <<FK>>
-    * examId : INTEGER <<FK>>
+    * userId : UUID <<FK>>
+    * examId : UUID <<FK>>
     * marks : INTEGER
 }
 
 entity QuestionSubmissions {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
     * answer : TEXT
-    * examSubmissionId : INTEGER <<FK>>
-    * questionId : INTEGER <<FK>>
+    * examSubmissionId : UUID <<FK>>
+    * questionId : UUID <<FK>>
 }
 
 entity InstructorSubjects {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
-    * userId : INTEGER <<FK>>
-    * subjectId : INTEGER <<FK>>
+    * userId : UUID <<FK>>
+    * subjectId : UUID <<FK>>
 }
 
 entity StudentSubjects {
-    * id : INTEGER <<generated>>
+    * id : UUID <<generated>>
     --
-    * userId : INTEGER <<FK>>
-    * subjectId : INTEGER <<FK>>
+    * userId : UUID <<FK>>
+    * subjectId : UUID <<FK>>
 }
 
 Subjects ||--o{ Exams
@@ -67,6 +75,7 @@ Users ||--o{ ExamSubmissions
 Exams ||--o{ ExamSubmissions
 ExamSubmissions ||--o{ QuestionSubmissions
 Questions ||--o{ QuestionSubmissions
+Questions ||--o{ Answers
 
 Users ||--o{ InstructorSubjects
 Users ||--o{ StudentSubjects
