@@ -34,7 +34,7 @@ public class Exam extends Model {
         return closeDate;
     }
 
-    public List<Question> getQuestions () {
+    public List<Question> getQuestions() {
         return null;
     }
 }

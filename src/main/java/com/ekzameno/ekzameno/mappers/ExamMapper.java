@@ -54,7 +54,8 @@ public class ExamMapper extends Mapper<Exam> {
     }
 
     public void insert(Exam exam) throws SQLException {
-        String query = "INSERT INTO exams (id, name, publishDate, closeDate) VALUES (?,?,?,?)";
+        String query = "INSERT INTO exams (id, name, publishDate, closeDate) " +
+            "VALUES (?,?,?,?)";
 
         try (
             Connection connection = DBConnection.getConnection();
@@ -62,22 +63,36 @@ public class ExamMapper extends Mapper<Exam> {
         ) {
             statement.setObject(1, UUID.randomUUID());
             statement.setString(2, exam.getName());
-            statement.setTimestamp(3, new Timestamp(exam.getPublishDate().getTime()));
-            statement.setTimestamp(4, new Timestamp(exam.getCloseDate().getTime()));
+            statement.setTimestamp(
+                3,
+                new Timestamp(exam.getPublishDate().getTime())
+            );
+            statement.setTimestamp(
+                4,
+                new Timestamp(exam.getCloseDate().getTime())
+            );
             statement.executeUpdate();
         }
     }
 
     public void update(Exam exam) throws SQLException {
-        String query = "UPDATE exams SET name = ?, publishDate = ?, closeDate = ? WHERE id = ?";
+        String query = "UPDATE exams " +
+            "SET name = ?, publishDate = ?, closeDate = ? " +
+            "WHERE id = ?";
 
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, exam.getName());
-            statement.setTimestamp(2, new Timestamp(exam.getPublishDate().getTime()));
-            statement.setTimestamp(3, new Timestamp(exam.getCloseDate().getTime()));
+            statement.setTimestamp(
+                2,
+                new Timestamp(exam.getPublishDate().getTime())
+            );
+            statement.setTimestamp(
+                3,
+                new Timestamp(exam.getCloseDate().getTime())
+            );
             statement.setObject(4, exam.getId());
             statement.executeUpdate();
         }
