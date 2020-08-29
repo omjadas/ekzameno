@@ -5,50 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
 
 public class ExamMapper extends Mapper<Exam> {
-    public Exam find(UUID id) throws SQLException {
-        String query = "SELECT * FROM exams WHERE id = ?";
-
-        try (
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            statement.setObject(1, id);
-            try (ResultSet rs = statement.executeQuery()) {
-                rs.next();
-                return load(rs);
-            }
-        }
-    }
-
-    public List<Exam> findAll() throws SQLException {
-        String query = "SELECT * FROM exams";
-
-        try (
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-        ) {
-            List<Exam> exams = new ArrayList<>();
-
-            while (rs.next()) {
-                exams.add(load(rs));
-            }
-
-            return exams;
-        }
-    }
+    private static final String tableName = "exams";
 
     public void insert(Exam exam) throws SQLException {
-        String query = "INSERT INTO exams (id, name, publishDate, closeDate) " +
+        String query = "INSERT INTO " + tableName +
+            " (id, name, publishDate, closeDate) " +
             "VALUES (?,?,?,?)";
 
         try (
@@ -70,7 +38,7 @@ public class ExamMapper extends Mapper<Exam> {
     }
 
     public void update(Exam exam) throws SQLException {
-        String query = "UPDATE exams " +
+        String query = "UPDATE " + tableName + " " +
             "SET name = ?, publishDate = ?, closeDate = ? " +
             "WHERE id = ?";
 
@@ -92,23 +60,16 @@ public class ExamMapper extends Mapper<Exam> {
         }
     }
 
-    public void delete(Exam exam) throws SQLException {
-        String query = "DELETE FROM exams WHERE id = ?";
-
-        try (
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            statement.setObject(1, exam.getId());
-            statement.executeUpdate();
-        }
-    }
-
     protected Exam load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
         Date publishDate = rs.getTimestamp("publishDate");
         Date closeDate = rs.getTimestamp("closeDate");
         return new Exam(id, name, publishDate, closeDate);
+    }
+
+    @Override
+    protected String getTableName() {
+        return tableName;
     }
 }

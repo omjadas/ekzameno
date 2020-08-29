@@ -4,49 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.shared.DBConnection;
 
 public class SubjectMapper extends Mapper<Subject> {
-    public Subject find(UUID id) throws SQLException {
-        String query = "SELECT * FROM exams WHERE id = ?";
-
-        try (
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            statement.setObject(1, id);
-            try (ResultSet rs = statement.executeQuery();) {
-                rs.next();
-                return load(rs);
-            }
-        }
-    }
-
-    public List<Subject> findAll() throws SQLException {
-        String query = "SELECT * FROM subjects";
-
-        try (
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-        ) {
-            List<Subject> subjects = new ArrayList<>();
-
-            while (rs.next()) {
-                subjects.add(load(rs));
-            }
-
-            return subjects;
-        }
-    }
+    private static final String tableName = "subjects";
 
     public void insert(Subject subject) throws SQLException {
-        String query = "INSERT INTO subjects (id, name) VALUES (?,?)";
+        String query = "INSERT INTO " + tableName + " (id, name) VALUES (?,?)";
 
         try (
             Connection connection = DBConnection.getConnection();
@@ -59,7 +26,7 @@ public class SubjectMapper extends Mapper<Subject> {
     }
 
     public void update(Subject subject) throws SQLException {
-        String query = "UPDATE subjects SET name = ? WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET name = ? WHERE id = ?";
 
         try (
             Connection connection = DBConnection.getConnection();
@@ -71,21 +38,13 @@ public class SubjectMapper extends Mapper<Subject> {
         }
     }
 
-    public void delete(Subject subject) throws SQLException {
-        String query = "DELETE FROM subjects WHERE id = ?";
-
-        try (
-            Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            statement.setObject(1, subject.getId());
-            statement.executeUpdate();
-        }
-    }
-
     protected Subject load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
         return new Subject(id, name);
+    }
+
+    protected String getTableName() {
+        return tableName;
     }
 }
