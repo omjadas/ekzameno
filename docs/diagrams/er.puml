@@ -37,6 +37,7 @@ entity Answers {
     * id : UUID <<generated>>
     --
     * answer : TEXT
+    * correct : BOOLEAN
     * questionId : UUID <<FK>>
 }
 

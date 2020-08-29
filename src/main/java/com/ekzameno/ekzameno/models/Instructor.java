@@ -1,5 +1,6 @@
 package com.ekzameno.ekzameno.models;
 
+import java.util.List;
 import java.util.UUID;
 
 public class Instructor extends User {
@@ -11,5 +12,9 @@ public class Instructor extends User {
 
     public Instructor(String email, String name, String passwordHash) {
         super(email, name, passwordHash);
+    }
+
+    public List<Subject> getSubjects() {
+        return null;
     }
 }

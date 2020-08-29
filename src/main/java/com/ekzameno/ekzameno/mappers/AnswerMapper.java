@@ -27,14 +27,16 @@ public class AnswerMapper extends Mapper<Answer> {
     }
 
     public void update(Answer answer) throws SQLException {
-        String query = "UPDATE " + tableName + " SET answer = ? WHERE id = ?";
+        String query = "UPDATE " + tableName +
+            " SET answer = ?, correct = ? WHERE id = ?";
 
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, answer.getAnswer());
-            statement.setObject(2, answer.getId());
+            statement.setBoolean(2, answer.isCorrect());
+            statement.setObject(3, answer.getId());
             statement.executeUpdate();
         }
     }
@@ -42,7 +44,8 @@ public class AnswerMapper extends Mapper<Answer> {
     protected Answer load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String answer = rs.getString("answer");
-        return new Answer(id, answer);
+        Boolean correct = rs.getBoolean("correct");
+        return new Answer(id, answer, correct);
     }
 
     protected String getTableName() {
