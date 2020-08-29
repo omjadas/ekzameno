@@ -1,14 +1,27 @@
 package com.ekzameno.ekzameno.mappers;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class Mapper<T> {
-    public abstract T find(UUID id);
+import com.ekzameno.ekzameno.models.Model;
 
-    public abstract List<T> findAll();
+public abstract class Mapper<T extends Model> {
+    public abstract T find(UUID id) throws SQLException;
 
-    public abstract void save(T obj);
+    public abstract List<T> findAll() throws SQLException;
 
-    public abstract void delete(T obj);
+    public void save(T obj) throws SQLException {
+        if (obj.getId() == null) {
+            insert(obj);
+        } else {
+            update(obj);
+        }
+    }
+
+    public abstract void insert(T obj) throws SQLException;
+
+    public abstract void update(T obj) throws SQLException;
+
+    public abstract void delete(T obj) throws SQLException;
 }
