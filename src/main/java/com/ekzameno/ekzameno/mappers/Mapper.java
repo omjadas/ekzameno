@@ -15,7 +15,11 @@ public abstract class Mapper<T extends Model> {
     public static <T extends Model> Mapper<T> getMapper(Class<?> modelClass) {
         try {
             return (Mapper<T>) Class
-                .forName("com.ekzameno.ekzameno.mappers." + modelClass.getSimpleName() + "Mapper")
+                .forName(
+                    "com.ekzameno.ekzameno.mappers." +
+                    modelClass.getSimpleName() +
+                    "Mapper"
+                )
                 .getDeclaredConstructor()
                 .newInstance();
         } catch (Exception e) {

@@ -10,10 +10,12 @@ import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 public class QuestionMapper extends AbstractQuestionMapper<Question> {
     public void insert(Question obj) throws SQLException {
         if (obj instanceof MultipleChoiceQuestion) {
-            Mapper<MultipleChoiceQuestion> mapper = new MultipleChoiceQuestionMapper();
+            Mapper<MultipleChoiceQuestion> mapper =
+                new MultipleChoiceQuestionMapper();
             mapper.insert((MultipleChoiceQuestion) obj);
         } else if (obj instanceof ShortAnswerQuestion) {
-            Mapper<ShortAnswerQuestion> mapper = new ShortAnswerQuestionMapper();
+            Mapper<ShortAnswerQuestion> mapper =
+                new ShortAnswerQuestionMapper();
             mapper.insert((ShortAnswerQuestion) obj);
         }
     }
