@@ -1,9 +1,15 @@
 package com.ekzameno.ekzameno.models;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Subject extends Model {
     private String name;
+
+    public Subject(UUID id, String name) {
+        this.setId(id);
+        this.name = name;
+    }
 
     public Subject(String name) {
         this.name = name;

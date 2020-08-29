@@ -8,4 +8,8 @@ public abstract class Model {
     public UUID getId() {
         return id;
     }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }
