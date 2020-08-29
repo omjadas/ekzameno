@@ -6,7 +6,7 @@ public class Answer extends Model {
     private String answer;
 
     public Answer(UUID id, String answer) {
-        this.setId(id);
+        setId(id);
         this.answer = answer;
     }
 

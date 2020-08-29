@@ -7,7 +7,7 @@ public class Subject extends Model {
     private String name;
 
     public Subject(UUID id, String name) {
-        this.setId(id);
+        setId(id);
         this.name = name;
     }
 

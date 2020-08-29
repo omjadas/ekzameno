@@ -10,7 +10,7 @@ public class Exam extends Model {
     private Date closeDate;
 
     public Exam(UUID id, String name, Date publishDate, Date closeDate) {
-        this.setId(id);
+        setId(id);
         this.name = name;
         this.publishDate = publishDate;
         this.closeDate = closeDate;

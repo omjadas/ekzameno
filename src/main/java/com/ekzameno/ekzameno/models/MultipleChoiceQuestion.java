@@ -6,7 +6,7 @@ import java.util.UUID;
 public class MultipleChoiceQuestion extends Question {
     public MultipleChoiceQuestion(UUID id, String question, int marks) {
         super(question, marks);
-        this.setId(id);
+        setId(id);
     }
 
     public MultipleChoiceQuestion(String question, int marks) {

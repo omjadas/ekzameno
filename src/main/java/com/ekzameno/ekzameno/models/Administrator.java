@@ -7,7 +7,7 @@ public class Administrator extends User {
 
     public Administrator(UUID id, String name, String passwordHash) {
         super(name, passwordHash);
-        this.setId(id);
+        setId(id);
     }
 
     public Administrator(String name, String passwordHash) {

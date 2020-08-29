@@ -7,7 +7,7 @@ public class Student extends User {
 
     public Student(UUID id, String name, String passwordHash) {
         super(name, passwordHash);
-        this.setId(id);
+        setId(id);
     }
 
     public Student(String name, String passwordHash) {

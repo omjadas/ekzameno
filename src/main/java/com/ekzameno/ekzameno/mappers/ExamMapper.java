@@ -38,8 +38,8 @@ public class ExamMapper extends Mapper<Exam> {
     }
 
     public void update(Exam exam) throws SQLException {
-        String query = "UPDATE " + tableName + " " +
-            "SET name = ?, publishDate = ?, closeDate = ? " +
+        String query = "UPDATE " + tableName +
+            " SET name = ?, publishDate = ?, closeDate = ? " +
             "WHERE id = ?";
 
         try (
