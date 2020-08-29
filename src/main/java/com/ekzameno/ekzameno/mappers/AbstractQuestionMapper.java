@@ -8,7 +8,8 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.shared.DBConnection;
 
-public abstract class AbstractQuestionMapper<T extends Question> extends Mapper<T> {
+public abstract class AbstractQuestionMapper<T extends Question>
+        extends Mapper<T> {
     private static final String tableName = "question";
 
     public void insert(T obj) throws SQLException {

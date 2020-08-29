@@ -6,7 +6,8 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 
-public class MultipleChoiceQuestionMapper extends AbstractQuestionMapper<MultipleChoiceQuestion> {
+public class MultipleChoiceQuestionMapper
+        extends AbstractQuestionMapper<MultipleChoiceQuestion> {
     protected MultipleChoiceQuestion load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String question = rs.getString("question");
