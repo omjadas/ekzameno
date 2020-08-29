@@ -7,8 +7,7 @@ public class MultipleChoiceQuestion extends Question {
     public static final String TYPE = "MULTIPLE_CHOICE";
 
     public MultipleChoiceQuestion(UUID id, String question, int marks) {
-        super(question, marks);
-        setId(id);
+        super(id, question, marks);
     }
 
     public MultipleChoiceQuestion(String question, int marks) {
