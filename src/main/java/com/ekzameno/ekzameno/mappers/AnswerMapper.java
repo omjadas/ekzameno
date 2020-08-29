@@ -14,7 +14,7 @@ public class AnswerMapper extends Mapper<Answer> {
 
     public void insert(Answer answer) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, answers) VALUES (?,?)";
+            " (id, answer) VALUES (?,?)";
 
         try (
             Connection connection = DBConnection.getConnection();
