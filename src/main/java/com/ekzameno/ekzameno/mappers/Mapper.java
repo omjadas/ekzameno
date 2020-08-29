@@ -12,6 +12,17 @@ import com.ekzameno.ekzameno.models.Model;
 import com.ekzameno.ekzameno.shared.DBConnection;
 
 public abstract class Mapper<T extends Model> {
+    public static <T extends Model> Mapper<T> getMapper(Class<?> modelClass) {
+        try {
+            return (Mapper<T>) Class
+                .forName("com.ekzameno.ekzameno.mappers." + modelClass.getSimpleName() + "Mapper")
+                .getDeclaredConstructor()
+                .newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public T find(UUID id) throws SQLException {
         String query = "SELECT * FROM " + getTableName() + " WHERE id = ?";
 
