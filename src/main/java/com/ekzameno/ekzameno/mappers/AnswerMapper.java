@@ -20,10 +20,11 @@ public class AnswerMapper extends Mapper<Answer> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            String answer = rs.getString("answer");
-            return new Answer(id, answer);
+            try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                String answer = rs.getString("answer");
+                return new Answer(id, answer);
+            }
         }
     }
 
@@ -33,8 +34,8 @@ public class AnswerMapper extends Mapper<Answer> {
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
-        ) {
             ResultSet rs = statement.executeQuery();
+        ) {
             List<Answer> answers = new ArrayList<>();
 
             while (rs.next()) {

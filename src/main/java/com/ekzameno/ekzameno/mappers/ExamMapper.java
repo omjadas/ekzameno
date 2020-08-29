@@ -22,12 +22,13 @@ public class ExamMapper extends Mapper<Exam> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            String name = rs.getString("name");
-            Date publishDate = rs.getDate("publishDate");
-            Date closeDate = rs.getDate("closeDate");
-            return new Exam(id, name, publishDate, closeDate);
+            try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                String name = rs.getString("name");
+                Date publishDate = rs.getDate("publishDate");
+                Date closeDate = rs.getDate("closeDate");
+                return new Exam(id, name, publishDate, closeDate);
+            }
         }
     }
 
@@ -37,8 +38,8 @@ public class ExamMapper extends Mapper<Exam> {
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
-        ) {
             ResultSet rs = statement.executeQuery();
+        ) {
             List<Exam> exams = new ArrayList<>();
 
             while (rs.next()) {

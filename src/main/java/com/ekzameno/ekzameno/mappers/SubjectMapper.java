@@ -20,10 +20,11 @@ public class SubjectMapper extends Mapper<Subject> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, id);
-            ResultSet rs = statement.executeQuery();
-            rs.next();
-            String name = rs.getString("name");
-            return new Subject(id, name);
+            try (ResultSet rs = statement.executeQuery();) {
+                rs.next();
+                String name = rs.getString("name");
+                return new Subject(id, name);
+            }
         }
     }
 
@@ -33,8 +34,8 @@ public class SubjectMapper extends Mapper<Subject> {
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
-        ) {
             ResultSet rs = statement.executeQuery();
+        ) {
             List<Subject> subjects = new ArrayList<>();
 
             while (rs.next()) {
