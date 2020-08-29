@@ -22,8 +22,7 @@ public class AnswerMapper extends Mapper<Answer> {
             statement.setObject(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 rs.next();
-                String answer = rs.getString("answer");
-                return new Answer(id, answer);
+                return load(rs);
             }
         }
     }
@@ -39,9 +38,7 @@ public class AnswerMapper extends Mapper<Answer> {
             List<Answer> answers = new ArrayList<>();
 
             while (rs.next()) {
-                UUID id = rs.getObject("id", java.util.UUID.class);
-                String answer = rs.getString("answer");
-                answers.add(new Answer(id, answer));
+                answers.add(load(rs));
             }
 
             return answers;
@@ -84,5 +81,11 @@ public class AnswerMapper extends Mapper<Answer> {
             statement.setObject(1, answer.getId());
             statement.executeUpdate();
         }
+    }
+
+    protected Answer load(ResultSet rs) throws SQLException {
+        UUID id = rs.getObject("id", java.util.UUID.class);
+        String answer = rs.getString("answer");
+        return new Answer(id, answer);
     }
 }

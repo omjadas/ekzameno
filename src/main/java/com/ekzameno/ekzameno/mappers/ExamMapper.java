@@ -24,10 +24,7 @@ public class ExamMapper extends Mapper<Exam> {
             statement.setObject(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 rs.next();
-                String name = rs.getString("name");
-                Date publishDate = rs.getDate("publishDate");
-                Date closeDate = rs.getDate("closeDate");
-                return new Exam(id, name, publishDate, closeDate);
+                return load(rs);
             }
         }
     }
@@ -43,11 +40,7 @@ public class ExamMapper extends Mapper<Exam> {
             List<Exam> exams = new ArrayList<>();
 
             while (rs.next()) {
-                UUID id = rs.getObject("id", java.util.UUID.class);
-                String name = rs.getString("name");
-                Date publishDate = rs.getTimestamp("publishDate");
-                Date closeDate = rs.getTimestamp("closeDate");
-                exams.add(new Exam(id, name, publishDate, closeDate));
+                exams.add(load(rs));
             }
 
             return exams;
@@ -109,5 +102,13 @@ public class ExamMapper extends Mapper<Exam> {
             statement.setObject(1, exam.getId());
             statement.executeUpdate();
         }
+    }
+
+    protected Exam load(ResultSet rs) throws SQLException {
+        UUID id = rs.getObject("id", java.util.UUID.class);
+        String name = rs.getString("name");
+        Date publishDate = rs.getTimestamp("publishDate");
+        Date closeDate = rs.getTimestamp("closeDate");
+        return new Exam(id, name, publishDate, closeDate);
     }
 }

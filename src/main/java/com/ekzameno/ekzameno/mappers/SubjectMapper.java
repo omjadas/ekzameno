@@ -22,8 +22,7 @@ public class SubjectMapper extends Mapper<Subject> {
             statement.setObject(1, id);
             try (ResultSet rs = statement.executeQuery();) {
                 rs.next();
-                String name = rs.getString("name");
-                return new Subject(id, name);
+                return load(rs);
             }
         }
     }
@@ -39,9 +38,7 @@ public class SubjectMapper extends Mapper<Subject> {
             List<Subject> subjects = new ArrayList<>();
 
             while (rs.next()) {
-                UUID id = rs.getObject("id", java.util.UUID.class);
-                String name = rs.getString("name");
-                subjects.add(new Subject(id, name));
+                subjects.add(load(rs));
             }
 
             return subjects;
@@ -84,5 +81,11 @@ public class SubjectMapper extends Mapper<Subject> {
             statement.setObject(1, subject.getId());
             statement.executeUpdate();
         }
+    }
+
+    protected Subject load(ResultSet rs) throws SQLException {
+        UUID id = rs.getObject("id", java.util.UUID.class);
+        String name = rs.getString("name");
+        return new Subject(id, name);
     }
 }

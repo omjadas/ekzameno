@@ -1,5 +1,6 @@
 package com.ekzameno.ekzameno.mappers;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -24,4 +25,6 @@ public abstract class Mapper<T extends Model> {
     public abstract void update(T obj) throws SQLException;
 
     public abstract void delete(T obj) throws SQLException;
+
+    protected abstract T load(ResultSet rs) throws SQLException;
 }
