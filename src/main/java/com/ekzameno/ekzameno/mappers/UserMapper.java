@@ -10,16 +10,8 @@ import com.ekzameno.ekzameno.models.User;
 
 public class UserMapper extends AbstractUserMapper<User> {
     public void insert(User obj) throws SQLException {
-        if (obj instanceof Administrator) {
-            Mapper<Administrator> mapper = new AdministratorMapper();
-            mapper.insert((Administrator) obj);
-        } else if (obj instanceof Instructor) {
-            Mapper<Instructor> mapper = new InstructorMapper();
-            mapper.insert((Instructor) obj);
-        } else if (obj instanceof Student) {
-            Mapper<Student> mapper = new StudentMapper();
-            mapper.insert((Student) obj);
-        }
+        Mapper<User> mapper = Mapper.getMapper(obj.getClass());
+        mapper.insert(obj);
     }
 
     protected User load(ResultSet rs) throws SQLException {
