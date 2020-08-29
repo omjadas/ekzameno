@@ -1,4 +1,4 @@
-package com.ekzameno.ekzameno;
+package com.ekzameno.ekzameno.shared;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

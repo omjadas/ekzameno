@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.DBConnection;
 import com.ekzameno.ekzameno.models.Subject;
+import com.ekzameno.ekzameno.shared.DBConnection;
 
 public class SubjectMapper extends Mapper<Subject> {
     public Subject find(UUID id) throws SQLException {

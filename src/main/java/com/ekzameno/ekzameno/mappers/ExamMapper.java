@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.DBConnection;
 import com.ekzameno.ekzameno.models.Exam;
+import com.ekzameno.ekzameno.shared.DBConnection;
 
 public class ExamMapper extends Mapper<Exam> {
     public Exam find(UUID id) throws SQLException {
