@@ -3,6 +3,7 @@
 entity Users {
     * id : UUID <<generated>>
     --
+    * email : TEXT
     * name : TEXT
     * passwordHash : TEXT
     * type : TEXT

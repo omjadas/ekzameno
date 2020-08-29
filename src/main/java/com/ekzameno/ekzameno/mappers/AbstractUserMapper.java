@@ -11,33 +11,35 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     private static final String tableName = "user";
 
-    public void insert(T obj) throws SQLException {
+    public void insert(T user) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, name, passwordHash, type) VALUES (?,?,?)";
+            " (id, email, name, passwordHash, type) VALUES (?,?,?)";
 
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, UUID.randomUUID());
-            statement.setString(2, obj.getName());
-            statement.setString(3, obj.getPasswordHash());
-            statement.setString(4, getType());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getName());
+            statement.setString(4, user.getPasswordHash());
+            statement.setString(5, getType());
             statement.executeUpdate();
         }
     }
 
-    public void update(T obj) throws SQLException {
+    public void update(T user) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET name = ?, passwordHash = ? WHERE id = ?";
+            " SET email = ?, name = ?, passwordHash = ? WHERE id = ?";
 
         try (
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setString(1, obj.getName());
-            statement.setString(2, obj.getPasswordHash());
-            statement.setObject(3, obj.getId());
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getName());
+            statement.setString(3, user.getPasswordHash());
+            statement.setObject(4, user.getId());
             statement.executeUpdate();
         }
     }
