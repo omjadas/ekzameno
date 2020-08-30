@@ -2,6 +2,8 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.shared.UnitOfWork;
+
 public class QuestionSubmission extends Model {
     private String answer;
 
