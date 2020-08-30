@@ -12,6 +12,9 @@ import com.ekzameno.ekzameno.models.Instructor;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Data Mapper for Instructors.
+ */
 public class InstructorMapper extends AbstractUserMapper<Instructor> {
     /**
      * Retrieve all instructors for a given subject ID.

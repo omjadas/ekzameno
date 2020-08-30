@@ -12,6 +12,9 @@ import com.ekzameno.ekzameno.models.Student;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Data Mapper for Students.
+ */
 public class StudentMapper extends AbstractUserMapper<Student> {
     /**
      * Retrieve all students for a given subject ID.

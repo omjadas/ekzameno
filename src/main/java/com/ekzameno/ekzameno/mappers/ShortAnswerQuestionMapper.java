@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 
+/**
+ * Data Mapper for ShortAnswerQuestions.
+ */
 public class ShortAnswerQuestionMapper
         extends AbstractQuestionMapper<ShortAnswerQuestion> {
     @Override

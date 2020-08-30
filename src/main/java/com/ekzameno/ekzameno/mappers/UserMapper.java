@@ -8,6 +8,9 @@ import com.ekzameno.ekzameno.models.Instructor;
 import com.ekzameno.ekzameno.models.Student;
 import com.ekzameno.ekzameno.models.User;
 
+/**
+ * Data Mapper for Users.
+ */
 public class UserMapper extends AbstractUserMapper<User> {
     @Override
     public void insert(User user) throws SQLException {

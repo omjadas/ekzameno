@@ -9,6 +9,10 @@ import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Abstract Data Mapper for Questions.
+ * @param <T> type of the questions
+ */
 public abstract class AbstractQuestionMapper<T extends Question>
         extends Mapper<T> {
     private static final String tableName = "question";

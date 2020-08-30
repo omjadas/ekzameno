@@ -14,6 +14,9 @@ import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Data Mapper for Questions.
+ */
 public class QuestionMapper extends AbstractQuestionMapper<Question> {
     /**
      * Retrieve all questions for a given exam ID.

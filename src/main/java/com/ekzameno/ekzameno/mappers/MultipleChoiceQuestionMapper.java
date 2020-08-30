@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 
+/**
+ * Data Mapper for MultipleChoiceQuestions.
+ */
 public class MultipleChoiceQuestionMapper
         extends AbstractQuestionMapper<MultipleChoiceQuestion> {
     @Override

@@ -12,6 +12,9 @@ import com.ekzameno.ekzameno.models.Answer;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Data Mapper for Answers.
+ */
 public class AnswerMapper extends Mapper<Answer> {
     private static final String tableName = "answers";
 

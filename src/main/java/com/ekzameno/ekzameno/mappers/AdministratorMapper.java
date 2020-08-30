@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Administrator;
 
+/**
+ * Data Mapper for Administrators.
+ */
 public class AdministratorMapper extends AbstractUserMapper<Administrator> {
     @Override
     protected Administrator load(ResultSet rs) throws SQLException {

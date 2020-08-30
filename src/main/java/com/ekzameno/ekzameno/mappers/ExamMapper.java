@@ -15,6 +15,9 @@ import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Data Mapper for Exams.
+ */
 public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
 

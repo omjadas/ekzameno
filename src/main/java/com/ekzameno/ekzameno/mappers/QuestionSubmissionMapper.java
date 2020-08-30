@@ -12,6 +12,9 @@ import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Data Mapper for QuestionSubmissions.
+ */
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "questionSubmissions";
 
