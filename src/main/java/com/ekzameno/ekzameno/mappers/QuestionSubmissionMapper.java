@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.QuestionSubmission;
@@ -12,6 +14,51 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "questionSubmissions";
+
+    public List<QuestionSubmission> findAllForExamSubmission(UUID id)
+            throws SQLException {
+        String query = "SELECT * FROM questionSubmissions " +
+            "WHERE examSubmissionId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<QuestionSubmission> questionSubmissions = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                questionSubmissions.add(load(rs));
+            }
+
+            return questionSubmissions;
+        }
+    }
+
+    public List<QuestionSubmission> findAllForQuestion(UUID id)
+            throws SQLException {
+        String query = "SELECT questionSubmissions.* " +
+            "FROM questionSubmissions " +
+            "WHERE questionSubmissions.questionId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<QuestionSubmission> questionSubmissions = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                questionSubmissions.add(load(rs));
+            }
+
+            return questionSubmissions;
+        }
+        }
 
     public void insert(QuestionSubmission questionSubmission) throws SQLException {
         String query = "INSERT INTO " + tableName +

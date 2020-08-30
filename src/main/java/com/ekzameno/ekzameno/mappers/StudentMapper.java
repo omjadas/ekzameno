@@ -1,12 +1,39 @@
 package com.ekzameno.ekzameno.mappers;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Student;
+import com.ekzameno.ekzameno.shared.DBConnection;
 
 public class StudentMapper extends AbstractUserMapper<Student> {
+    public List<Student> findAllForSubject(UUID id) throws SQLException {
+        String query = "SELECT users.* FROM users " +
+            "JOIN instructorSubjects ON users.id = instructorSubjects.userId " +
+            "WHERE instructorSubjects.subjectId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Student> students = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                students.add(load(rs));
+            }
+
+            return students;
+        }
+    }
+
     protected Student load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String email = rs.getString("email");

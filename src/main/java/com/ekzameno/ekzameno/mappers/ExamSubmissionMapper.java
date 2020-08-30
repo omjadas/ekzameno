@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -12,6 +14,47 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     private static final String tableName = "examSubmissions";
+
+    public List<ExamSubmission> findAllForExam(UUID id) throws SQLException {
+        String query = "SELECT * FROM examSubmissions WHERE examId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<ExamSubmission> examSubmissions = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                examSubmissions.add(load(rs));
+            }
+
+            return examSubmissions;
+        }
+    }
+
+    public List<ExamSubmission> findAllForStudent(UUID id) throws SQLException {
+        String query = "SELECT examSubmissions.* FROM examSubmissions " +
+            "WHERE examSubmissions.userId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<ExamSubmission> examSubmissions = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                examSubmissions.add(load(rs));
+            }
+
+            return examSubmissions;
+        }
+    }
 
     public void insert(ExamSubmission examSubmission) throws SQLException {
         String query = "INSERT INTO " + tableName +

@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Exam;
@@ -14,6 +16,26 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
+
+    public List<Exam> findAllForSubject(UUID id) throws SQLException {
+        String query = "SELECT * FROM exams WHERE subjectId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Exam> exams = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                exams.add(load(rs));
+            }
+
+            return exams;
+        }
+    }
 
     public void insert(Exam exam) throws SQLException {
         String query = "INSERT INTO " + tableName +

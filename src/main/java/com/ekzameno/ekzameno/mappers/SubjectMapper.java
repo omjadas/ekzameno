@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Subject;
@@ -12,6 +14,51 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class SubjectMapper extends Mapper<Subject> {
     private static final String tableName = "subjects";
+
+    public List<Subject> findAllForStudent(UUID id) throws SQLException {
+        String query = "SELECT subjects.* FROM subjects " +
+            "JOIN studentSubjects ON subjects.id = studentSubjects.subjectId " +
+            "WHERE studentSubjects.userId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Subject> subjects = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                subjects.add(load(rs));
+            }
+
+            return subjects;
+        }
+    }
+
+    public List<Subject> findAllForInstructor(UUID id) throws SQLException {
+        String query = "SELECT * FROM subjects " +
+            "JOIN instructorSubjects ON " +
+            "subjects.id = instructorSubjects.subjectId " +
+            "WHERE instructorSubjects.userId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Subject> subjects = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                subjects.add(load(rs));
+            }
+
+            return subjects;
+        }
+    }
 
     public void insert(Subject subject) throws SQLException {
         String query = "INSERT INTO " + tableName + " (id, name) VALUES (?,?)";

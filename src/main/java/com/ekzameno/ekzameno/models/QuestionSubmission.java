@@ -17,8 +17,4 @@ public class QuestionSubmission extends Model {
     public String getAnswer() {
         return answer;
     }
-
-    public Question getQuestion() {
-        return null;
-    }
 }

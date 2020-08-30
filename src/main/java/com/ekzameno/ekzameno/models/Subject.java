@@ -1,10 +1,18 @@
 package com.ekzameno.ekzameno.models;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.mappers.ExamMapper;
+import com.ekzameno.ekzameno.mappers.InstructorMapper;
+import com.ekzameno.ekzameno.mappers.StudentMapper;
+
 public class Subject extends Model {
     private String name;
+    private List<Instructor> instructors = null;
+    private List<Student> students = null;
+    private List<Exam> exams = null;
 
     public Subject(UUID id, String name) {
         super(id);
@@ -19,11 +27,27 @@ public class Subject extends Model {
         return name;
     }
 
-    public List<User> getInstructors() {
-        return null;
+    public List<Instructor> getInstructors() throws SQLException {
+        if (instructors == null) {
+            return new InstructorMapper().findAllForSubject(getId());
+        } else {
+            return instructors;
+        }
     }
 
-    public List<User> getStudents() {
-        return null;
+    public List<Student> getStudents() throws SQLException {
+        if (students == null) {
+            return new StudentMapper().findAllForSubject(getId());
+        } else {
+            return students;
+        }
+    }
+
+    public List<Exam> getExams() throws SQLException {
+        if (exams == null) {
+            return new ExamMapper().findAllForSubject(getId());
+        } else {
+            return exams;
+        }
     }
 }

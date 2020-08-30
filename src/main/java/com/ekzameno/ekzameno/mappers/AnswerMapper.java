@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Answer;
@@ -12,6 +14,26 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class AnswerMapper extends Mapper<Answer> {
     private static final String tableName = "answers";
+
+    public List<Answer> findAllForQuestion(UUID id) throws SQLException {
+        String query = "SELECT * FROM answers WHERE questionId = ?";
+
+        try (
+            Connection connection = DBConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Answer> answers = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                answers.add(load(rs));
+            }
+
+            return answers;
+        }
+    }
 
     public void insert(Answer answer) throws SQLException {
         String query = "INSERT INTO " + tableName +
