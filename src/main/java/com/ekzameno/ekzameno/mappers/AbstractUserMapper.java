@@ -10,7 +10,11 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
-    private static final String tableName = "user";
+    private static final String tableName = "users";
+    private static final String columns = "users.id AS users_id, " +
+        "users.email AS users_email, " +
+        "users.passwordHash AS users_passwordHash, " +
+        "users.type AS users_type";
 
     public void insert(T user) throws SQLException {
         String query = "INSERT INTO " + tableName +
@@ -49,6 +53,10 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
 
     protected String getTableName() {
         return tableName;
+    }
+
+    protected String getColumns() {
+        return columns;
     }
 
     protected abstract String getType();

@@ -29,14 +29,14 @@ public abstract class Mapper<T extends Model> {
     }
 
     public T find(UUID id) throws SQLException {
-        IdentityMap identityMap = IdentityMap.getInstance();
-        T obj = (T) identityMap.get(id);
+        T obj = (T) IdentityMap.getInstance().get(id);
 
         if (obj != null) {
             return obj;
         }
 
-        String query = "SELECT * FROM " + getTableName() + " WHERE id = ?";
+        String query = "SELECT " + getColumns() + " FROM " + getTableName() +
+            " WHERE id = ?";
 
         try (
             Connection connection = DBConnection.getConnection();
@@ -45,16 +45,13 @@ public abstract class Mapper<T extends Model> {
             statement.setObject(1, id);
             try (ResultSet rs = statement.executeQuery();) {
                 rs.next();
-                obj = load(rs);
-                identityMap.put(id, obj);
-                return obj;
+                return load(rs);
             }
         }
     }
 
     public List<T> findAll() throws SQLException {
-        IdentityMap identityMap = IdentityMap.getInstance();
-        String query = "SELECT * FROM " + getTableName();
+        String query = "SELECT " + getColumns() + " FROM " + getTableName();
 
         try (
             Connection connection = DBConnection.getConnection();
@@ -64,9 +61,7 @@ public abstract class Mapper<T extends Model> {
             List<T> objects = new ArrayList<>();
 
             while (rs.next()) {
-                T obj = load(rs);
-                identityMap.put(obj.getId(), obj);
-                objects.add(obj);
+                objects.add(load(rs));
             }
 
             return objects;
@@ -101,4 +96,6 @@ public abstract class Mapper<T extends Model> {
     protected abstract T load(ResultSet rs) throws SQLException;
 
     protected abstract String getTableName();
+
+    protected abstract String getColumns();
 }

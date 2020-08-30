@@ -12,6 +12,8 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class SubjectMapper extends Mapper<Subject> {
     private static final String tableName = "subjects";
+    private static final String columns = "subjects.id as subjects_id, " +
+        "subjects.name as subjects_name";
 
     public void insert(Subject subject) throws SQLException {
         String query = "INSERT INTO " + tableName + " (id, name) VALUES (?,?)";
@@ -42,12 +44,18 @@ public class SubjectMapper extends Mapper<Subject> {
     }
 
     protected Subject load(ResultSet rs) throws SQLException {
-        UUID id = rs.getObject("id", java.util.UUID.class);
-        String name = rs.getString("name");
-        return new Subject(id, name);
+        UUID id = rs.getObject("subjects_id", java.util.UUID.class);
+        String name = rs.getString("subjects_name");
+        Subject subject = new Subject(id, name);
+        IdentityMap.getInstance().put(id, subject);
+        return subject;
     }
 
     protected String getTableName() {
         return tableName;
+    }
+
+    protected String getColumns() {
+        return columns;
     }
 }

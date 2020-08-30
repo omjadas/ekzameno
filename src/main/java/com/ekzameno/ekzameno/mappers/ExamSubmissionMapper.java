@@ -12,6 +12,9 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     private static final String tableName = "examSubmissions";
+    private static final String columns =
+        "examSubmissions.id AS examSubmissions_id, " +
+        "examSubmissions.marks AS examSubmissions_marks";
 
     public void insert(ExamSubmission examSubmission) throws SQLException {
         String query = "INSERT INTO " + tableName +
@@ -47,12 +50,18 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     }
 
     protected ExamSubmission load(ResultSet rs) throws SQLException {
-        UUID id = rs.getObject("id", java.util.UUID.class);
-        int marks = rs.getInt("marks");
-        return new ExamSubmission(id, marks);
+        UUID id = rs.getObject("examSubmissions_id", java.util.UUID.class);
+        int marks = rs.getInt("examSubmissions_marks");
+        ExamSubmission examSubmission = new ExamSubmission(id, marks);
+        IdentityMap.getInstance().put(id, examSubmission);
+        return examSubmission;
     }
 
     protected String getTableName() {
         return tableName;
+    }
+
+    protected String getColumns() {
+        return columns;
     }
 }

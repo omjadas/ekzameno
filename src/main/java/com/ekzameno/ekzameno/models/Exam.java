@@ -8,18 +8,32 @@ public class Exam extends Model {
     private String name;
     private Date publishDate;
     private Date closeDate;
+    private Subject subject;
 
-    public Exam(UUID id, String name, Date publishDate, Date closeDate) {
+    public Exam(
+        UUID id,
+        String name,
+        Date publishDate,
+        Date closeDate,
+        Subject subject
+    ) {
         super(id);
         this.name = name;
         this.publishDate = publishDate;
         this.closeDate = closeDate;
+        this.subject = subject;
     }
 
-    public Exam(String name, Date publishDate, Date closeDate) {
+    public Exam(
+        String name,
+        Date publishDate,
+        Date closeDate,
+        Subject subject
+    ) {
         this.name = name;
         this.publishDate = publishDate;
         this.closeDate = closeDate;
+        this.subject = subject;
     }
 
     public String getName() {
@@ -32,6 +46,10 @@ public class Exam extends Model {
 
     public Date getCloseDate() {
         return closeDate;
+    }
+
+    public Subject getSubject() {
+        return subject;
     }
 
     public List<Question> getQuestions() {

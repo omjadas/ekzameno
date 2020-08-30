@@ -12,6 +12,8 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class AnswerMapper extends Mapper<Answer> {
     private static final String tableName = "answers";
+    private static final String columns = "answers.id AS answers_id, " +
+        "answers.answer AS answers_answer";
 
     public void insert(Answer answer) throws SQLException {
         String query = "INSERT INTO " + tableName +
@@ -45,13 +47,19 @@ public class AnswerMapper extends Mapper<Answer> {
     }
 
     protected Answer load(ResultSet rs) throws SQLException {
-        UUID id = rs.getObject("id", java.util.UUID.class);
-        String answer = rs.getString("answer");
-        boolean correct = rs.getBoolean("correct");
-        return new Answer(id, answer, correct);
+        UUID id = rs.getObject("answers_id", java.util.UUID.class);
+        String answer = rs.getString("answers_answer");
+        boolean correct = rs.getBoolean("answers_correct");
+        Answer answerObj = new Answer(id, answer, correct);
+        IdentityMap.getInstance().put(id, answerObj);
+        return answerObj;
     }
 
     protected String getTableName() {
         return tableName;
+    }
+
+    protected String getColumns() {
+        return columns;
     }
 }

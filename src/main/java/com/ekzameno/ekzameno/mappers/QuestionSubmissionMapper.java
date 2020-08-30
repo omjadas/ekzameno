@@ -12,6 +12,9 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "questionSubmissions";
+    private static final String columns =
+        "questionSubmissions.id AS questionSubmissions_id, " +
+        "questionSubmissions.answer AS questionSubmissions_answer";
 
     public void insert(QuestionSubmission questionSubmission) throws SQLException {
         String query = "INSERT INTO " + tableName +
@@ -47,12 +50,24 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     }
 
     protected QuestionSubmission load(ResultSet rs) throws SQLException {
-        UUID id = rs.getObject("id", java.util.UUID.class);
-        String answer = rs.getString("answer");
-        return new QuestionSubmission(id, answer);
+        UUID id = rs.getObject("questionSubmissions_id", java.util.UUID.class);
+        String answer = rs.getString("questionSubmissions_answer");
+
+        QuestionSubmission questionSubmission = new QuestionSubmission(
+            id,
+            answer
+        );
+
+        IdentityMap.getInstance().put(id, questionSubmission);
+
+        return questionSubmission;
     }
 
     protected String getTableName() {
         return tableName;
+    }
+
+    protected String getColumns() {
+        return columns;
     }
 }
