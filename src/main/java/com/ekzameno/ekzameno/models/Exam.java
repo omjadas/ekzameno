@@ -21,8 +21,8 @@ public class Exam extends Model {
     /**
      * Crete an exam with an ID.
      *
-     * @param id ID of the exam
-     * @param name name of the exam
+     * @param id        ID of the exam
+     * @param name      name of the exam
      * @param dateRange date range of the exam
      */
     public Exam(UUID id, String name, DateRange dateRange) {
@@ -34,7 +34,7 @@ public class Exam extends Model {
     /**
      * Create an exam without an ID (registers as new).
      *
-     * @param name name of the exam
+     * @param name      name of the exam
      * @param dateRange date range of the exam
      */
     public Exam(String name, DateRange dateRange) {
@@ -54,6 +54,12 @@ public class Exam extends Model {
         return dateRange.getToDate();
     }
 
+    /**
+     * Retrieve the Questions in the Exam.
+     *
+     * @return Questions in the Exam
+     * @throws SQLException if unable to retrieve the Questions
+     */
     public List<Question> getQuestions() throws SQLException {
         if (questions == null) {
             return new QuestionMapper().findAllForExam(getId());
@@ -62,6 +68,12 @@ public class Exam extends Model {
         }
     }
 
+    /**
+     * Retrieve the submissions for the Exam.
+     *
+     * @return submissions for the Exam
+     * @throws SQLException if unable to retrieve the submissions
+     */
     public List<ExamSubmission> getExamSubmissions() throws SQLException {
         if (examSubmissions == null) {
             return new ExamSubmissionMapper().findAllForExam(getId());
@@ -70,16 +82,31 @@ public class Exam extends Model {
         }
     }
 
+    /**
+     * Set the name of the Exam (marks the Exam as dirty).
+     *
+     * @param name name of the Exam
+     */
     public void setName(String name) {
         this.name = name;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the publish date of the Exam (marks the Exam as dirty).
+     *
+     * @param publishDate publish date of the Exam
+     */
     public void setPublishDate(Date publishDate) {
         dateRange.setFromDate(publishDate);
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the close date of the Exam (marks the Exam as dirty).
+     *
+     * @param closeDate close date of the Exam
+     */
     public void setCloseDate(Date closeDate) {
         dateRange.setToDate(closeDate);
         UnitOfWork.getCurrent().registerDirty(this);

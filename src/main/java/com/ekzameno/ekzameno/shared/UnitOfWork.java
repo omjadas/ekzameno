@@ -7,6 +7,9 @@ import java.util.List;
 import com.ekzameno.ekzameno.mappers.Mapper;
 import com.ekzameno.ekzameno.models.Model;
 
+/**
+ * Keeps track of changes to models.
+ */
 public class UnitOfWork {
     private static ThreadLocal<UnitOfWork> current = new ThreadLocal<>();
 

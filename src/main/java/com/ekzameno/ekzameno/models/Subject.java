@@ -21,7 +21,7 @@ public class Subject extends Model {
     /**
      * Create a Subject with an ID.
      *
-     * @param id ID of the Subject
+     * @param id   ID of the Subject
      * @param name name of the Subject
      */
     public Subject(UUID id, String name) {
@@ -42,6 +42,12 @@ public class Subject extends Model {
         return name;
     }
 
+    /**
+     * Retrieve the Instructors for the Subject.
+     *
+     * @return Instructors for the Subject
+     * @throws SQLException if unable to retrieve the Instructors
+     */
     public List<Instructor> getInstructors() throws SQLException {
         if (instructors == null) {
             return new InstructorMapper().findAllForSubject(getId());
@@ -50,6 +56,12 @@ public class Subject extends Model {
         }
     }
 
+    /**
+     * Retrieve the Students for the Subject.
+     *
+     * @return Students enrolled in the Subject
+     * @throws SQLException if unable to retrieve the Students
+     */
     public List<Student> getStudents() throws SQLException {
         if (students == null) {
             return new StudentMapper().findAllForSubject(getId());
@@ -58,6 +70,12 @@ public class Subject extends Model {
         }
     }
 
+    /**
+     * Retrieve the Exams for the Subject.
+     *
+     * @return Exams created for the Subject
+     * @throws SQLException if unable to retrieve the Exams
+     */
     public List<Exam> getExams() throws SQLException {
         if (exams == null) {
             return new ExamMapper().findAllForSubject(getId());
@@ -66,6 +84,11 @@ public class Subject extends Model {
         }
     }
 
+    /**
+     * Set the name of the Subject (registers the Subject as dirty).
+     *
+     * @param name name of the Subject
+     */
     public void setName(String name) {
         this.name = name;
         UnitOfWork.getCurrent().registerDirty(this);

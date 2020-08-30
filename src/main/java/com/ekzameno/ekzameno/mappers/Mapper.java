@@ -14,6 +14,7 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
  * Abstract Data Mapper class.
+ *
  * @param <T> type of model the Data Mapper is for.
  */
 public abstract class Mapper<T extends Model> {
@@ -21,7 +22,7 @@ public abstract class Mapper<T extends Model> {
     /**
      * Retrieve a Data Mapper for a given class.
      *
-     * @param <T> generic type for the mapper
+     * @param <T>   generic type for the mapper
      * @param klass class to retrieve a mapper for
      * @return mapper for the given class
      */
@@ -30,11 +31,8 @@ public abstract class Mapper<T extends Model> {
             return (Mapper<T>) Class
                 .forName(
                     "com.ekzameno.ekzameno.mappers." +
-                    klass.getSimpleName() +
-                    "Mapper"
-                )
-                .getDeclaredConstructor()
-                .newInstance();
+                            klass.getSimpleName() + "Mapper")
+                    .getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             return null;
         }

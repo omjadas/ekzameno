@@ -13,7 +13,7 @@ public class QuestionSubmission extends Model {
     /**
      * Create a QuestionSubmission with an ID.
      *
-     * @param id ID of the QuestionSubmission
+     * @param id     ID of the QuestionSubmission
      * @param answer answer for the QuestionSubmission
      */
     public QuestionSubmission(UUID id, String answer) {
@@ -34,6 +34,12 @@ public class QuestionSubmission extends Model {
         return answer;
     }
 
+    /**
+     * Set the answer for the QuestionSubmission (marks the QuestionSubmission
+     * as dirty).
+     *
+     * @param answer answer for the QuestionSubmission
+     */
     public void setAnswer(String answer) {
         this.answer = answer;
         UnitOfWork.getCurrent().registerDirty(this);

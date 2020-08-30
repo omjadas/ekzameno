@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Model;
 
+/**
+ * IdentityMap used to cache models in memory.
+ */
 public class IdentityMap {
     private static IdentityMap identityMap = new IdentityMap();
 

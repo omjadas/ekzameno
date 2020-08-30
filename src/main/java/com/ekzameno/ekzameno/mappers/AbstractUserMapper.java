@@ -11,6 +11,7 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
  * Abstract Data Mapper for Users.
+ *
  * @param <T> type of the users
  */
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {

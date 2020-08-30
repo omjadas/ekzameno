@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Wrapper class to handle connections to the database.
+ */
 public class DBConnection {
     private static final String connectionUrl = System.getenv(
         "JDBC_DATABASE_URL"

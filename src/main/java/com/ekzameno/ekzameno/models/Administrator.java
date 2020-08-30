@@ -11,9 +11,9 @@ public class Administrator extends User {
     /**
      * Create an Administrator with an ID.
      *
-     * @param id ID of the Administrator
-     * @param email email address of the Administrator
-     * @param name name of the Administrator
+     * @param id           ID of the Administrator
+     * @param email        email address of the Administrator
+     * @param name         name of the Administrator
      * @param passwordHash password hash of the Administrator
      */
     public Administrator(
@@ -28,8 +28,8 @@ public class Administrator extends User {
     /**
      * Create an Administrator without an ID (registers as new).
      *
-     * @param email email address of the Administrator
-     * @param name name of the Administrator
+     * @param email        email address of the Administrator
+     * @param name         name of the Administrator
      * @param passwordHash password hash of the Administrator
      */
     public Administrator(String email, String name, String passwordHash) {

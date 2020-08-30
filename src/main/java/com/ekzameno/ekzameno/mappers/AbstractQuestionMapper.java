@@ -11,6 +11,7 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
  * Abstract Data Mapper for Questions.
+ *
  * @param <T> type of the questions
  */
 public abstract class AbstractQuestionMapper<T extends Question>

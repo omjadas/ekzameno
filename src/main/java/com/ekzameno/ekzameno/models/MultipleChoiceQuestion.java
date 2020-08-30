@@ -16,9 +16,9 @@ public class MultipleChoiceQuestion extends Question {
     /**
      * Create a MultipleChoiceQuestion with an ID.
      *
-     * @param id ID of the MultipleChoiceQuestion
+     * @param id       ID of the MultipleChoiceQuestion
      * @param question question of the MultipleChoiceQuestion
-     * @param marks number of marks allocated to the MultipleChoiceQuestion
+     * @param marks    number of marks allocated to the MultipleChoiceQuestion
      */
     public MultipleChoiceQuestion(UUID id, String question, int marks) {
         super(id, question, marks);
@@ -28,12 +28,18 @@ public class MultipleChoiceQuestion extends Question {
      * Create a MultipleChoiceQuestion without an ID (registers as new).
      *
      * @param question question of the MultipleChoiceQuestion
-     * @param marks number of marks allocated to the MultipleChoiceQuestion
+     * @param marks    number of marks allocated to the MultipleChoiceQuestion
      */
     public MultipleChoiceQuestion(String question, int marks) {
         super(question, marks);
     }
 
+    /**
+     * Retrieve the possible answers for the MultipleChoiceQuestion.
+     *
+     * @return possible answers for the MultipleChoiceQuestion
+     * @throws SQLException if unable to retrieve the answers
+     */
     public List<Answer> getAnswers() throws SQLException {
         if (answers == null) {
             return new AnswerMapper().findAllForQuestion(getId());

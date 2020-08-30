@@ -16,9 +16,9 @@ public class Instructor extends User {
     /**
      * Create an Instructor with an ID.
      *
-     * @param id ID of the Instructor
-     * @param email email address of the Instructor
-     * @param name name of the Instructor
+     * @param id           ID of the Instructor
+     * @param email        email address of the Instructor
+     * @param name         name of the Instructor
      * @param passwordHash password hash of the Instructor
      */
     public Instructor(UUID id, String email, String name, String passwordHash) {
@@ -28,14 +28,20 @@ public class Instructor extends User {
     /**
      * Create an Instructor without an ID (registers as new).
      *
-     * @param email email address of the Instructor
-     * @param name name of the Instructor
+     * @param email        email address of the Instructor
+     * @param name         name of the Instructor
      * @param passwordHash password hash of the Instructor
      */
     public Instructor(String email, String name, String passwordHash) {
         super(email, name, passwordHash);
     }
 
+    /**
+     * Retrieve the Subjects that the Instructor teaches.
+     *
+     * @return Subjects the Instructor teaches
+     * @throws SQLException if unable to retrieve the Subjects
+     */
     public List<Subject> getSubjects() throws SQLException {
         if (subjects == null) {
             return new SubjectMapper().findAllForInstructor(getId());

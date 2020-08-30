@@ -17,7 +17,7 @@ public class ExamSubmission extends Model {
     /**
      * Create an ExamSubmission with an ID.
      *
-     * @param id ID of the ExamSubmission
+     * @param id    ID of the ExamSubmission
      * @param marks total number of marks for the ExamSubmission
      */
     public ExamSubmission(UUID id, int marks) {
@@ -27,6 +27,7 @@ public class ExamSubmission extends Model {
 
     /**
      * Create an ExamSubmission without an ID (registers as new).
+     *
      * @param marks total number of marks for the ExamSubmission.
      */
     public ExamSubmission(int marks) {
@@ -37,6 +38,12 @@ public class ExamSubmission extends Model {
         return marks;
     }
 
+    /**
+     * Retrieve QuestionSubmissions for the ExamSubmission.
+     *
+     * @return QuestionSubmissions for the ExamSubmission
+     * @throws SQLException if unable to retrieve the QuestionSubmissions
+     */
     public List<QuestionSubmission> getQuestionSubmissions()
             throws SQLException {
         if (questionSubmissions == null) {
@@ -47,6 +54,12 @@ public class ExamSubmission extends Model {
         }
     }
 
+    /**
+     * Set the number of marks earned by the ExamSubmission (marks the
+     * ExamSubmission as dirty).
+     *
+     * @param marks number of marks earned
+     */
     public void setMarks(int marks) {
         this.marks = marks;
         UnitOfWork.getCurrent().registerDirty(this);

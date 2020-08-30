@@ -13,7 +13,7 @@ public class DateRange {
      * Create a DateRange.
      *
      * @param fromDate the from date for the DateRange
-     * @param toDate the to date for the DateRange
+     * @param toDate   the to date for the DateRange
      */
     public DateRange(Date fromDate, Date toDate) {
         this.fromDate = fromDate;

@@ -11,9 +11,9 @@ public class ShortAnswerQuestion extends Question {
     /**
      * Create a ShortAnswerQuestion with an ID.
      *
-     * @param id ID of the ShortAnswerQuestion
+     * @param id       ID of the ShortAnswerQuestion
      * @param question question of the ShortAnswerQuestion
-     * @param marks number of marks allocated to the ShortAnswerQuestion
+     * @param marks    number of marks allocated to the ShortAnswerQuestion
      */
     public ShortAnswerQuestion(UUID id, String question, int marks) {
         super(id, question, marks);
@@ -23,7 +23,7 @@ public class ShortAnswerQuestion extends Question {
      * Create a ShortAnswerQuestion without an ID (registers as new).
      *
      * @param question question of the ShortAnswerQuestion
-     * @param marks number of marks allocated to the ShortAnswerQuestion
+     * @param marks    number of marks allocated to the ShortAnswerQuestion
      */
     public ShortAnswerQuestion(String question, int marks) {
         super(question, marks);
