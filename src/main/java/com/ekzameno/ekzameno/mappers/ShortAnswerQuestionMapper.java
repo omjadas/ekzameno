@@ -8,6 +8,7 @@ import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 
 public class ShortAnswerQuestionMapper
         extends AbstractQuestionMapper<ShortAnswerQuestion> {
+    @Override
     protected ShortAnswerQuestion load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String question = rs.getString("question");
@@ -15,6 +16,7 @@ public class ShortAnswerQuestionMapper
         return new ShortAnswerQuestion(id, question, marks);
     }
 
+    @Override
     protected String getType() {
         return ShortAnswerQuestion.TYPE;
     }

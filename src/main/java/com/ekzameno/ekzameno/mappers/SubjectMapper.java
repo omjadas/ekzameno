@@ -64,6 +64,7 @@ public class SubjectMapper extends Mapper<Subject> {
         }
     }
 
+    @Override
     public void insert(Subject subject) throws SQLException {
         String query = "INSERT INTO " + tableName + " (id, name) VALUES (?,?)";
 
@@ -79,6 +80,7 @@ public class SubjectMapper extends Mapper<Subject> {
         }
     }
 
+    @Override
     public void update(Subject subject) throws SQLException {
         String query = "UPDATE " + tableName + " SET name = ? WHERE id = ?";
 
@@ -92,12 +94,14 @@ public class SubjectMapper extends Mapper<Subject> {
         }
     }
 
+    @Override
     protected Subject load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
         return new Subject(id, name);
     }
 
+    @Override
     protected String getTableName() {
         return tableName;
     }

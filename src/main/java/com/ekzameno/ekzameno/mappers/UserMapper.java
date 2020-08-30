@@ -9,11 +9,13 @@ import com.ekzameno.ekzameno.models.Student;
 import com.ekzameno.ekzameno.models.User;
 
 public class UserMapper extends AbstractUserMapper<User> {
+    @Override
     public void insert(User obj) throws SQLException {
         Mapper<User> mapper = Mapper.getMapper(obj.getClass());
         mapper.insert(obj);
     }
 
+    @Override
     protected User load(ResultSet rs) throws SQLException {
         String type = rs.getString("type");
 
@@ -32,6 +34,7 @@ public class UserMapper extends AbstractUserMapper<User> {
         return (User) mapper.load(rs);
     }
 
+    @Override
     protected String getType() {
         return "";
     }

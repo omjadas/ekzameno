@@ -72,9 +72,11 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
 
             return questionSubmissions;
         }
-        }
+    }
 
-    public void insert(QuestionSubmission questionSubmission) throws SQLException {
+    @Override
+    public void insert(QuestionSubmission questionSubmission)
+            throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, answer) VALUES (?,?)";
 
@@ -93,7 +95,9 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         }
     }
 
-    public void update(QuestionSubmission questionSubmission) throws SQLException {
+    @Override
+    public void update(QuestionSubmission questionSubmission)
+            throws SQLException {
         String query = "UPDATE " + tableName +
             " SET answer = ? WHERE id = ?";
 
@@ -107,12 +111,14 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         }
     }
 
+    @Override
     protected QuestionSubmission load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String answer = rs.getString("answer");
         return new QuestionSubmission(id, answer);
     }
 
+    @Override
     protected String getTableName() {
         return tableName;
     }

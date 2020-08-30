@@ -31,7 +31,8 @@ public abstract class Question extends Model {
         return marks;
     }
 
-    public List<QuestionSubmission> getQuestionSubmissions() throws SQLException {
+    public List<QuestionSubmission> getQuestionSubmissions()
+            throws SQLException {
         if (questionSubmissions == null) {
             return new QuestionSubmissionMapper().findAllForQuestion(getId());
         } else {

@@ -37,6 +37,7 @@ public class StudentMapper extends AbstractUserMapper<Student> {
         }
     }
 
+    @Override
     protected Student load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String email = rs.getString("email");
@@ -45,6 +46,7 @@ public class StudentMapper extends AbstractUserMapper<Student> {
         return new Student(id, email, name, passwordHash);
     }
 
+    @Override
     protected String getType() {
         return Student.TYPE;
     }

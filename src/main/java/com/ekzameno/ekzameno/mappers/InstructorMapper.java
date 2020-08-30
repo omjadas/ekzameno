@@ -37,6 +37,7 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
         }
     }
 
+    @Override
     protected Instructor load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String email = rs.getString("email");
@@ -45,6 +46,7 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
         return new Instructor(id, email, name, passwordHash);
     }
 
+    @Override
     protected String getType() {
         return Instructor.TYPE;
     }

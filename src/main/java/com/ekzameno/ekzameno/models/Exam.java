@@ -60,7 +60,7 @@ public class Exam extends Model {
     }
 
     public void setPublishDate(Date publishDate) {
-        dateRange.setFromDate(publishDate);;
+        dateRange.setFromDate(publishDate);
         UnitOfWork.getCurrent().registerDirty(this);
     }
 

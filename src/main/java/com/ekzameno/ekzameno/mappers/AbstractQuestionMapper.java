@@ -13,6 +13,7 @@ public abstract class AbstractQuestionMapper<T extends Question>
         extends Mapper<T> {
     private static final String tableName = "question";
 
+    @Override
     public void insert(T obj) throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, question, marks, type) VALUES (?,?,?,?)";
@@ -31,6 +32,7 @@ public abstract class AbstractQuestionMapper<T extends Question>
         }
     }
 
+    @Override
     public void update(T obj) throws SQLException {
         String query = "UPDATE " + tableName +
             " SET question = ?, marks = ? WHERE id = ?";
@@ -46,6 +48,7 @@ public abstract class AbstractQuestionMapper<T extends Question>
         }
     }
 
+    @Override
     protected String getTableName() {
         return tableName;
     }

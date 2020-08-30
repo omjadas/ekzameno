@@ -8,6 +8,7 @@ import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 
 public class MultipleChoiceQuestionMapper
         extends AbstractQuestionMapper<MultipleChoiceQuestion> {
+    @Override
     protected MultipleChoiceQuestion load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String question = rs.getString("question");
@@ -15,6 +16,7 @@ public class MultipleChoiceQuestionMapper
         return new MultipleChoiceQuestion(id, question, marks);
     }
 
+    @Override
     protected String getType() {
         return MultipleChoiceQuestion.TYPE;
     }

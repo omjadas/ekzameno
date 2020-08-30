@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.models.Administrator;
 
 public class AdministratorMapper extends AbstractUserMapper<Administrator> {
+    @Override
     protected Administrator load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String email = rs.getString("email");
@@ -15,6 +16,7 @@ public class AdministratorMapper extends AbstractUserMapper<Administrator> {
         return new Administrator(id, email, name, passwordHash);
     }
 
+    @Override
     protected String getType() {
         return Administrator.TYPE;
     }

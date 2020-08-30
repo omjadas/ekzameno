@@ -5,7 +5,12 @@ import java.util.UUID;
 public class Administrator extends User {
     public static final String TYPE = "ADMINISTRATOR";
 
-    public Administrator(UUID id, String email, String name, String passwordHash) {
+    public Administrator(
+        UUID id,
+        String email,
+        String name,
+        String passwordHash
+    ) {
         super(id, email, name, passwordHash);
     }
 

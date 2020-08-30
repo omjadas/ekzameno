@@ -70,6 +70,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         }
     }
 
+    @Override
     public void insert(ExamSubmission examSubmission) throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, marks) VALUES (?,?)";
@@ -89,6 +90,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         }
     }
 
+    @Override
     public void update(ExamSubmission examSubmission) throws SQLException {
         String query = "UPDATE " + tableName +
             " SET marks = ? WHERE id = ?";
@@ -103,12 +105,14 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         }
     }
 
+    @Override
     protected ExamSubmission load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         int marks = rs.getInt("marks");
         return new ExamSubmission(id, marks);
     }
 
+    @Override
     protected String getTableName() {
         return tableName;
     }

@@ -30,8 +30,7 @@ public class UnitOfWork {
         return (
             dirtyObjects.contains(obj) ||
             deletedObjects.contains(obj) ||
-            newObjects.contains(obj)
-        );
+            newObjects.contains(obj));
     }
 
     public void registerNew(Model obj) {

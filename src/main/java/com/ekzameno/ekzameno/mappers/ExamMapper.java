@@ -40,6 +40,7 @@ public class ExamMapper extends Mapper<Exam> {
         }
     }
 
+    @Override
     public void insert(Exam exam) throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, name, publishDate, closeDate) " +
@@ -65,6 +66,7 @@ public class ExamMapper extends Mapper<Exam> {
         }
     }
 
+    @Override
     public void update(Exam exam) throws SQLException {
         String query = "UPDATE " + tableName +
             " SET name = ?, publishDate = ?, closeDate = ? " +
@@ -88,6 +90,7 @@ public class ExamMapper extends Mapper<Exam> {
         }
     }
 
+    @Override
     protected Exam load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
@@ -97,6 +100,7 @@ public class ExamMapper extends Mapper<Exam> {
         return new Exam(id, name, dateRange);
     }
 
+    @Override
     protected String getTableName() {
         return tableName;
     }

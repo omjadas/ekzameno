@@ -37,6 +37,7 @@ public class AnswerMapper extends Mapper<Answer> {
         }
     }
 
+    @Override
     public void insert(Answer answer) throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, answer) VALUES (?,?)";
@@ -53,6 +54,7 @@ public class AnswerMapper extends Mapper<Answer> {
         }
     }
 
+    @Override
     public void update(Answer answer) throws SQLException {
         String query = "UPDATE " + tableName +
             " SET answer = ?, correct = ? WHERE id = ?";
@@ -68,6 +70,7 @@ public class AnswerMapper extends Mapper<Answer> {
         }
     }
 
+    @Override
     protected Answer load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String answer = rs.getString("answer");
@@ -75,6 +78,7 @@ public class AnswerMapper extends Mapper<Answer> {
         return new Answer(id, answer, correct);
     }
 
+    @Override
     protected String getTableName() {
         return tableName;
     }

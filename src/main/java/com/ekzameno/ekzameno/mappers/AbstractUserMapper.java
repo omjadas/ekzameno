@@ -12,6 +12,7 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     private static final String tableName = "user";
 
+    @Override
     public void insert(T user) throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, email, name, passwordHash, type) VALUES (?,?,?)";
@@ -31,6 +32,7 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
         }
     }
 
+    @Override
     public void update(T user) throws SQLException {
         String query = "UPDATE " + tableName +
             " SET email = ?, name = ?, passwordHash = ? WHERE id = ?";
@@ -47,6 +49,7 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
         }
     }
 
+    @Override
     protected String getTableName() {
         return tableName;
     }

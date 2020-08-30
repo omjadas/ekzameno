@@ -37,11 +37,13 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
         }
     }
 
+    @Override
     public void insert(Question obj) throws SQLException {
         Mapper<Question> mapper = Mapper.getMapper(obj.getClass());
         mapper.insert(obj);
     }
 
+    @Override
     protected Question load(ResultSet rs) throws SQLException {
         String type = rs.getString("type");
 
@@ -58,6 +60,7 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
         return (Question) mapper.load(rs);
     }
 
+    @Override
     protected String getType() {
         return "";
     }
