@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
@@ -23,7 +24,8 @@ public class ExamMapper extends Mapper<Exam> {
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, UUID.randomUUID());
+            exam.setId(UUID.randomUUID());
+            statement.setObject(1, exam.getId());
             statement.setString(2, exam.getName());
             statement.setTimestamp(
                 3,
@@ -34,6 +36,7 @@ public class ExamMapper extends Mapper<Exam> {
                 new Timestamp(exam.getCloseDate().getTime())
             );
             statement.executeUpdate();
+            IdentityMap.getInstance().put(exam.getId(), exam);
         }
     }
 

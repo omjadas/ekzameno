@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     private static final String tableName = "user";
@@ -19,12 +20,14 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, UUID.randomUUID());
+            user.setId(UUID.randomUUID());
+            statement.setObject(1, user.getId());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getName());
             statement.setString(4, user.getPasswordHash());
             statement.setString(5, getType());
             statement.executeUpdate();
+            IdentityMap.getInstance().put(user.getId(), user);
         }
     }
 

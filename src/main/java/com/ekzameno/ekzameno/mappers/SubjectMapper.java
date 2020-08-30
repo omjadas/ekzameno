@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class SubjectMapper extends Mapper<Subject> {
     private static final String tableName = "subjects";
@@ -19,9 +20,11 @@ public class SubjectMapper extends Mapper<Subject> {
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, UUID.randomUUID());
+            subject.setId(UUID.randomUUID());
+            statement.setObject(1, subject.getId());
             statement.setString(2, subject.getName());
             statement.executeUpdate();
+            IdentityMap.getInstance().put(subject.getId(), subject);
         }
     }
 

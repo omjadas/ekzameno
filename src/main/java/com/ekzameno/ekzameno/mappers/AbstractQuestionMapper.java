@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public abstract class AbstractQuestionMapper<T extends Question>
         extends Mapper<T> {
@@ -20,11 +21,13 @@ public abstract class AbstractQuestionMapper<T extends Question>
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, UUID.randomUUID());
+            obj.setId(UUID.randomUUID());
+            statement.setObject(1, obj.getId());
             statement.setString(2, obj.getQuestion());
             statement.setInt(3, obj.getMarks());
             statement.setString(4, getType());
             statement.executeUpdate();
+            IdentityMap.getInstance().put(obj.getId(), obj);
         }
     }
 

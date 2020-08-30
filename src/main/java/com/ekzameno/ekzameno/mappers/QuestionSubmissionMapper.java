@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "questionSubmissions";
@@ -20,9 +21,14 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, UUID.randomUUID());
+            questionSubmission.setId(UUID.randomUUID());
+            statement.setObject(1, questionSubmission.getId());
             statement.setString(2, questionSubmission.getAnswer());
             statement.executeUpdate();
+            IdentityMap.getInstance().put(
+                questionSubmission.getId(),
+                questionSubmission
+            );
         }
     }
 

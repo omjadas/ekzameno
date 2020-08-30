@@ -20,4 +20,12 @@ public class IdentityMap {
     public Model get(UUID id) {
         return map.get(id);
     }
+
+    public void put(UUID id, Model obj) {
+        map.put(id, obj);
+    }
+
+    public void remove(UUID id) {
+        map.remove(id);
+    }
 }

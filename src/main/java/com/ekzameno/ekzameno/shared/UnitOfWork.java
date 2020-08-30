@@ -26,12 +26,16 @@ public class UnitOfWork {
         return current.get();
     }
 
-    private boolean oneContains(Model obj) {
-        return dirtyObjects.contains(obj) || deletedObjects.contains(obj) || newObjects.contains(obj);
+    private boolean objectInAnyList(Model obj) {
+        return (
+            dirtyObjects.contains(obj) ||
+            deletedObjects.contains(obj) ||
+            newObjects.contains(obj)
+        );
     }
 
     public void registerNew(Model obj) {
-        if (oneContains(obj)) {
+        if (objectInAnyList(obj)) {
             return;
         }
 
@@ -39,7 +43,7 @@ public class UnitOfWork {
     }
 
     public void registerDirty(Model obj) {
-        if (oneContains(obj)) {
+        if (objectInAnyList(obj)) {
             return;
         }
 

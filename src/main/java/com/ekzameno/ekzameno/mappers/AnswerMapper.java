@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Answer;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class AnswerMapper extends Mapper<Answer> {
     private static final String tableName = "answers";
@@ -20,9 +21,11 @@ public class AnswerMapper extends Mapper<Answer> {
             Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, UUID.randomUUID());
+            answer.setId(UUID.randomUUID());
+            statement.setObject(1, answer.getId());
             statement.setString(2, answer.getAnswer());
             statement.executeUpdate();
+            IdentityMap.getInstance().put(answer.getId(), answer);
         }
     }
 
