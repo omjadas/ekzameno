@@ -30,7 +30,9 @@ public class SubjectMapper extends Mapper<Subject> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                subjects.add(load(rs));
+                Subject subject = load(rs);
+                IdentityMap.getInstance().put(subject.getId(), subject);
+                subjects.add(subject);
             }
 
             return subjects;
@@ -53,7 +55,9 @@ public class SubjectMapper extends Mapper<Subject> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                subjects.add(load(rs));
+                Subject subject = load(rs);
+                IdentityMap.getInstance().put(subject.getId(), subject);
+                subjects.add(subject);
             }
 
             return subjects;

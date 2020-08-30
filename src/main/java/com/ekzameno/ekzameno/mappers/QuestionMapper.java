@@ -12,6 +12,7 @@ import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class QuestionMapper extends AbstractQuestionMapper<Question> {
     public List<Question> findAllForExam(UUID id) throws SQLException {
@@ -27,7 +28,9 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                questions.add(load(rs));
+                Question question = load(rs);
+                IdentityMap.getInstance().put(question.getId(), question);
+                questions.add(question);
             }
 
             return questions;

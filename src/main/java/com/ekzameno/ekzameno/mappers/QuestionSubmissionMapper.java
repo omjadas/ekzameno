@@ -30,6 +30,13 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
+                QuestionSubmission questionSubmission = load(rs);
+
+                IdentityMap.getInstance().put(
+                    questionSubmission.getId(),
+                    questionSubmission
+                );
+
                 questionSubmissions.add(load(rs));
             }
 
@@ -53,7 +60,14 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                questionSubmissions.add(load(rs));
+                QuestionSubmission questionSubmission = load(rs);
+
+                IdentityMap.getInstance().put(
+                    questionSubmission.getId(),
+                    questionSubmission
+                );
+
+                questionSubmissions.add(questionSubmission);
             }
 
             return questionSubmissions;

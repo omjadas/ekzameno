@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Student;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class StudentMapper extends AbstractUserMapper<Student> {
     public List<Student> findAllForSubject(UUID id) throws SQLException {
@@ -27,7 +28,9 @@ public class StudentMapper extends AbstractUserMapper<Student> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                students.add(load(rs));
+                Student student = load(rs);
+                IdentityMap.getInstance().put(student.getId(), student);
+                students.add(student);
             }
 
             return students;

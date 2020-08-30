@@ -28,7 +28,14 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                examSubmissions.add(load(rs));
+                ExamSubmission examSubmission = load(rs);
+
+                IdentityMap.getInstance().put(
+                    examSubmission.getId(),
+                    examSubmission
+                );
+
+                examSubmissions.add(examSubmission);
             }
 
             return examSubmissions;
@@ -49,7 +56,14 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                examSubmissions.add(load(rs));
+                ExamSubmission examSubmission = load(rs);
+
+                IdentityMap.getInstance().put(
+                    examSubmission.getId(),
+                    examSubmission
+                );
+
+                examSubmissions.add(examSubmission);
             }
 
             return examSubmissions;

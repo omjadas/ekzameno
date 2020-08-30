@@ -30,7 +30,9 @@ public class ExamMapper extends Mapper<Exam> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                exams.add(load(rs));
+                Exam exam = load(rs);
+                IdentityMap.getInstance().put(exam.getId(), exam);
+                exams.add(exam);
             }
 
             return exams;

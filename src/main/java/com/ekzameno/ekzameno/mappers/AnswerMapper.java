@@ -28,7 +28,9 @@ public class AnswerMapper extends Mapper<Answer> {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                answers.add(load(rs));
+                Answer answer = load(rs);
+                IdentityMap.getInstance().put(answer.getId(), answer);
+                answers.add(answer);
             }
 
             return answers;
