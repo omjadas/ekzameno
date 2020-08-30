@@ -9,6 +9,9 @@ import com.ekzameno.ekzameno.mappers.InstructorMapper;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Subjects that Instructors teach and Students enrol in.
+ */
 public class Subject extends Model {
     private String name;
     private List<Instructor> instructors = null;

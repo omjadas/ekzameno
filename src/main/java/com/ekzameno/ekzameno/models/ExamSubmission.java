@@ -7,6 +7,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Submission for an Exam.
+ */
 public class ExamSubmission extends Model {
     private int marks;
     private List<QuestionSubmission> questionSubmissions = null;

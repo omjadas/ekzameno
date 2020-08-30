@@ -9,6 +9,9 @@ import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Exam for a Subject.
+ */
 public class Exam extends Model {
     private String name;
     private DateRange dateRange;

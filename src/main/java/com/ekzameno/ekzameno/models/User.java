@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Users of the system.
+ */
 public abstract class User extends Model {
     private String email;
     private String name;

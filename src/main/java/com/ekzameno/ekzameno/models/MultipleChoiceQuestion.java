@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.AnswerMapper;
 
+/**
+ * MultipleChoiceQuestion for an Exam.
+ */
 public class MultipleChoiceQuestion extends Question {
     public static final String TYPE = "MULTIPLE_CHOICE";
     private List<Answer> answers = null;

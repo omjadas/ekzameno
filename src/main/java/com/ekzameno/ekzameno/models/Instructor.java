@@ -6,6 +6,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
 
+/**
+ * Instructor for a Subject.
+ */
 public class Instructor extends User {
     public static final String TYPE = "INSTRUCTOR";
     private List<Subject> subjects = null;

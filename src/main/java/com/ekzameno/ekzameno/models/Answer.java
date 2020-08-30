@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Answer for a MultipleChoiceQuestion.
+ */
 public class Answer extends Model {
     private String answer;
     private boolean correct;

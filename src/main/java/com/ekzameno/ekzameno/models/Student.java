@@ -7,6 +7,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
 
+/**
+ * Student able to enrol in Subjects and take Exams.
+ */
 public class Student extends User {
     public static final String TYPE = "STUDENT";
     private List<Subject> subjects = null;

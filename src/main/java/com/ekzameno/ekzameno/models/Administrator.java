@@ -2,6 +2,9 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.UUID;
 
+/**
+ * Administrator of the system.
+ */
 public class Administrator extends User {
     public static final String TYPE = "ADMINISTRATOR";
 

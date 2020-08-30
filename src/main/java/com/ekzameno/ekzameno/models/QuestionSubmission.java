@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Submission for a Question.
+ */
 public class QuestionSubmission extends Model {
     private String answer;
 

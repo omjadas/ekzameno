@@ -2,6 +2,9 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.Date;
 
+/**
+ * DateRange for an Exam.
+ */
 public class DateRange {
     private Date fromDate;
     private Date toDate;

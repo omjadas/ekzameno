@@ -10,7 +10,7 @@ public class DBConnection {
     );
 
     /**
-     * Retrieve connection to the Database;
+     * Retrieve connection to the Database.
      *
      * @return connection to the database
      * @throws SQLException if unable to connect to the database

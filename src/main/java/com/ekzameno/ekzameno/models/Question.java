@@ -7,6 +7,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Question for an Exam.
+ */
 public abstract class Question extends Model {
     private String question;
     private int marks;

@@ -2,6 +2,9 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.UUID;
 
+/**
+ * ShortAnswerQuestion for an Exam.
+ */
 public class ShortAnswerQuestion extends Question {
     public static final String TYPE = "SHORT_ANSWER";
 

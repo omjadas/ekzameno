@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
+/**
+ * Base Model class.
+ */
 public abstract class Model {
     private UUID id;
 
@@ -11,7 +14,7 @@ public abstract class Model {
      * Create a model without an ID (registers as new).
      */
     public Model() {
-        UnitOfWork.getCurrent().registerNew(this);;
+        UnitOfWork.getCurrent().registerNew(this);
     }
 
     /**
