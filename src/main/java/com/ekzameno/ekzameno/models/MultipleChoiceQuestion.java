@@ -10,10 +10,23 @@ public class MultipleChoiceQuestion extends Question {
     public static final String TYPE = "MULTIPLE_CHOICE";
     private List<Answer> answers = null;
 
+    /**
+     * Create a MultipleChoiceQuestion with an ID.
+     *
+     * @param id ID of the MultipleChoiceQuestion
+     * @param question question of the MultipleChoiceQuestion
+     * @param marks number of marks allocated to the MultipleChoiceQuestion
+     */
     public MultipleChoiceQuestion(UUID id, String question, int marks) {
         super(id, question, marks);
     }
 
+    /**
+     * Create a MultipleChoiceQuestion without an ID (registers as new).
+     *
+     * @param question question of the MultipleChoiceQuestion
+     * @param marks number of marks allocated to the MultipleChoiceQuestion
+     */
     public MultipleChoiceQuestion(String question, int marks) {
         super(question, marks);
     }

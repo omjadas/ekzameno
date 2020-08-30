@@ -12,12 +12,25 @@ public abstract class Question extends Model {
     private int marks;
     private List<QuestionSubmission> questionSubmissions = null;
 
+    /**
+     * Create a Question with an ID.
+     *
+     * @param id ID of the Question
+     * @param question question of the Question
+     * @param marks number of marks allocated to the Question
+     */
     public Question(UUID id, String question, int marks) {
         super(id);
         this.question = question;
         this.marks = marks;
     }
 
+    /**
+     * Create a Question without an ID (registers as new).
+     *
+     * @param question question of the Question
+     * @param marks number of marks allocated to the Question
+     */
     public Question(String question, int marks) {
         this.question = question;
         this.marks = marks;

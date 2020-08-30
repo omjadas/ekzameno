@@ -6,6 +6,12 @@ public class DateRange {
     private Date fromDate;
     private Date toDate;
 
+    /**
+     * Create a DateRange.
+     *
+     * @param fromDate the from date for the DateRange
+     * @param toDate the to date for the DateRange
+     */
     public DateRange(Date fromDate, Date toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;

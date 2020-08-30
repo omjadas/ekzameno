@@ -15,12 +15,25 @@ public class Exam extends Model {
     private List<Question> questions = null;
     private List<ExamSubmission> examSubmissions = null;
 
+    /**
+     * Crete an exam with an ID.
+     *
+     * @param id ID of the exam
+     * @param name name of the exam
+     * @param dateRange date range of the exam
+     */
     public Exam(UUID id, String name, DateRange dateRange) {
         super(id);
         this.name = name;
         this.dateRange = dateRange;
     }
 
+    /**
+     * Create an exam without an ID (registers as new).
+     *
+     * @param name name of the exam
+     * @param dateRange date range of the exam
+     */
     public Exam(String name, DateRange dateRange) {
         this.name = name;
         this.dateRange = dateRange;

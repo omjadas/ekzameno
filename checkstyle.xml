@@ -57,7 +57,9 @@
         <module name="MethodName" />
         <module name="MethodParamPad" />
         <module name="MethodTypeParameterName" />
-        <module name="MissingJavadocMethod" />
+        <module name="MissingJavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true" />
+        </module>
         <module name="MissingJavadocType" />
         <module name="MissingSwitchDefault" />
         <module name="ModifierOrder" />

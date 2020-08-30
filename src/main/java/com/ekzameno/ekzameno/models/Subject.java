@@ -15,11 +15,22 @@ public class Subject extends Model {
     private List<Student> students = null;
     private List<Exam> exams = null;
 
+    /**
+     * Create a Subject with an ID.
+     *
+     * @param id ID of the Subject
+     * @param name name of the Subject
+     */
     public Subject(UUID id, String name) {
         super(id);
         this.name = name;
     }
 
+    /**
+     * Create a Subject without an ID (registers as new).
+     *
+     * @param name name of the Subject
+     */
     public Subject(String name) {
         this.name = name;
     }

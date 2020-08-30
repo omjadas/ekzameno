@@ -8,12 +8,25 @@ public class Answer extends Model {
     private String answer;
     private boolean correct;
 
+    /**
+     * Create an Answer with an ID.
+     *
+     * @param id ID of the Answer
+     * @param answer answer of the Answer
+     * @param correct whether the Answer is the correct answer for the question
+     */
     public Answer(UUID id, String answer, boolean correct) {
         super(id);
         this.answer = answer;
         this.correct = correct;
     }
 
+    /**
+     * Create an Answer without an ID (registers as new).
+     *
+     * @param answer answer of the Answer
+     * @param correct whether the Answer is the correct answer for the question
+     */
     public Answer(String answer, boolean correct) {
         this.answer = answer;
         this.correct = correct;

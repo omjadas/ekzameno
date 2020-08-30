@@ -11,11 +11,21 @@ public class ExamSubmission extends Model {
     private int marks;
     private List<QuestionSubmission> questionSubmissions = null;
 
+    /**
+     * Create an ExamSubmission with an ID.
+     *
+     * @param id ID of the ExamSubmission
+     * @param marks total number of marks for the ExamSubmission
+     */
     public ExamSubmission(UUID id, int marks) {
         super(id);
         this.marks = marks;
     }
 
+    /**
+     * Create an ExamSubmission without an ID (registers as new).
+     * @param marks total number of marks for the ExamSubmission.
+     */
     public ExamSubmission(int marks) {
         this.marks = marks;
     }
