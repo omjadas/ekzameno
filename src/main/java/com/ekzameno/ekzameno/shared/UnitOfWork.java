@@ -14,14 +14,22 @@ public class UnitOfWork {
     private List<Model> dirtyObjects = new ArrayList<>();
     private List<Model> deletedObjects = new ArrayList<>();
 
+    /**
+     * Create a new thread local UnitOfWork.
+     */
     public static void newCurrent() {
         setCurrent(new UnitOfWork());
     }
 
-    public static void setCurrent(UnitOfWork uow) {
+    private static void setCurrent(UnitOfWork uow) {
         current.set(uow);
     }
 
+    /**
+     * Retrieve the thread local UnitOfWork.
+     *
+     * @return thread local UnitOfWork
+     */
     public static UnitOfWork getCurrent() {
         return current.get();
     }
@@ -33,6 +41,11 @@ public class UnitOfWork {
             newObjects.contains(obj));
     }
 
+    /**
+     * Register a new model.
+     *
+     * @param obj model to register
+     */
     public void registerNew(Model obj) {
         if (objectInAnyList(obj)) {
             return;
@@ -41,6 +54,11 @@ public class UnitOfWork {
         newObjects.add(obj);
     }
 
+    /**
+     * Register a dirty model.
+     *
+     * @param obj model to register
+     */
     public void registerDirty(Model obj) {
         if (objectInAnyList(obj)) {
             return;
@@ -49,6 +67,11 @@ public class UnitOfWork {
         dirtyObjects.add(obj);
     }
 
+    /**
+     * Register a deleted model.
+     *
+     * @param obj model to register
+     */
     public void registerDeleted(Model obj) {
         if (newObjects.remove(obj)) {
             return;
@@ -58,6 +81,11 @@ public class UnitOfWork {
         deletedObjects.add(obj);
     }
 
+    /**
+     * Commit changes to models.
+     *
+     * @throws SQLException if unable to commit changes
+     */
     public void commit() throws SQLException {
         for (Model obj : newObjects) {
             Mapper.getMapper(obj.getClass()).insert(obj);

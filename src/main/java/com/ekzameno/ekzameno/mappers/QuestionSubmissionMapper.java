@@ -15,6 +15,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "questionSubmissions";
 
+    /**
+     * Retrieve all questions submissions for a given exam submission ID.
+     *
+     * @param id ID of the exam submission to retrieve the question submissions
+     *           for
+     * @return questions submissions for the given exam submission
+     * @throws SQLException if unable to retrieve the question submissions
+     */
     public List<QuestionSubmission> findAllForExamSubmission(UUID id)
             throws SQLException {
         String query = "SELECT * FROM questionSubmissions " +
@@ -44,6 +52,13 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         }
     }
 
+    /**
+     * Retrieve all question submissions for a given question ID.
+     *
+     * @param id ID of the question to retrieve submissions for
+     * @return submissions for the given question
+     * @throws SQLException if unable to retrieve the question submissions
+     */
     public List<QuestionSubmission> findAllForQuestion(UUID id)
             throws SQLException {
         String query = "SELECT questionSubmissions.* " +
@@ -98,8 +113,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     @Override
     public void update(QuestionSubmission questionSubmission)
             throws SQLException {
-        String query = "UPDATE " + tableName +
-            " SET answer = ? WHERE id = ?";
+        String query = "UPDATE " + tableName + " SET answer = ? WHERE id = ?";
 
         try (
             Connection connection = DBConnection.getConnection();

@@ -13,12 +13,20 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public abstract class Mapper<T extends Model> {
-    public static <T extends Model> Mapper<T> getMapper(Class<?> modelClass) {
+
+    /**
+     * Retrieve a Data Mapper for a given class.
+     *
+     * @param <T> generic type for the mapper
+     * @param klass class to retrieve a mapper for
+     * @return mapper for the given class
+     */
+    public static <T extends Model> Mapper<T> getMapper(Class<?> klass) {
         try {
             return (Mapper<T>) Class
                 .forName(
                     "com.ekzameno.ekzameno.mappers." +
-                    modelClass.getSimpleName() +
+                    klass.getSimpleName() +
                     "Mapper"
                 )
                 .getDeclaredConstructor()
@@ -28,6 +36,13 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
+    /**
+     * Find a model for a given ID.
+     *
+     * @param id ID of the model to find
+     * @return model with the given ID
+     * @throws SQLException if unable to retrieve the model
+     */
     public T find(UUID id) throws SQLException {
         IdentityMap identityMap = IdentityMap.getInstance();
         T obj = (T) identityMap.get(id);
@@ -52,6 +67,12 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
+    /**
+     * Find all models of a given type.
+     *
+     * @return all models of a given type
+     * @throws SQLException if unable to retrieve the models
+     */
     public List<T> findAll() throws SQLException {
         IdentityMap identityMap = IdentityMap.getInstance();
         String query = "SELECT * FROM " + getTableName();
@@ -73,6 +94,12 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
+    /**
+     * Save a model.
+     *
+     * @param obj model to save
+     * @throws SQLException if unable to save the model
+     */
     public void save(T obj) throws SQLException {
         if (obj.getId() == null) {
             insert(obj);
@@ -81,10 +108,28 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
+    /**
+     * Insert the given model.
+     *
+     * @param obj model to insert.
+     * @throws SQLException if unable to insert the model
+     */
     public abstract void insert(T obj) throws SQLException;
 
+    /**
+     * Update the given model.
+     *
+     * @param obj model to update
+     * @throws SQLException if unable to update the model
+     */
     public abstract void update(T obj) throws SQLException;
 
+    /**
+     * Delete the given model.
+     *
+     * @param obj model to delete.
+     * @throws SQLException if unable to delete the model
+     */
     public void delete(T obj) throws SQLException {
         String query = "DELETE FROM " + getTableName() + " WHERE id = ?";
 

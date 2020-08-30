@@ -15,6 +15,13 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     private static final String tableName = "examSubmissions";
 
+    /**
+     * Retrieve all exam submissions for a given exam ID.
+     *
+     * @param id ID of the exam to retrieve submissions for
+     * @return submissions for the given exam
+     * @throws SQLException if unable to retrieve the submissions
+     */
     public List<ExamSubmission> findAllForExam(UUID id) throws SQLException {
         String query = "SELECT * FROM examSubmissions WHERE examId = ?";
 
@@ -42,6 +49,13 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         }
     }
 
+    /**
+     * Retrieve all exam submissions for a given student ID.
+     *
+     * @param id ID of the student to retrieve submissions for
+     * @return submissions for the given student
+     * @throws SQLException if unable to retrieve the submissions
+     */
     public List<ExamSubmission> findAllForStudent(UUID id) throws SQLException {
         String query = "SELECT examSubmissions.* FROM examSubmissions " +
             "WHERE examSubmissions.userId = ?";

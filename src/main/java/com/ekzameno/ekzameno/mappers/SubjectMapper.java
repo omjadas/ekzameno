@@ -15,6 +15,13 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class SubjectMapper extends Mapper<Subject> {
     private static final String tableName = "subjects";
 
+    /**
+     * Retrieve all subjects for a given student ID.
+     *
+     * @param id ID of the student to retrieve subjects for
+     * @return subjects for the given student
+     * @throws SQLException if unable to retrieve the subjects
+     */
     public List<Subject> findAllForStudent(UUID id) throws SQLException {
         String query = "SELECT subjects.* FROM subjects " +
             "JOIN studentSubjects ON subjects.id = studentSubjects.subjectId " +
@@ -39,6 +46,13 @@ public class SubjectMapper extends Mapper<Subject> {
         }
     }
 
+    /**
+     * Retrieve subjects for a given instructor ID.
+     *
+     * @param id ID of the instructor to retrieve subjects for
+     * @return subjects for the given instructor
+     * @throws SQLException if unable to retrieve the subjects
+     */
     public List<Subject> findAllForInstructor(UUID id) throws SQLException {
         String query = "SELECT * FROM subjects " +
             "JOIN instructorSubjects ON " +

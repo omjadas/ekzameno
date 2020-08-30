@@ -15,6 +15,13 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class AnswerMapper extends Mapper<Answer> {
     private static final String tableName = "answers";
 
+    /**
+     * Retrieve all answers for a given question ID.
+     *
+     * @param id ID of the question to retrieve answers for
+     * @return answers for the given question
+     * @throws SQLException if unable to retrieve the answers
+     */
     public List<Answer> findAllForQuestion(UUID id) throws SQLException {
         String query = "SELECT * FROM answers WHERE questionId = ?";
 

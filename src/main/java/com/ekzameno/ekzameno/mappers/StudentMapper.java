@@ -13,6 +13,13 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class StudentMapper extends AbstractUserMapper<Student> {
+    /**
+     * Retrieve all students for a given subject ID.
+     *
+     * @param id ID of the subject to retrieve students for
+     * @return students for the given subject
+     * @throws SQLException if unable to retrieve the students
+     */
     public List<Student> findAllForSubject(UUID id) throws SQLException {
         String query = "SELECT users.* FROM users " +
             "JOIN instructorSubjects ON users.id = instructorSubjects.userId " +

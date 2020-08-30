@@ -15,6 +15,13 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
 public class QuestionMapper extends AbstractQuestionMapper<Question> {
+    /**
+     * Retrieve all questions for a given exam ID.
+     *
+     * @param id ID of the exam to retrieve questions for
+     * @return questions for the given exam
+     * @throws SQLException if unable to retrieve the questions
+     */
     public List<Question> findAllForExam(UUID id) throws SQLException {
         String query = "SELECT * FROM questions WHERE examId = ?";
 
@@ -38,9 +45,9 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
     }
 
     @Override
-    public void insert(Question obj) throws SQLException {
-        Mapper<Question> mapper = Mapper.getMapper(obj.getClass());
-        mapper.insert(obj);
+    public void insert(Question question) throws SQLException {
+        Mapper<Question> mapper = Mapper.getMapper(question.getClass());
+        mapper.insert(question);
     }
 
     @Override

@@ -18,6 +18,13 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
 
+    /**
+     * Retrieve all exams for a given subject ID.
+     *
+     * @param id ID of the subject to retrieve exams for
+     * @return exams for the given subject
+     * @throws SQLException if unable to retrieve the exams
+     */
     public List<Exam> findAllForSubject(UUID id) throws SQLException {
         String query = "SELECT * FROM exams WHERE subjectId = ?";
 

@@ -9,6 +9,12 @@ public class DBConnection {
         "JDBC_DATABASE_URL"
     );
 
+    /**
+     * Retrieve connection to the Database;
+     *
+     * @return connection to the database
+     * @throws SQLException if unable to connect to the database
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(connectionUrl);
     }
