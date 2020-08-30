@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
+import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 public class ExamSubmission extends Model {
     private int marks;
@@ -31,5 +32,10 @@ public class ExamSubmission extends Model {
         } else {
             return questionSubmissions;
         }
+    }
+
+    public void setMarks(int marks) {
+        this.marks = marks;
+        UnitOfWork.getCurrent().registerDirty(this);
     }
 }

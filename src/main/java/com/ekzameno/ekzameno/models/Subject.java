@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.InstructorMapper;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
+import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 public class Subject extends Model {
     private String name;
@@ -49,5 +50,10 @@ public class Subject extends Model {
         } else {
             return exams;
         }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        UnitOfWork.getCurrent().registerDirty(this);
     }
 }

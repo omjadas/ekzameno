@@ -2,6 +2,8 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.shared.UnitOfWork;
+
 public abstract class User extends Model {
     private String email;
     private String name;
@@ -30,5 +32,20 @@ public abstract class User extends Model {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+        UnitOfWork.getCurrent().registerDirty(this);
     }
 }

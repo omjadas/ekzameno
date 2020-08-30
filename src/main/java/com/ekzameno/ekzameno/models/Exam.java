@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
+import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 public class Exam extends Model {
     private String name;
@@ -54,5 +55,20 @@ public class Exam extends Model {
         } else {
             return examSubmissions;
         }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setCloseDate(Date closeDate) {
+        this.closeDate = closeDate;
+        UnitOfWork.getCurrent().registerDirty(this);
     }
 }

@@ -17,4 +17,9 @@ public class QuestionSubmission extends Model {
     public String getAnswer() {
         return answer;
     }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
 }

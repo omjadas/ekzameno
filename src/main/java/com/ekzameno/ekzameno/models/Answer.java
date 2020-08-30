@@ -2,6 +2,8 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.shared.UnitOfWork;
+
 public class Answer extends Model {
     private String answer;
     private boolean correct;
@@ -27,5 +29,11 @@ public class Answer extends Model {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
+        UnitOfWork.getCurrent().registerDirty(this);
     }
 }
