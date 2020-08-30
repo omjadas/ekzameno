@@ -44,7 +44,7 @@ public class AnswerMapper extends Mapper<Answer> {
     protected Answer load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String answer = rs.getString("answer");
-        Boolean correct = rs.getBoolean("correct");
+        boolean correct = rs.getBoolean("correct");
         return new Answer(id, answer, correct);
     }
 

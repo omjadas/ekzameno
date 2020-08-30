@@ -4,15 +4,15 @@ import java.util.UUID;
 
 public class Answer extends Model {
     private String answer;
-    private Boolean correct;
+    private boolean correct;
 
-    public Answer(UUID id, String answer, Boolean correct) {
+    public Answer(UUID id, String answer, boolean correct) {
         super(id);
         this.answer = answer;
         this.correct = correct;
     }
 
-    public Answer(String answer, Boolean correct) {
+    public Answer(String answer, boolean correct) {
         this.answer = answer;
         this.correct = correct;
     }
@@ -21,7 +21,7 @@ public class Answer extends Model {
         return answer;
     }
 
-    public Boolean isCorrect() {
+    public boolean isCorrect() {
         return correct;
     }
 
