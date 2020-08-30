@@ -11,22 +11,19 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 public class Exam extends Model {
     private String name;
-    private Date publishDate;
-    private Date closeDate;
+    private DateRange dateRange;
     private List<Question> questions = null;
     private List<ExamSubmission> examSubmissions = null;
 
-    public Exam(UUID id, String name, Date publishDate, Date closeDate) {
+    public Exam(UUID id, String name, DateRange dateRange) {
         super(id);
         this.name = name;
-        this.publishDate = publishDate;
-        this.closeDate = closeDate;
+        this.dateRange = dateRange;
     }
 
-    public Exam(String name, Date publishDate, Date closeDate) {
+    public Exam(String name, DateRange dateRange) {
         this.name = name;
-        this.publishDate = publishDate;
-        this.closeDate = closeDate;
+        this.dateRange = dateRange;
     }
 
     public String getName() {
@@ -34,11 +31,11 @@ public class Exam extends Model {
     }
 
     public Date getPublishDate() {
-        return publishDate;
+        return dateRange.getFromDate();
     }
 
     public Date getCloseDate() {
-        return closeDate;
+        return dateRange.getToDate();
     }
 
     public List<Question> getQuestions() throws SQLException {
@@ -63,12 +60,12 @@ public class Exam extends Model {
     }
 
     public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
+        dateRange.setFromDate(publishDate);;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
     public void setCloseDate(Date closeDate) {
-        this.closeDate = closeDate;
+        dateRange.setToDate(closeDate);
         UnitOfWork.getCurrent().registerDirty(this);
     }
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
@@ -92,10 +93,10 @@ public class ExamMapper extends Mapper<Exam> {
         String name = rs.getString("name");
         Date publishDate = rs.getTimestamp("publishDate");
         Date closeDate = rs.getTimestamp("closeDate");
-        return new Exam(id, name, publishDate, closeDate);
+        DateRange dateRange = new DateRange(publishDate, closeDate);
+        return new Exam(id, name, dateRange);
     }
 
-    @Override
     protected String getTableName() {
         return tableName;
     }
