@@ -23,8 +23,9 @@ public abstract class AbstractQuestionMapper<T extends Question>
         String query = "INSERT INTO " + tableName +
             " (id, question, marks, type) VALUES (?,?,?,?)";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             question.setId(UUID.randomUUID());
@@ -42,8 +43,9 @@ public abstract class AbstractQuestionMapper<T extends Question>
         String query = "UPDATE " + tableName +
             " SET question = ?, marks = ? WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, question.getQuestion());

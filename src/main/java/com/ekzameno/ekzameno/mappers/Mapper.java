@@ -54,9 +54,9 @@ public abstract class Mapper<T extends Model> {
         }
 
         String query = "SELECT * FROM " + getTableName() + " WHERE id = ?";
+        Connection connection = DBConnection.getInstance().getConnection();
 
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, id);
@@ -79,8 +79,9 @@ public abstract class Mapper<T extends Model> {
         IdentityMap identityMap = IdentityMap.getInstance();
         String query = "SELECT * FROM " + getTableName();
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
         ) {
@@ -135,8 +136,9 @@ public abstract class Mapper<T extends Model> {
     public void delete(T obj) throws SQLException {
         String query = "DELETE FROM " + getTableName() + " WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, obj.getId());

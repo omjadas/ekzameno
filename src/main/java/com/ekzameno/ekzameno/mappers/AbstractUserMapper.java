@@ -22,8 +22,9 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
         String query = "INSERT INTO " + tableName +
             " (id, email, name, passwordHash, type) VALUES (?,?,?)";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             user.setId(UUID.randomUUID());
@@ -42,8 +43,9 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
         String query = "UPDATE " + tableName +
             " SET email = ?, name = ?, passwordHash = ? WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, user.getEmail());

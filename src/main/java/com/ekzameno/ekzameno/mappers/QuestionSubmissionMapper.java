@@ -31,8 +31,9 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         String query = "SELECT * FROM questionSubmissions " +
             "WHERE examSubmissionId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<QuestionSubmission> questionSubmissions = new ArrayList<>();
@@ -68,8 +69,9 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             "FROM questionSubmissions " +
             "WHERE questionSubmissions.questionId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<QuestionSubmission> questionSubmissions = new ArrayList<>();
@@ -98,8 +100,9 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         String query = "INSERT INTO " + tableName +
             " (id, answer) VALUES (?,?)";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             questionSubmission.setId(UUID.randomUUID());
@@ -118,8 +121,9 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             throws SQLException {
         String query = "UPDATE " + tableName + " SET answer = ? WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, questionSubmission.getAnswer());

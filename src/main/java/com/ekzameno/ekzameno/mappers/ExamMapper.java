@@ -31,8 +31,9 @@ public class ExamMapper extends Mapper<Exam> {
     public List<Exam> findAllForSubject(UUID id) throws SQLException {
         String query = "SELECT * FROM exams WHERE subjectId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<Exam> exams = new ArrayList<>();
@@ -56,8 +57,9 @@ public class ExamMapper extends Mapper<Exam> {
             " (id, name, publishDate, closeDate) " +
             "VALUES (?,?,?,?)";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             exam.setId(UUID.randomUUID());
@@ -82,8 +84,9 @@ public class ExamMapper extends Mapper<Exam> {
             " SET name = ?, publishDate = ?, closeDate = ? " +
             "WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, exam.getName());

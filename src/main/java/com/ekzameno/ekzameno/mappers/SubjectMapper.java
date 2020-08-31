@@ -30,8 +30,9 @@ public class SubjectMapper extends Mapper<Subject> {
             "JOIN studentSubjects ON subjects.id = studentSubjects.subjectId " +
             "WHERE studentSubjects.userId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<Subject> subjects = new ArrayList<>();
@@ -62,8 +63,9 @@ public class SubjectMapper extends Mapper<Subject> {
             "subjects.id = instructorSubjects.subjectId " +
             "WHERE instructorSubjects.userId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<Subject> subjects = new ArrayList<>();
@@ -85,8 +87,9 @@ public class SubjectMapper extends Mapper<Subject> {
     public void insert(Subject subject) throws SQLException {
         String query = "INSERT INTO " + tableName + " (id, name) VALUES (?,?)";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             subject.setId(UUID.randomUUID());
@@ -101,8 +104,9 @@ public class SubjectMapper extends Mapper<Subject> {
     public void update(Subject subject) throws SQLException {
         String query = "UPDATE " + tableName + " SET name = ? WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, subject.getName());

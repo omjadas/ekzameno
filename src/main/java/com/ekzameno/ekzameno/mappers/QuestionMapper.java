@@ -28,8 +28,9 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
     public List<Question> findAllForExam(UUID id) throws SQLException {
         String query = "SELECT * FROM questions WHERE examId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<Question> questions = new ArrayList<>();

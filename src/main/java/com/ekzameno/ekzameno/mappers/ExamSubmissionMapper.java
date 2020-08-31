@@ -28,8 +28,9 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     public List<ExamSubmission> findAllForExam(UUID id) throws SQLException {
         String query = "SELECT * FROM examSubmissions WHERE examId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<ExamSubmission> examSubmissions = new ArrayList<>();
@@ -63,8 +64,9 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         String query = "SELECT examSubmissions.* FROM examSubmissions " +
             "WHERE examSubmissions.userId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<ExamSubmission> examSubmissions = new ArrayList<>();
@@ -92,8 +94,9 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         String query = "INSERT INTO " + tableName +
             " (id, marks) VALUES (?,?)";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             examSubmission.setId(UUID.randomUUID());
@@ -112,8 +115,9 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         String query = "UPDATE " + tableName +
             " SET marks = ? WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setInt(1, examSubmission.getMarks());

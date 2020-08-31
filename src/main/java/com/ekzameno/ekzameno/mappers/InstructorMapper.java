@@ -28,8 +28,9 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
             "JOIN instructorSubjects ON users.id = instructorSubjects.userId " +
             "WHERE instructorSubjects.subjectId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<Instructor> instructors = new ArrayList<>();

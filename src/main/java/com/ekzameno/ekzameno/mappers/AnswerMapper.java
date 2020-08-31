@@ -28,8 +28,9 @@ public class AnswerMapper extends Mapper<Answer> {
     public List<Answer> findAllForQuestion(UUID id) throws SQLException {
         String query = "SELECT * FROM answers WHERE questionId = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             List<Answer> answers = new ArrayList<>();
@@ -52,8 +53,9 @@ public class AnswerMapper extends Mapper<Answer> {
         String query = "INSERT INTO " + tableName +
             " (id, answer) VALUES (?,?)";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             answer.setId(UUID.randomUUID());
@@ -69,8 +71,9 @@ public class AnswerMapper extends Mapper<Answer> {
         String query = "UPDATE " + tableName +
             " SET answer = ?, correct = ? WHERE id = ?";
 
+        Connection connection = DBConnection.getInstance().getConnection();
+
         try (
-            Connection connection = DBConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, answer.getAnswer());
