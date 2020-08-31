@@ -1,88 +1,88 @@
 @startuml ER Diagram
 
-entity Users {
+entity users {
     * id : UUID <<generated>>
     --
     * email : TEXT
     * name : TEXT
-    * passwordHash : TEXT
+    * password_hash : TEXT
     * type : TEXT
 }
 
-entity Subjects {
+entity subjects {
     * id : UUID <<generated>>
     --
     * name : TEXT
 }
 
-entity Exams {
+entity exams {
     * id : UUID <<generated>>
     --
     * name : TEXT
-    * subjectId : UUID <<FK>>
-    publishDate : TIMESTAMP
-    closeDate : TIMESTAMP
+    * subject_id : UUID <<FK>>
+    publish_date : TIMESTAMP
+    close_date : TIMESTAMP
 }
 
-entity Questions {
+entity questions {
     * id : UUID <<generated>>
     --
     * question : TEXT
     * type : TEXT
     * marks : INTEGER
-    * examId : UUID <<FK>>
+    * exam_id : UUID <<FK>>
 }
 
-entity Answers {
+entity answers {
     * id : UUID <<generated>>
     --
     * answer : TEXT
     * correct : BOOLEAN
-    * questionId : UUID <<FK>>
+    * question_id : UUID <<FK>>
 }
 
-entity ExamSubmissions {
+entity exam_submissions {
     * id : UUID <<generated>>
     --
-    * userId : UUID <<FK>>
-    * examId : UUID <<FK>>
-    * marks : INTEGER
+    * user_id : UUID <<FK>>
+    * exam_id : UUID <<FK>>
+    marks : INTEGER
 }
 
-entity QuestionSubmissions {
+entity question_submissions {
     * id : UUID <<generated>>
     --
-    * answer : TEXT
-    * examSubmissionId : UUID <<FK>>
-    * questionId : UUID <<FK>>
+    answer : TEXT
+    * exam_submission_id : UUID <<FK>>
+    * question_id : UUID <<FK>>
 }
 
-entity InstructorSubjects {
+entity instructor_subjects {
     * id : UUID <<generated>>
     --
-    * userId : UUID <<FK>>
-    * subjectId : UUID <<FK>>
+    * user_id : UUID <<FK>>
+    * subject_id : UUID <<FK>>
 }
 
-entity StudentSubjects {
+entity student_subjects {
     * id : UUID <<generated>>
     --
-    * userId : UUID <<FK>>
-    * subjectId : UUID <<FK>>
+    * user_id : UUID <<FK>>
+    * subject_id : UUID <<FK>>
 }
 
-Subjects ||--o{ Exams
-Exams ||--|{ Questions
-Users ||--o{ ExamSubmissions
-Exams ||--o{ ExamSubmissions
-ExamSubmissions ||--o{ QuestionSubmissions
-Questions ||--o{ QuestionSubmissions
-Questions ||--o{ Answers
+subjects ||--o{ exams
+exams ||--|{ questions
+users ||--o{ exam_submissions
+exams ||--o{ exam_submissions
+examSubmissions ||--o{ question_submissions
+questions ||--o{ question_submissions
+questions ||--o{ answers
 
-Users ||--o{ InstructorSubjects
-Users ||--o{ StudentSubjects
+users ||--o{ instructor_subjects
+users ||--o{ student_subjects
 
-Subjects ||-|{ InstructorSubjects
-Subjects ||-|{ StudentSubjects
+subjects ||-|{ instructor_subjects
+subjects ||-|{ student_subjects
 
 @enduml

@@ -15,7 +15,7 @@ public class AdministratorMapper extends AbstractUserMapper<Administrator> {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String email = rs.getString("email");
         String name = rs.getString("name");
-        String passwordHash = rs.getString("passwordHash");
+        String passwordHash = rs.getString("password_hash");
         return new Administrator(id, email, name, passwordHash);
     }
 

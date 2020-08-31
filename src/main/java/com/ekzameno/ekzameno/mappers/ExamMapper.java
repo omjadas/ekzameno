@@ -29,7 +29,7 @@ public class ExamMapper extends Mapper<Exam> {
      * @throws SQLException if unable to retrieve the exams
      */
     public List<Exam> findAllForSubject(UUID id) throws SQLException {
-        String query = "SELECT * FROM exams WHERE subjectId = ?";
+        String query = "SELECT * FROM exams WHERE subject_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -54,7 +54,7 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void insert(Exam exam) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, name, publishDate, closeDate) " +
+            " (id, name, publish_date, close_date) " +
             "VALUES (?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
@@ -81,7 +81,7 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void update(Exam exam) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET name = ?, publishDate = ?, closeDate = ? " +
+            " SET name = ?, publish_date = ?, close_date = ? " +
             "WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
@@ -107,8 +107,8 @@ public class ExamMapper extends Mapper<Exam> {
     protected Exam load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
-        Date publishDate = rs.getTimestamp("publishDate");
-        Date closeDate = rs.getTimestamp("closeDate");
+        Date publishDate = rs.getTimestamp("publish_date");
+        Date closeDate = rs.getTimestamp("close_date");
         DateRange dateRange = new DateRange(publishDate, closeDate);
         return new Exam(id, name, dateRange);
     }

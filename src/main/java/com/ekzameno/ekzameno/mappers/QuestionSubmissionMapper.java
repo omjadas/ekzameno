@@ -16,7 +16,7 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
  * Data Mapper for QuestionSubmissions.
  */
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
-    private static final String tableName = "questionSubmissions";
+    private static final String tableName = "question_submissions";
 
     /**
      * Retrieve all questions submissions for a given exam submission ID.
@@ -28,8 +28,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
      */
     public List<QuestionSubmission> findAllForExamSubmission(UUID id)
             throws SQLException {
-        String query = "SELECT * FROM questionSubmissions " +
-            "WHERE examSubmissionId = ?";
+        String query = "SELECT * FROM " + tableName +
+            " WHERE exam_submission_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -65,9 +65,9 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
      */
     public List<QuestionSubmission> findAllForQuestion(UUID id)
             throws SQLException {
-        String query = "SELECT questionSubmissions.* " +
-            "FROM questionSubmissions " +
-            "WHERE questionSubmissions.questionId = ?";
+        String query = "SELECT question_submissions.* " +
+            "FROM question_submissions " +
+            "WHERE question_submissions.question_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 

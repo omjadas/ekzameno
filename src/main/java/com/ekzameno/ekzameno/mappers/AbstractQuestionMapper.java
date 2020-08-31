@@ -16,7 +16,7 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
  */
 public abstract class AbstractQuestionMapper<T extends Question>
         extends Mapper<T> {
-    private static final String tableName = "question";
+    private static final String tableName = "questions";
 
     @Override
     public void insert(T question) throws SQLException {

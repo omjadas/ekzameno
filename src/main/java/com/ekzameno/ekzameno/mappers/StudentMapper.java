@@ -25,8 +25,9 @@ public class StudentMapper extends AbstractUserMapper<Student> {
      */
     public List<Student> findAllForSubject(UUID id) throws SQLException {
         String query = "SELECT users.* FROM users " +
-            "JOIN instructorSubjects ON users.id = instructorSubjects.userId " +
-            "WHERE instructorSubjects.subjectId = ?";
+            "JOIN instructor_subjects " +
+            "ON users.id = instructor_subjects.user_id " +
+            "WHERE instructor_subjects.subject_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -53,7 +54,7 @@ public class StudentMapper extends AbstractUserMapper<Student> {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String email = rs.getString("email");
         String name = rs.getString("name");
-        String passwordHash = rs.getString("passwordHash");
+        String passwordHash = rs.getString("password_hash");
         return new Student(id, email, name, passwordHash);
     }
 

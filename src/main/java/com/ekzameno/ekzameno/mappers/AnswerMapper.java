@@ -26,7 +26,7 @@ public class AnswerMapper extends Mapper<Answer> {
      * @throws SQLException if unable to retrieve the answers
      */
     public List<Answer> findAllForQuestion(UUID id) throws SQLException {
-        String query = "SELECT * FROM answers WHERE questionId = ?";
+        String query = "SELECT * FROM " + tableName + " WHERE question_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 

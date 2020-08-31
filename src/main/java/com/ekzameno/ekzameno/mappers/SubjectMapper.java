@@ -27,8 +27,9 @@ public class SubjectMapper extends Mapper<Subject> {
      */
     public List<Subject> findAllForStudent(UUID id) throws SQLException {
         String query = "SELECT subjects.* FROM subjects " +
-            "JOIN studentSubjects ON subjects.id = studentSubjects.subjectId " +
-            "WHERE studentSubjects.userId = ?";
+            "JOIN student_subjects " +
+            "ON subjects.id = student_subjects.subject_id " +
+            "WHERE student_subjects.user_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -59,9 +60,9 @@ public class SubjectMapper extends Mapper<Subject> {
      */
     public List<Subject> findAllForInstructor(UUID id) throws SQLException {
         String query = "SELECT * FROM subjects " +
-            "JOIN instructorSubjects ON " +
-            "subjects.id = instructorSubjects.subjectId " +
-            "WHERE instructorSubjects.userId = ?";
+            "JOIN instructor_subjects ON " +
+            "subjects.id = instructor_subjects.subject_id " +
+            "WHERE instructor_subjects.user_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 

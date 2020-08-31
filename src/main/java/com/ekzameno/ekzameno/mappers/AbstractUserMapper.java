@@ -15,12 +15,12 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
  * @param <T> type of the users
  */
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
-    private static final String tableName = "user";
+    private static final String tableName = "users";
 
     @Override
     public void insert(T user) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, email, name, passwordHash, type) VALUES (?,?,?)";
+            " (id, email, name, password_hash, type) VALUES (?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -41,7 +41,7 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     @Override
     public void update(T user) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET email = ?, name = ?, passwordHash = ? WHERE id = ?";
+            " SET email = ?, name = ?, password_hash = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
