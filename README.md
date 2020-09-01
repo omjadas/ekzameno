@@ -13,13 +13,19 @@
 
 ## Development Workflow
 
-For the development workflow, the team as decided to follow a new feature logic.
+For the development workflow, the team has decided to follow a feature branch
+strategy.
 
-Each time an addition needs to be made to the code in the master branch, a new branch
-is to be created with a meaningful that incorporates the nature of the change and
-the name and number of the corresponding task in Jira, for example:
-  - feature/Login-11 (this task is a feature, Login, and is task number 11 in Jira)
-  - docs/Meeting_Notes_Sep_2 (this is a document, meeting notes from September second)
-  - bug/Fix_Login-24 (this task is a bug fix on the login feature, and is task number 24 in Jira)
+Each time an addition needs to be made to the code in the master branch, a new
+branch is to be created with a meaningful name that incorporates the nature of
+the change and the name and ID of the corresponding issue in Jira, for example:
 
-For each commit, the Conventional Commits standards (https://www.conventionalcommits.org/en/v1.0.0/) must be followed.
+- EKZ-11/feat/login (this task is a feature, its Jira issue ID is EKZ-11, and it
+  implements the login feature)
+- docs/meeting-notes-sep-2 (this is a documentation update for the meeting notes
+  from September second)
+- EKZ-24/fix/login (this is a bug fix for the login feature, with a Jira issue
+  ID of EKZ-24)
+
+For each commit, the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+standard must be followed.
