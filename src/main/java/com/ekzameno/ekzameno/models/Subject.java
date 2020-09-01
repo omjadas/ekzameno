@@ -1,12 +1,7 @@
 package com.ekzameno.ekzameno.models;
 
-import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.mappers.ExamMapper;
-import com.ekzameno.ekzameno.mappers.InstructorMapper;
-import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.proxies.ExamProxyList;
 import com.ekzameno.ekzameno.proxies.InstructorProxyList;
 import com.ekzameno.ekzameno.proxies.ProxyList;

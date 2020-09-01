@@ -1,11 +1,9 @@
 package com.ekzameno.ekzameno.models;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamMapper;
-import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.QuestionSubmissionQuestionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;

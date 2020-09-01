@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.shared.DBConnection;
-import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
  * Abstract Data Mapper for Questions.

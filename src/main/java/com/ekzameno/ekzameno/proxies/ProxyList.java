@@ -23,21 +23,21 @@ public abstract class ProxyList<T extends Model> {
     public boolean contains(T obj) throws SQLException {
         init();
         return models.contains(obj);
-    };
+    }
 
     public T get(int index) throws SQLException {
         init();
         return models.get(index);
-    };
+    }
 
     public int size() throws SQLException {
         init();
         return models.size();
-    };
+    }
 
     public void remove(T obj) throws SQLException {
         Mapper.getMapper(obj.getClass()).delete(obj);
-    };
+    }
 
     protected abstract void init() throws SQLException;
 }
