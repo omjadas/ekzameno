@@ -18,8 +18,16 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     private static final String tableName = "exam_submissions";
 
+    /**
+     * Find the ExamSubmission with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param examId    ID of the exam
+     * @return the ExamSubmission with the given relation IDs
+     * @throws SQLException if unable to retrieve the ExamSubmission
+     */
     public ExamSubmission findByRelationIds(
-        UUID userId,
+        UUID studentId,
         UUID examId
     ) throws SQLException {
         String query = "SELECT * FROM " + tableName +
@@ -30,7 +38,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, userId);
+            statement.setObject(1, studentId);
             statement.setObject(2, examId);
             ResultSet rs = statement.executeQuery();
             ExamSubmission examSubmission = load(rs);

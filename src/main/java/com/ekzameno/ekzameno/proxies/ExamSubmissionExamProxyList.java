@@ -10,8 +10,13 @@ import com.ekzameno.ekzameno.models.ExamSubmission;
  * Proxy list for ExamSubmissions owned by Exams.
  */
 public class ExamSubmissionExamProxyList extends ProxyList<ExamSubmission> {
-    public ExamSubmissionExamProxyList(UUID id) {
-        super(id);
+    /**
+     * Create an ExamSubmissionExamProxyList.
+     *
+     * @param examId ID of the exam the submissions are for
+     */
+    public ExamSubmissionExamProxyList(UUID examId) {
+        super(examId);
     }
 
     @Override

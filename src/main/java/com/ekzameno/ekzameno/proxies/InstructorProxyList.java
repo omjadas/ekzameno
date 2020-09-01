@@ -11,6 +11,11 @@ import com.ekzameno.ekzameno.models.Instructor;
  * Proxy list for Instructors.
  */
 public class InstructorProxyList extends ProxyList<Instructor> {
+    /**
+     * Create an InstructorProxyList.
+     *
+     * @param subjectId ID of the subject the instructors teach
+     */
     public InstructorProxyList(UUID subjectId) {
         super(subjectId);
     }

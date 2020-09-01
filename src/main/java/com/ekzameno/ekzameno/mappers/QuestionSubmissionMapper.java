@@ -18,6 +18,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "question_submissions";
 
+    /**
+     * Retrieve the QuestionSubmission with the given relation IDs.
+     *
+     * @param questionId       ID of the question
+     * @param examSubmissionId ID of the exam submission
+     * @return the QuestionSubmission with the specified relation IDs
+     * @throws SQLException if unable to retrieve the QuestionSubmission
+     */
     public QuestionSubmission findByRelationIds(
         UUID questionId,
         UUID examSubmissionId

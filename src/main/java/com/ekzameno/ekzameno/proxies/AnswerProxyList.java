@@ -10,6 +10,11 @@ import com.ekzameno.ekzameno.models.Answer;
  * Proxy list for Answers.
  */
 public class AnswerProxyList extends ProxyList<Answer> {
+    /**
+     * Create an AnswerProxyList.
+     *
+     * @param questionId ID of the question the answers belong to
+     */
     public AnswerProxyList(UUID questionId) {
         super(questionId);
     }

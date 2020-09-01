@@ -11,6 +11,11 @@ import com.ekzameno.ekzameno.models.QuestionSubmission;
  */
 public class QuestionSubmissionQuestionProxyList
         extends ProxyList<QuestionSubmission> {
+    /**
+     * Create a QuestionSubmissionQuestionProxyList.
+     *
+     * @param questionId ID of the question the questions submissions are for
+     */
     public QuestionSubmissionQuestionProxyList(UUID questionId) {
         super(questionId);
     }

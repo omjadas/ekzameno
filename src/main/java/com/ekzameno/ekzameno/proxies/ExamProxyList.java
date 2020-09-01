@@ -10,6 +10,11 @@ import com.ekzameno.ekzameno.models.Exam;
  * Proxy list for Exams.
  */
 public class ExamProxyList extends ProxyList<Exam> {
+    /**
+     * Create an ExamProxyList.
+     *
+     * @param subjectId ID of the subject the exams belong to
+     */
     public ExamProxyList(UUID subjectId) {
         super(subjectId);
     }

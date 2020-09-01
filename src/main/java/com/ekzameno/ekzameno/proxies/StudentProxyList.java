@@ -11,6 +11,11 @@ import com.ekzameno.ekzameno.models.Student;
  * Proxy list for students.
  */
 public class StudentProxyList extends ProxyList<Student> {
+    /**
+     * Create a StudentProxyList.
+     *
+     * @param subjectId ID of the subject the students are enrolled in
+     */
     public StudentProxyList(UUID subjectId) {
         super(subjectId);
     }

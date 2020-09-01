@@ -11,6 +11,11 @@ import com.ekzameno.ekzameno.models.Subject;
  * Proxy list for Subjects owned by Students.
  */
 public class SubjectStudentProxyList extends ProxyList<Subject> {
+    /**
+     * Create a SubjectStudentProxyList.
+     *
+     * @param studentId ID of the student the subjects are being taken by
+     */
     public SubjectStudentProxyList(UUID studentId) {
         super(studentId);
     }

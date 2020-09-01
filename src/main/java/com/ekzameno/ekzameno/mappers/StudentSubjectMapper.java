@@ -16,6 +16,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class StudentSubjectMapper extends Mapper<StudentSubject> {
     private static final String tableName = "student_subjects";
 
+    /**
+     * Retrieve the StudentSubject with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param subjectId ID of the subject
+     * @return the StudentSubject with the specified relation IDs
+     * @throws SQLException if unable to retrieve the StudentSubject
+     */
     public StudentSubject findByRelationIds(
         UUID studentId,
         UUID subjectId
@@ -78,6 +86,13 @@ public class StudentSubjectMapper extends Mapper<StudentSubject> {
         }
     }
 
+    /**
+     * Delete the StudentSubject with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param subjectId ID of the subject
+     * @throws SQLException if unable to delete the StudentSubject
+     */
     public void deleteByRelationIds(
         UUID studentId,
         UUID subjectId

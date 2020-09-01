@@ -10,6 +10,11 @@ import com.ekzameno.ekzameno.models.Question;
  * Proxy list for Questions.
  */
 public class QuestionProxyList extends ProxyList<Question> {
+    /**
+     * Create a QuestionProxyList.
+     *
+     * @param examId ID of the exam the questions belong to
+     */
     public QuestionProxyList(UUID examId) {
         super(examId);
     }

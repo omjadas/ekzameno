@@ -11,6 +11,12 @@ import com.ekzameno.ekzameno.models.QuestionSubmission;
  */
 public class QuestionSubmissionExamSubmissionProxyList
         extends ProxyList<QuestionSubmission> {
+    /**
+     * Create a QuestionSubmissionExamSubmissionProxyList.
+     *
+     * @param examSubmissionId ID of the exam submissions the question
+     *                         submissions belong to
+     */
     public QuestionSubmissionExamSubmissionProxyList(UUID examSubmissionId) {
         super(examSubmissionId);
     }
@@ -19,7 +25,7 @@ public class QuestionSubmissionExamSubmissionProxyList
     protected void init() throws SQLException {
         if (models == null) {
             models = new QuestionSubmissionMapper()
-                .findAllForExamSubmission(id);
+                    .findAllForExamSubmission(id);
         }
     }
 }
