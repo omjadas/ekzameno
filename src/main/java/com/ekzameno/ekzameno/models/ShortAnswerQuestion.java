@@ -15,8 +15,13 @@ public class ShortAnswerQuestion extends Question {
      * @param question question of the ShortAnswerQuestion
      * @param marks    number of marks allocated to the ShortAnswerQuestion
      */
-    public ShortAnswerQuestion(UUID id, String question, int marks) {
-        super(id, question, marks);
+    public ShortAnswerQuestion(
+        UUID id,
+        String question,
+        int marks,
+        UUID examId
+    ) {
+        super(id, question, marks, examId);
     }
 
     /**
@@ -25,7 +30,7 @@ public class ShortAnswerQuestion extends Question {
      * @param question question of the ShortAnswerQuestion
      * @param marks    number of marks allocated to the ShortAnswerQuestion
      */
-    public ShortAnswerQuestion(String question, int marks) {
-        super(question, marks);
+    public ShortAnswerQuestion(String question, int marks, UUID examId) {
+        super(question, marks, examId);
     }
 }

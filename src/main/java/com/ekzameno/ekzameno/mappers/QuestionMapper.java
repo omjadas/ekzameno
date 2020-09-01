@@ -49,12 +49,6 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
     }
 
     @Override
-    public void insert(Question question) throws SQLException {
-        Mapper<Question> mapper = Mapper.getMapper(question.getClass());
-        mapper.insert(question);
-    }
-
-    @Override
     protected Question load(ResultSet rs) throws SQLException {
         String type = rs.getString("type");
 

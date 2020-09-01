@@ -54,8 +54,8 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void insert(Exam exam) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, name, publish_date, close_date) " +
-            "VALUES (?,?,?,?)";
+            " (id, name, publish_date, close_date, subject_id) " +
+            "VALUES (?,?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -72,6 +72,7 @@ public class ExamMapper extends Mapper<Exam> {
                 4,
                 new Timestamp(exam.getCloseDate().getTime())
             );
+            statement.setObject(5, exam.getSubjectId());
             statement.executeUpdate();
             IdentityMap.getInstance().put(exam.getId(), exam);
         }
@@ -80,7 +81,7 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void update(Exam exam) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET name = ?, publish_date = ?, close_date = ? " +
+            " SET name = ?, publish_date = ?, close_date = ?, subject_id = ? " +
             "WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
@@ -97,7 +98,8 @@ public class ExamMapper extends Mapper<Exam> {
                 3,
                 new Timestamp(exam.getCloseDate().getTime())
             );
-            statement.setObject(4, exam.getId());
+            statement.setObject(4, exam.getSubjectId());
+            statement.setObject(5, exam.getId());
             statement.executeUpdate();
         }
     }
@@ -109,7 +111,8 @@ public class ExamMapper extends Mapper<Exam> {
         Date publishDate = rs.getTimestamp("publish_date");
         Date closeDate = rs.getTimestamp("close_date");
         DateRange dateRange = new DateRange(publishDate, closeDate);
-        return new Exam(id, name, dateRange);
+        UUID subjectId = rs.getObject("subject_id", java.util.UUID.class);
+        return new Exam(id, name, dateRange, subjectId);
     }
 
     @Override

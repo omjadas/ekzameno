@@ -1,7 +1,9 @@
 package com.ekzameno.ekzameno.models;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -10,6 +12,8 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 public class Answer extends Model {
     private String answer;
     private boolean correct;
+    private UUID questionId;
+    private Question question = null;
 
     /**
      * Create an Answer with an ID.
@@ -18,10 +22,11 @@ public class Answer extends Model {
      * @param answer  answer of the Answer
      * @param correct whether the Answer is the correct answer for the question
      */
-    public Answer(UUID id, String answer, boolean correct) {
+    public Answer(UUID id, String answer, boolean correct, UUID questionId) {
         super(id);
         this.answer = answer;
         this.correct = correct;
+        this.questionId = questionId;
     }
 
     /**
@@ -30,9 +35,10 @@ public class Answer extends Model {
      * @param answer  answer of the Answer
      * @param correct whether the Answer is the correct answer for the question
      */
-    public Answer(String answer, boolean correct) {
+    public Answer(String answer, boolean correct, UUID questionId) {
         this.answer = answer;
         this.correct = correct;
+        this.questionId = questionId;
     }
 
     public String getAnswer() {
@@ -60,6 +66,29 @@ public class Answer extends Model {
      */
     public void setCorrect(boolean correct) {
         this.correct = correct;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public Question getQuestion() throws SQLException {
+        if (question == null) {
+            question = new QuestionMapper().find(questionId);
+        }
+        return question;
+    }
+
+    public UUID getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+        this.questionId = question.getId();
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setQuestionId(UUID questionId) {
+        this.questionId = questionId;
+        this.question = null;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 }

@@ -13,12 +13,6 @@ import com.ekzameno.ekzameno.models.User;
  */
 public class UserMapper extends AbstractUserMapper<User> {
     @Override
-    public void insert(User user) throws SQLException {
-        Mapper<User> mapper = Mapper.getMapper(user.getClass());
-        mapper.insert(user);
-    }
-
-    @Override
     protected User load(ResultSet rs) throws SQLException {
         String type = rs.getString("type");
 

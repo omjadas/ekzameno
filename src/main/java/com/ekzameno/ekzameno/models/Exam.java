@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
+import com.ekzameno.ekzameno.mappers.SubjectMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -17,6 +18,8 @@ public class Exam extends Model {
     private DateRange dateRange;
     private List<Question> questions = null;
     private List<ExamSubmission> examSubmissions = null;
+    private UUID subjectId;
+    private Subject subject = null;
 
     /**
      * Crete an exam with an ID.
@@ -25,10 +28,11 @@ public class Exam extends Model {
      * @param name      name of the exam
      * @param dateRange date range of the exam
      */
-    public Exam(UUID id, String name, DateRange dateRange) {
+    public Exam(UUID id, String name, DateRange dateRange, UUID subjectId) {
         super(id);
         this.name = name;
         this.dateRange = dateRange;
+        this.subjectId = subjectId;
     }
 
     /**
@@ -37,9 +41,10 @@ public class Exam extends Model {
      * @param name      name of the exam
      * @param dateRange date range of the exam
      */
-    public Exam(String name, DateRange dateRange) {
+    public Exam(String name, DateRange dateRange, UUID subjectId) {
         this.name = name;
         this.dateRange = dateRange;
+        this.subjectId = subjectId;
     }
 
     public String getName() {
@@ -109,6 +114,29 @@ public class Exam extends Model {
      */
     public void setCloseDate(Date closeDate) {
         dateRange.setToDate(closeDate);
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public UUID getSubjectId() {
+        return subjectId;
+    }
+
+    public Subject getSubject() throws SQLException {
+        if (subject == null) {
+            subject = new SubjectMapper().find(subjectId);
+        }
+        return subject;
+    }
+
+    public void setSubjectId(UUID subjectId) {
+        this.subjectId = subjectId;
+        this.subject = null;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+        this.subjectId = subject.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
 }

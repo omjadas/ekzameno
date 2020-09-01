@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
+import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -13,6 +15,10 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 public class ExamSubmission extends Model {
     private int marks;
     private List<QuestionSubmission> questionSubmissions = null;
+    private UUID studentId;
+    private UUID examId;
+    private Student student = null;
+    private Exam exam = null;
 
     /**
      * Create an ExamSubmission with an ID.
@@ -20,9 +26,11 @@ public class ExamSubmission extends Model {
      * @param id    ID of the ExamSubmission
      * @param marks total number of marks for the ExamSubmission
      */
-    public ExamSubmission(UUID id, int marks) {
+    public ExamSubmission(UUID id, int marks, UUID studentId, UUID examId) {
         super(id);
         this.marks = marks;
+        this.studentId = studentId;
+        this.examId = examId;
     }
 
     /**
@@ -30,8 +38,10 @@ public class ExamSubmission extends Model {
      *
      * @param marks total number of marks for the ExamSubmission.
      */
-    public ExamSubmission(int marks) {
+    public ExamSubmission(int marks, UUID studentId, UUID examId) {
         this.marks = marks;
+        this.studentId = studentId;
+        this.examId = examId;
     }
 
     public int getMarks() {
@@ -62,6 +72,40 @@ public class ExamSubmission extends Model {
      */
     public void setMarks(int marks) {
         this.marks = marks;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public UUID getStudentId() {
+        return studentId;
+    }
+
+    public UUID getExamId() {
+        return examId;
+    }
+
+    public Student getStudent() throws SQLException {
+        if (student == null) {
+            student = new StudentMapper().find(studentId);
+        }
+        return student;
+    }
+
+    public Exam getExam() throws SQLException {
+        if (exam == null) {
+            exam = new ExamMapper().find(examId);
+        }
+        return exam;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+        this.studentId = student.getId();
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
+        this.examId = student.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
 }

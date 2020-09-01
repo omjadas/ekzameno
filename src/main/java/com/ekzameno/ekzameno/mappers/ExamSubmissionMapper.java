@@ -92,7 +92,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     @Override
     public void insert(ExamSubmission examSubmission) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, marks) VALUES (?,?)";
+            " (id, marks, user_id, exam_id) VALUES (?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -101,6 +101,8 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         ) {
             statement.setObject(1, examSubmission.getId());
             statement.setInt(2, examSubmission.getMarks());
+            statement.setObject(3, examSubmission.getStudentId());
+            statement.setObject(4, examSubmission.getExamId());
             statement.executeUpdate();
             IdentityMap.getInstance().put(
                 examSubmission.getId(),
@@ -112,7 +114,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     @Override
     public void update(ExamSubmission examSubmission) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET marks = ? WHERE id = ?";
+            " SET marks = ?, user_id = ?, exam_id = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -120,7 +122,9 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setInt(1, examSubmission.getMarks());
-            statement.setObject(2, examSubmission.getId());
+            statement.setObject(2, examSubmission.getStudentId());
+            statement.setObject(3, examSubmission.getExamId());
+            statement.setObject(4, examSubmission.getId());
             statement.executeUpdate();
         }
     }
@@ -129,7 +133,9 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     protected ExamSubmission load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         int marks = rs.getInt("marks");
-        return new ExamSubmission(id, marks);
+        UUID studentId = rs.getObject("user_id", java.util.UUID.class);
+        UUID examId = rs.getObject("exam_id", java.util.UUID.class);
+        return new ExamSubmission(id, marks, studentId, examId);
     }
 
     @Override

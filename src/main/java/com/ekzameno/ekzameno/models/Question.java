@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
@@ -14,6 +15,8 @@ public abstract class Question extends Model {
     private String question;
     private int marks;
     private List<QuestionSubmission> questionSubmissions = null;
+    private UUID examId;
+    private Exam exam = null;
 
     /**
      * Create a Question with an ID.
@@ -22,10 +25,11 @@ public abstract class Question extends Model {
      * @param question question of the Question
      * @param marks    number of marks allocated to the Question
      */
-    public Question(UUID id, String question, int marks) {
+    public Question(UUID id, String question, int marks, UUID examId) {
         super(id);
         this.question = question;
         this.marks = marks;
+        this.examId = examId;
     }
 
     /**
@@ -34,9 +38,10 @@ public abstract class Question extends Model {
      * @param question question of the Question
      * @param marks    number of marks allocated to the Question
      */
-    public Question(String question, int marks) {
+    public Question(String question, int marks, UUID examId) {
         this.question = question;
         this.marks = marks;
+        this.examId = examId;
     }
 
     public String getQuestion() {
@@ -80,6 +85,29 @@ public abstract class Question extends Model {
      */
     public void setMarks(int marks) {
         this.marks = marks;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public UUID getExamId() {
+        return examId;
+    }
+
+    public Exam getExam() throws SQLException {
+        if (exam == null) {
+            exam = new ExamMapper().find(examId);
+        }
+        return exam;
+    }
+
+    public void setExamId(UUID examId) {
+        this.examId = examId;
+        this.exam = null;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
+        this.examId = exam.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
 }

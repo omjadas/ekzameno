@@ -16,7 +16,8 @@ public class MultipleChoiceQuestionMapper
         UUID id = rs.getObject("id", java.util.UUID.class);
         String question = rs.getString("question");
         int marks = rs.getInt("marks");
-        return new MultipleChoiceQuestion(id, question, marks);
+        UUID examId = rs.getObject("exam_id", java.util.UUID.class);
+        return new MultipleChoiceQuestion(id, question, marks, examId);
     }
 
     @Override

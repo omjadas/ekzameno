@@ -51,7 +51,7 @@ public class AnswerMapper extends Mapper<Answer> {
     @Override
     public void insert(Answer answer) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, answer) VALUES (?,?)";
+            " (id, answer, question_id) VALUES (?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -60,6 +60,7 @@ public class AnswerMapper extends Mapper<Answer> {
         ) {
             statement.setObject(1, answer.getId());
             statement.setString(2, answer.getAnswer());
+            statement.setObject(3, answer.getQuestionId());
             statement.executeUpdate();
             IdentityMap.getInstance().put(answer.getId(), answer);
         }
@@ -68,7 +69,7 @@ public class AnswerMapper extends Mapper<Answer> {
     @Override
     public void update(Answer answer) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET answer = ?, correct = ? WHERE id = ?";
+            " SET answer = ?, correct = ?, question_id = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -77,7 +78,8 @@ public class AnswerMapper extends Mapper<Answer> {
         ) {
             statement.setString(1, answer.getAnswer());
             statement.setBoolean(2, answer.isCorrect());
-            statement.setObject(3, answer.getId());
+            statement.setObject(3, answer.getQuestionId());
+            statement.setObject(4, answer.getId());
             statement.executeUpdate();
         }
     }
@@ -87,7 +89,8 @@ public class AnswerMapper extends Mapper<Answer> {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String answer = rs.getString("answer");
         boolean correct = rs.getBoolean("correct");
-        return new Answer(id, answer, correct);
+        UUID questionId = rs.getObject("question_id", java.util.UUID.class);
+        return new Answer(id, answer, correct, questionId);
     }
 
     @Override
