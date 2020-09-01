@@ -62,7 +62,6 @@ public class ExamMapper extends Mapper<Exam> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            exam.setId(UUID.randomUUID());
             statement.setObject(1, exam.getId());
             statement.setString(2, exam.getName());
             statement.setTimestamp(

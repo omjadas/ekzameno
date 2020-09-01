@@ -98,20 +98,6 @@ public abstract class Mapper<T extends Model> {
     }
 
     /**
-     * Save a model.
-     *
-     * @param obj model to save
-     * @throws SQLException if unable to save the model
-     */
-    public void save(T obj) throws SQLException {
-        if (obj.getId() == null) {
-            insert(obj);
-        } else {
-            update(obj);
-        }
-    }
-
-    /**
      * Insert the given model.
      *
      * @param obj model to insert.

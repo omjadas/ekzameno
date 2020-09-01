@@ -99,7 +99,6 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            examSubmission.setId(UUID.randomUUID());
             statement.setObject(1, examSubmission.getId());
             statement.setInt(2, examSubmission.getMarks());
             statement.executeUpdate();

@@ -93,7 +93,6 @@ public class SubjectMapper extends Mapper<Subject> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            subject.setId(UUID.randomUUID());
             statement.setObject(1, subject.getId());
             statement.setString(2, subject.getName());
             statement.executeUpdate();

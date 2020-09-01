@@ -14,6 +14,7 @@ public abstract class Model {
      * Create a model without an ID (registers as new).
      */
     public Model() {
+        this.id = UUID.randomUUID();
         UnitOfWork.getCurrent().registerNew(this);
     }
 

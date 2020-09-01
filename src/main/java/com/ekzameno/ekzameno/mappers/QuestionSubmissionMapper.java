@@ -105,7 +105,6 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            questionSubmission.setId(UUID.randomUUID());
             statement.setObject(1, questionSubmission.getId());
             statement.setString(2, questionSubmission.getAnswer());
             statement.executeUpdate();

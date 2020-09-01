@@ -3,7 +3,6 @@ package com.ekzameno.ekzameno.mappers;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -28,7 +27,6 @@ public abstract class AbstractQuestionMapper<T extends Question>
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            question.setId(UUID.randomUUID());
             statement.setObject(1, question.getId());
             statement.setString(2, question.getQuestion());
             statement.setInt(3, question.getMarks());

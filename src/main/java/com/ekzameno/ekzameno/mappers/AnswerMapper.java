@@ -58,7 +58,6 @@ public class AnswerMapper extends Mapper<Answer> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            answer.setId(UUID.randomUUID());
             statement.setObject(1, answer.getId());
             statement.setString(2, answer.getAnswer());
             statement.executeUpdate();

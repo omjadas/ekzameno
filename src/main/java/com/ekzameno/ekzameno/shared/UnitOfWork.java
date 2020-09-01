@@ -101,5 +101,7 @@ public class UnitOfWork {
         for (Model obj : deletedObjects) {
             Mapper.getMapper(obj.getClass()).delete(obj);
         }
+
+        DBConnection.getInstance().getConnection().commit();
     }
 }
