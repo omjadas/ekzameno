@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.AnswerMapper;
 import com.ekzameno.ekzameno.models.Answer;
 
+/**
+ * Proxy list for Answers.
+ */
 public class AnswerProxyList extends ProxyList<Answer> {
     public AnswerProxyList(UUID questionId) {
         super(questionId);

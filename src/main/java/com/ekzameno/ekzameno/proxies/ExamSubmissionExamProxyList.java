@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.models.ExamSubmission;
 
+/**
+ * Proxy list for ExamSubmissions owned by Exams.
+ */
 public class ExamSubmissionExamProxyList extends ProxyList<ExamSubmission> {
     public ExamSubmissionExamProxyList(UUID id) {
         super(id);

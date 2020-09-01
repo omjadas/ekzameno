@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.InstructorMapper;
 import com.ekzameno.ekzameno.models.Instructor;
 
+/**
+ * Proxy list for Instructors.
+ */
 public class InstructorProxyList extends ProxyList<Instructor> {
     public InstructorProxyList(UUID subjectId) {
         super(subjectId);

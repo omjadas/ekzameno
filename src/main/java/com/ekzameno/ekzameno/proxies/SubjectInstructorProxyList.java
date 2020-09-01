@@ -7,6 +7,9 @@ import com.ekzameno.ekzameno.mappers.InstructorSubjectMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
 import com.ekzameno.ekzameno.models.Subject;
 
+/**
+ * Proxy list for Subjects owned by Instructors.
+ */
 public class SubjectInstructorProxyList extends ProxyList<Subject> {
     public SubjectInstructorProxyList(UUID instructorId) {
         super(instructorId);

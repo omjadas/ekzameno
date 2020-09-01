@@ -10,6 +10,9 @@ import com.ekzameno.ekzameno.models.StudentSubject;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
+/**
+ * Data Mapper for StudentSubjects.
+ */
 public class StudentSubjectMapper extends Mapper<StudentSubject> {
     private static final String tableName = "student_subjects";
 

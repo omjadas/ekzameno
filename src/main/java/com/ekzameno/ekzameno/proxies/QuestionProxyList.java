@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.models.Question;
 
+/**
+ * Proxy list for Questions.
+ */
 public class QuestionProxyList extends ProxyList<Question> {
     public QuestionProxyList(UUID examId) {
         super(examId);

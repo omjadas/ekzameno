@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.Exam;
 
+/**
+ * Proxy list for Exams.
+ */
 public class ExamProxyList extends ProxyList<Exam> {
     public ExamProxyList(UUID subjectId) {
         super(subjectId);

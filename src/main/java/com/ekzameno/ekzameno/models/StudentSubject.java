@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
 
+/**
+ * Associative table for Students and Subjects.
+ */
 public class StudentSubject extends Model {
     private UUID studentId;
     private UUID subjectId;
