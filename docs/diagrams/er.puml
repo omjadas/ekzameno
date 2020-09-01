@@ -75,7 +75,7 @@ subjects ||--o{ exams
 exams ||--|{ questions
 users ||--o{ exam_submissions
 exams ||--o{ exam_submissions
-examSubmissions ||--o{ question_submissions
+exam_submissions ||--o{ question_submissions
 questions ||--o{ question_submissions
 questions ||--o{ answers
 

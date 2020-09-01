@@ -24,6 +24,7 @@ public abstract class Question extends Model {
      * @param id       ID of the Question
      * @param question question of the Question
      * @param marks    number of marks allocated to the Question
+     * @param examId   ID of the related exam
      */
     public Question(UUID id, String question, int marks, UUID examId) {
         super(id);
@@ -37,6 +38,7 @@ public abstract class Question extends Model {
      *
      * @param question question of the Question
      * @param marks    number of marks allocated to the Question
+     * @param examId   ID of the related exam
      */
     public Question(String question, int marks, UUID examId) {
         this.question = question;
@@ -92,6 +94,12 @@ public abstract class Question extends Model {
         return examId;
     }
 
+    /**
+     * Retrieve the related question.
+     *
+     * @return the related question
+     * @throws SQLException if unable to retrieve the question
+     */
     public Exam getExam() throws SQLException {
         if (exam == null) {
             exam = new ExamMapper().find(examId);
@@ -99,12 +107,22 @@ public abstract class Question extends Model {
         return exam;
     }
 
+    /**
+     * Set the ID of the related exam (marks the Question as dirty).
+     *
+     * @param examId ID of the related exam
+     */
     public void setExamId(UUID examId) {
         this.examId = examId;
         this.exam = null;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the related exam (marks the Question as dirty).
+     *
+     * @param exam related exam
+     */
     public void setExam(Exam exam) {
         this.exam = exam;
         this.examId = exam.getId();

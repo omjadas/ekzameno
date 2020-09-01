@@ -20,8 +20,10 @@ public class QuestionSubmission extends Model {
     /**
      * Create a QuestionSubmission with an ID.
      *
-     * @param id     ID of the QuestionSubmission
-     * @param answer answer for the QuestionSubmission
+     * @param id               ID of the QuestionSubmission
+     * @param answer           answer for the QuestionSubmission
+     * @param questionId       ID of the related question
+     * @param examSubmissionId ID of the related examSubmission
      */
     public QuestionSubmission(
             UUID id,
@@ -37,10 +39,18 @@ public class QuestionSubmission extends Model {
     /**
      * Create a QuestionSubmission without an ID (registers as new).
      *
-     * @param answer answer for the QuestionSubmission
+     * @param answer           answer for the QuestionSubmission
+     * @param questionId       ID of the related question
+     * @param examSubmissionId ID of the related examSubmission
      */
-    public QuestionSubmission(String answer) {
+    public QuestionSubmission(
+        String answer,
+        UUID questionId,
+        UUID examSubmissionId
+    ) {
         this.answer = answer;
+        this.questionId = questionId;
+        this.examSubmissionId = examSubmissionId;
     }
 
     public String getAnswer() {
@@ -66,6 +76,12 @@ public class QuestionSubmission extends Model {
         return examSubmissionId;
     }
 
+    /**
+     * Retrieve the related question.
+     *
+     * @return the related question
+     * @throws SQLException if unable to retrieve the question
+     */
     public Question getQuestion() throws SQLException {
         if (question == null) {
             question = new QuestionMapper().find(questionId);
@@ -73,6 +89,12 @@ public class QuestionSubmission extends Model {
         return question;
     }
 
+    /**
+     * Retrieve the related exam submission.
+     *
+     * @return the related exam submission.
+     * @throws SQLException if unable to retrieve the exam submission
+     */
     public ExamSubmission getExamSubmission() throws SQLException {
         if (examSubmission == null) {
             examSubmission = new ExamSubmissionMapper().find(examSubmissionId);
@@ -80,24 +102,46 @@ public class QuestionSubmission extends Model {
         return examSubmission;
     }
 
+    /**
+     * Set the ID of the related question (marks the QuestionSubmission as
+     * dirty).
+     *
+     * @param questionId ID of the related question
+     */
     public void setQuestionId(UUID questionId) {
         this.questionId = questionId;
         this.question = null;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the ID of the related exam submission (marks the QuestionSubmission
+     * as dirty).
+     *
+     * @param examSubmissionId ID of the related exam submission
+     */
     public void setExamSubmissionId(UUID examSubmissionId) {
         this.examSubmissionId = examSubmissionId;
         this.examSubmission = null;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the related question (marks the QuestionSubmission as dirty).
+     *
+     * @param question the related question
+     */
     public void setQuestion(Question question) {
         this.question = question;
         this.questionId = question.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the related exam submission (marks the QuestionSubmission as dirty).
+     *
+     * @param examSubmission the related exam submission
+     */
     public void setExamSubmission(ExamSubmission examSubmission) {
         this.examSubmission = examSubmission;
         this.examSubmissionId = examSubmission.getId();

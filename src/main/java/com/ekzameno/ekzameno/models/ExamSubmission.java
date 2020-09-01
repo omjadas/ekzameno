@@ -23,8 +23,10 @@ public class ExamSubmission extends Model {
     /**
      * Create an ExamSubmission with an ID.
      *
-     * @param id    ID of the ExamSubmission
-     * @param marks total number of marks for the ExamSubmission
+     * @param id        ID of the ExamSubmission
+     * @param marks     total number of marks for the ExamSubmission
+     * @param studentId ID of the related student
+     * @param examId    ID of the related exam
      */
     public ExamSubmission(UUID id, int marks, UUID studentId, UUID examId) {
         super(id);
@@ -36,7 +38,9 @@ public class ExamSubmission extends Model {
     /**
      * Create an ExamSubmission without an ID (registers as new).
      *
-     * @param marks total number of marks for the ExamSubmission.
+     * @param marks     total number of marks for the ExamSubmission.
+     * @param studentId ID of the related student
+     * @param examId    ID of the related exam
      */
     public ExamSubmission(int marks, UUID studentId, UUID examId) {
         this.marks = marks;
@@ -83,6 +87,12 @@ public class ExamSubmission extends Model {
         return examId;
     }
 
+    /**
+     * Retrieve related student for this ExamSubmission.
+     *
+     * @return related student for this ExamSubmission
+     * @throws SQLException if unable to retrieve the student
+     */
     public Student getStudent() throws SQLException {
         if (student == null) {
             student = new StudentMapper().find(studentId);
@@ -90,6 +100,12 @@ public class ExamSubmission extends Model {
         return student;
     }
 
+    /**
+     * Retrieve related exam for this ExamSubmission.
+     *
+     * @return related exam for this ExamSubmission
+     * @throws SQLException if unable to retrieve the exam
+     */
     public Exam getExam() throws SQLException {
         if (exam == null) {
             exam = new ExamMapper().find(examId);
@@ -97,12 +113,44 @@ public class ExamSubmission extends Model {
         return exam;
     }
 
+    /**
+     * Set the ID of the related student (marks the ExamSubmission as dirty).
+     *
+     * @param studentId ID of the related student
+     */
+    public void setStudentId(UUID studentId) {
+        this.studentId = studentId;
+        this.student = null;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    /**
+     * Set the ID of the related exam (marks the ExamSubmission as dirty).
+     *
+     * @param examId ID of the related exam
+     */
+    public void setExamId(UUID examId) {
+        this.examId = examId;
+        this.exam = null;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    /**
+     * Set the related student (marks the ExamSubmission as dirty).
+     *
+     * @param student related student
+     */
     public void setStudent(Student student) {
         this.student = student;
         this.studentId = student.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the related exam (marks the ExamSubmission as dirty).
+     *
+     * @param exam related exam
+     */
     public void setExam(Exam exam) {
         this.exam = exam;
         this.examId = student.getId();

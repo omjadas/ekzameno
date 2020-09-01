@@ -19,6 +19,7 @@ public class MultipleChoiceQuestion extends Question {
      * @param id       ID of the MultipleChoiceQuestion
      * @param question question of the MultipleChoiceQuestion
      * @param marks    number of marks allocated to the MultipleChoiceQuestion
+     * @param examId   ID of the related exam
      */
     public MultipleChoiceQuestion(
         UUID id,
@@ -34,6 +35,7 @@ public class MultipleChoiceQuestion extends Question {
      *
      * @param question question of the MultipleChoiceQuestion
      * @param marks    number of marks allocated to the MultipleChoiceQuestion
+     * @param examId   ID of the related exam
      */
     public MultipleChoiceQuestion(String question, int marks, UUID examId) {
         super(question, marks, examId);

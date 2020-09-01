@@ -27,6 +27,7 @@ public class Exam extends Model {
      * @param id        ID of the exam
      * @param name      name of the exam
      * @param dateRange date range of the exam
+     * @param subjectId ID of the related subject
      */
     public Exam(UUID id, String name, DateRange dateRange, UUID subjectId) {
         super(id);
@@ -40,6 +41,7 @@ public class Exam extends Model {
      *
      * @param name      name of the exam
      * @param dateRange date range of the exam
+     * @param subjectId ID of the related subject
      */
     public Exam(String name, DateRange dateRange, UUID subjectId) {
         this.name = name;
@@ -121,6 +123,12 @@ public class Exam extends Model {
         return subjectId;
     }
 
+    /**
+     * Retrieve the related subject.
+     *
+     * @return the related subject
+     * @throws SQLException if unable to retrieve the subject
+     */
     public Subject getSubject() throws SQLException {
         if (subject == null) {
             subject = new SubjectMapper().find(subjectId);
@@ -128,12 +136,22 @@ public class Exam extends Model {
         return subject;
     }
 
+    /**
+     * Set the ID of the related subject (marks the Exam as dirty).
+     *
+     * @param subjectId ID of the related subject
+     */
     public void setSubjectId(UUID subjectId) {
         this.subjectId = subjectId;
         this.subject = null;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the related subject (marks the Exam as dirty).
+     *
+     * @param subject the related subject.
+     */
     public void setSubject(Subject subject) {
         this.subject = subject;
         this.subjectId = subject.getId();

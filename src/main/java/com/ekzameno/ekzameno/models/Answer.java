@@ -18,9 +18,11 @@ public class Answer extends Model {
     /**
      * Create an Answer with an ID.
      *
-     * @param id      ID of the Answer
-     * @param answer  answer of the Answer
-     * @param correct whether the Answer is the correct answer for the question
+     * @param id         ID of the Answer
+     * @param answer     answer of the Answer
+     * @param correct    whether the Answer is the correct answer for the
+     *                   question
+     * @param questionId ID of the related question
      */
     public Answer(UUID id, String answer, boolean correct, UUID questionId) {
         super(id);
@@ -32,8 +34,10 @@ public class Answer extends Model {
     /**
      * Create an Answer without an ID (registers as new).
      *
-     * @param answer  answer of the Answer
-     * @param correct whether the Answer is the correct answer for the question
+     * @param answer     answer of the Answer
+     * @param correct    whether the Answer is the correct answer for the
+     *                   question
+     * @param questionId ID of the related question
      */
     public Answer(String answer, boolean correct, UUID questionId) {
         this.answer = answer;
@@ -69,6 +73,12 @@ public class Answer extends Model {
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Retrieve the related question.
+     *
+     * @return related question
+     * @throws SQLException if unable to retrieve the question
+     */
     public Question getQuestion() throws SQLException {
         if (question == null) {
             question = new QuestionMapper().find(questionId);
@@ -80,12 +90,22 @@ public class Answer extends Model {
         return questionId;
     }
 
+    /**
+     * Set the related question (marks the Answer as dirty).
+     *
+     * @param question relation question
+     */
     public void setQuestion(Question question) {
         this.question = question;
         this.questionId = question.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
+    /**
+     * Set the ID of the related question (marks the Answer as dirty).
+     *
+     * @param questionId ID of the related question
+     */
     public void setQuestionId(UUID questionId) {
         this.questionId = questionId;
         this.question = null;
