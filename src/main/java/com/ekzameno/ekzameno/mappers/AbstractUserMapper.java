@@ -32,7 +32,6 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
             statement.setString(4, user.getPasswordHash());
             statement.setString(5, getType());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(user.getId(), user);
         }
     }
 

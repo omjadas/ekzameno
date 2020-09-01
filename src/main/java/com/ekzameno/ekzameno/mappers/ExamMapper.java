@@ -74,7 +74,6 @@ public class ExamMapper extends Mapper<Exam> {
             );
             statement.setObject(5, exam.getSubjectId());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(exam.getId(), exam);
         }
     }
 

@@ -6,14 +6,16 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
+import com.ekzameno.ekzameno.proxies.ProxyList;
+import com.ekzameno.ekzameno.proxies.SubjectStudentProxyList;
 
 /**
  * Student able to enrol in Subjects and take Exams.
  */
 public class Student extends User {
     public static final String TYPE = "STUDENT";
-    private List<Subject> subjects = null;
-    private List<ExamSubmission> examSubmissions = null;
+    private ProxyList<Subject> subjects;
+    private ProxyList<ExamSubmission> examSubmissions;
 
     /**
      * Create a Student with an ID.
@@ -25,6 +27,7 @@ public class Student extends User {
      */
     public Student(UUID id, String email, String name, String passwordHash) {
         super(id, email, name, passwordHash);
+        this.subjects = new SubjectStudentProxyList(id);
     }
 
     /**
@@ -36,33 +39,24 @@ public class Student extends User {
      */
     public Student(String email, String name, String passwordHash) {
         super(email, name, passwordHash);
+        this.subjects = new SubjectStudentProxyList(getId());
     }
 
     /**
      * Retrieve the Subjects the Student is enrolled in.
      *
      * @return Subjects the Student is enrolled in
-     * @throws SQLException if unable to retrieve the Subjects
      */
-    public List<Subject> getSubjects() throws SQLException {
-        if (subjects == null) {
-            return new SubjectMapper().findAllForStudent(getId());
-        } else {
-            return subjects;
-        }
+    public ProxyList<Subject> getSubjects() {
+        return subjects;
     }
 
     /**
      * Retrieve the ExamSubmissions the Student has made.
      *
      * @return ExamSubmissions the Student has made
-     * @throws SQLException if unable to retrieve the ExamSubmissions
      */
-    public List<ExamSubmission> getExamSubmissions() throws SQLException {
-        if (examSubmissions == null) {
-            return new ExamSubmissionMapper().findAllForStudent(getId());
-        } else {
-            return examSubmissions;
-        }
+    public ProxyList<ExamSubmission> getExamSubmissions() {
+        return examSubmissions;
     }
 }

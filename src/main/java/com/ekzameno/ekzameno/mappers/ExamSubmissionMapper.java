@@ -18,6 +18,30 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     private static final String tableName = "exam_submissions";
 
+    public ExamSubmission findByRelationIds(
+        UUID userId,
+        UUID examId
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName +
+            " WHERE user_id = ? AND exam_id = ?";
+
+        Connection connection = DBConnection.getInstance().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            statement.setObject(1, userId);
+            statement.setObject(2, examId);
+            ResultSet rs = statement.executeQuery();
+            ExamSubmission examSubmission = load(rs);
+            IdentityMap.getInstance().put(
+                examSubmission.getId(),
+                examSubmission
+            );
+            return examSubmission;
+        }
+    }
+
     /**
      * Retrieve all exam submissions for a given exam ID.
      *
@@ -104,10 +128,6 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             statement.setObject(3, examSubmission.getStudentId());
             statement.setObject(4, examSubmission.getExamId());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(
-                examSubmission.getId(),
-                examSubmission
-            );
         }
     }
 

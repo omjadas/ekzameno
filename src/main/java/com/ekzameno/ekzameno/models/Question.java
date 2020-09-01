@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
+import com.ekzameno.ekzameno.proxies.ProxyList;
+import com.ekzameno.ekzameno.proxies.QuestionSubmissionQuestionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -14,7 +16,7 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 public abstract class Question extends Model {
     private String question;
     private int marks;
-    private List<QuestionSubmission> questionSubmissions = null;
+    private ProxyList<QuestionSubmission> questionSubmissions;
     private UUID examId;
     private Exam exam = null;
 
@@ -31,6 +33,7 @@ public abstract class Question extends Model {
         this.question = question;
         this.marks = marks;
         this.examId = examId;
+        this.questionSubmissions = new QuestionSubmissionQuestionProxyList(id);
     }
 
     /**
@@ -44,6 +47,9 @@ public abstract class Question extends Model {
         this.question = question;
         this.marks = marks;
         this.examId = examId;
+        this.questionSubmissions = new QuestionSubmissionQuestionProxyList(
+            getId()
+        );
     }
 
     public String getQuestion() {
@@ -58,15 +64,9 @@ public abstract class Question extends Model {
      * Retrieve submissions for the Question.
      *
      * @return submissions for the Question
-     * @throws SQLException if unable to retrieve the submissions
      */
-    public List<QuestionSubmission> getQuestionSubmissions()
-            throws SQLException {
-        if (questionSubmissions == null) {
-            return new QuestionSubmissionMapper().findAllForQuestion(getId());
-        } else {
-            return questionSubmissions;
-        }
+    public ProxyList<QuestionSubmission> getQuestionSubmissions() {
+        return questionSubmissions;
     }
 
     /**

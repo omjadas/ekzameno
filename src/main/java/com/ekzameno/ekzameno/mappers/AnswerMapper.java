@@ -62,7 +62,6 @@ public class AnswerMapper extends Mapper<Answer> {
             statement.setString(2, answer.getAnswer());
             statement.setObject(3, answer.getQuestionId());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(answer.getId(), answer);
         }
     }
 

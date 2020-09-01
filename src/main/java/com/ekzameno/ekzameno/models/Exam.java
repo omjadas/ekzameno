@@ -2,12 +2,12 @@ package com.ekzameno.ekzameno.models;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
-import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
+import com.ekzameno.ekzameno.proxies.ExamSubmissionExamProxyList;
+import com.ekzameno.ekzameno.proxies.ProxyList;
+import com.ekzameno.ekzameno.proxies.QuestionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -16,8 +16,8 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 public class Exam extends Model {
     private String name;
     private DateRange dateRange;
-    private List<Question> questions = null;
-    private List<ExamSubmission> examSubmissions = null;
+    private ProxyList<Question> questions;
+    private ProxyList<ExamSubmission> examSubmissions;
     private UUID subjectId;
     private Subject subject = null;
 
@@ -34,6 +34,8 @@ public class Exam extends Model {
         this.name = name;
         this.dateRange = dateRange;
         this.subjectId = subjectId;
+        this.questions = new QuestionProxyList(id);
+        this.examSubmissions = new ExamSubmissionExamProxyList(id);
     }
 
     /**
@@ -47,6 +49,8 @@ public class Exam extends Model {
         this.name = name;
         this.dateRange = dateRange;
         this.subjectId = subjectId;
+        this.questions = new QuestionProxyList(getId());
+        this.examSubmissions = new ExamSubmissionExamProxyList(getId());
     }
 
     public String getName() {
@@ -65,28 +69,18 @@ public class Exam extends Model {
      * Retrieve the Questions in the Exam.
      *
      * @return Questions in the Exam
-     * @throws SQLException if unable to retrieve the Questions
      */
-    public List<Question> getQuestions() throws SQLException {
-        if (questions == null) {
-            return new QuestionMapper().findAllForExam(getId());
-        } else {
-            return questions;
-        }
+    public ProxyList<Question> getQuestions() {
+        return questions;
     }
 
     /**
      * Retrieve the submissions for the Exam.
      *
      * @return submissions for the Exam
-     * @throws SQLException if unable to retrieve the submissions
      */
-    public List<ExamSubmission> getExamSubmissions() throws SQLException {
-        if (examSubmissions == null) {
-            return new ExamSubmissionMapper().findAllForExam(getId());
-        } else {
-            return examSubmissions;
-        }
+    public ProxyList<ExamSubmission> getExamSubmissions() {
+        return examSubmissions;
     }
 
     /**

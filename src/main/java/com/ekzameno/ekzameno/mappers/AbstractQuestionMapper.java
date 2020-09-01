@@ -33,7 +33,6 @@ public abstract class AbstractQuestionMapper<T extends Question>
             statement.setString(4, getType());
             statement.setObject(5, question.getExamId());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(question.getId(), question);
         }
     }
 

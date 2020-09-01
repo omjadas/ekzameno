@@ -2,6 +2,7 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.shared.IdentityMap;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -16,6 +17,7 @@ public abstract class Model {
     public Model() {
         this.id = UUID.randomUUID();
         UnitOfWork.getCurrent().registerNew(this);
+        IdentityMap.getInstance().put(id, this);
     }
 
     /**

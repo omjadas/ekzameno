@@ -96,7 +96,6 @@ public class SubjectMapper extends Mapper<Subject> {
             statement.setObject(1, subject.getId());
             statement.setString(2, subject.getName());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(subject.getId(), subject);
         }
     }
 
