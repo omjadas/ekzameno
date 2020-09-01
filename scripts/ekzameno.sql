@@ -54,7 +54,7 @@ CREATE TABLE instructor_subjects (
     subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
 );
 
-CREATE TABLE student_subjects (
+CREATE TABLE enrolments (
     id uuid PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES users ON DELETE CASCADE,
     subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,

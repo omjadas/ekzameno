@@ -3,8 +3,8 @@ package com.ekzameno.ekzameno.proxies;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.mappers.EnrolmentMapper;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
-import com.ekzameno.ekzameno.mappers.StudentSubjectMapper;
 import com.ekzameno.ekzameno.models.Student;
 
 /**
@@ -30,6 +30,6 @@ public class StudentProxyList extends ProxyList<Student> {
     @Override
     public void remove(Student student) throws SQLException {
         models.remove(student);
-        new StudentSubjectMapper().deleteByRelationIds(student.getId(), id);
+        new EnrolmentMapper().deleteByRelationIds(student.getId(), id);
     }
 }

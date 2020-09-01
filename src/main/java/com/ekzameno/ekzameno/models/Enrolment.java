@@ -10,32 +10,32 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 /**
  * Associative table for Students and Subjects.
  */
-public class StudentSubject extends Model {
+public class Enrolment extends Model {
     private UUID studentId;
     private UUID subjectId;
     private Student student = null;
     private Subject subject = null;
 
     /**
-     * Create a StudentSubject with an ID.
+     * Create an Enrolment with an ID.
      *
-     * @param id        ID of the StudentSubject
+     * @param id        ID of the enrolment
      * @param studentId ID of the student
      * @param subjectId ID of the subject
      */
-    public StudentSubject(UUID id, UUID studentId, UUID subjectId) {
+    public Enrolment(UUID id, UUID studentId, UUID subjectId) {
         super(id);
         this.studentId = studentId;
         this.subjectId = subjectId;
     }
 
     /**
-     * Create a StudentSubject with an ID.
+     * Create an Enrolment.
      *
      * @param studentId ID of the student
      * @param subjectId ID of the subject
      */
-    public StudentSubject(UUID studentId, UUID subjectId) {
+    public Enrolment(UUID studentId, UUID subjectId) {
         this.studentId = studentId;
         this.subjectId = subjectId;
     }
@@ -75,7 +75,7 @@ public class StudentSubject extends Model {
     }
 
     /**
-     * Set the ID of the associated student (marks the StudentSubject as dirty).
+     * Set the ID of the associated student (marks the Enrolment as dirty).
      *
      * @param studentId ID of the associated student
      */
@@ -86,7 +86,7 @@ public class StudentSubject extends Model {
     }
 
     /**
-     * Set the ID of the associated subject (marks the StudentSubject as dirty).
+     * Set the ID of the associated subject (marks the Enrolment as dirty).
      *
      * @param subjectId ID of the associated subject
      */
@@ -97,7 +97,7 @@ public class StudentSubject extends Model {
     }
 
     /**
-     * Set the associated Student (marks the StudentSubject as dirty).
+     * Set the associated Student (marks the Enrolment as dirty).
      *
      * @param student the associated student
      */
@@ -108,7 +108,7 @@ public class StudentSubject extends Model {
     }
 
     /**
-     * Set the associated subject (marks the StudentSubject as dirty).
+     * Set the associated subject (marks the Enrolment as dirty).
      *
      * @param subject the associated subject
      */

@@ -64,7 +64,7 @@ entity instructor_subjects {
     * subject_id : UUID <<FK>>
 }
 
-entity student_subjects {
+entity enrolments {
     * id : UUID <<generated>>
     --
     * user_id : UUID <<FK>>
@@ -80,9 +80,9 @@ questions ||--o{ question_submissions
 questions ||--o{ answers
 
 users ||--o{ instructor_subjects
-users ||--o{ student_subjects
+users ||--o{ enrolments
 
 subjects ||-|{ instructor_subjects
-subjects ||-|{ student_subjects
+subjects ||-|{ enrolments
 
 @enduml
