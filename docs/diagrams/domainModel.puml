@@ -16,7 +16,7 @@ class Question {}
 
 class ShortAnswerQuestion {}
 
-class MultipleChoiceQuestion
+class MultipleChoiceQuestion {}
 
 class Answer {}
 
