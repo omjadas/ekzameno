@@ -1,0 +1,50 @@
+@startuml
+
+class User {}
+
+class Student {}
+
+class Instructor {}
+
+class Administrator {}
+
+class Subject {}
+
+class Exam {}
+
+class Question {}
+
+class ShortAnswerQuestion {}
+
+class MultipleChoiceQuestion {}
+
+class Answer {}
+
+class ExamSubmission {}
+
+class QuestionSubmission {}
+
+Student --|> User
+Instructor --|> User
+Administrator --|> User
+
+Student "1..*" o--o "*" Subject
+Instructor "1..*" o--o "*" Subject
+
+ShortAnswerQuestion --|> Question
+MultipleChoiceQuestion --|> Question
+
+Student "1" *-- "*" ExamSubmission
+
+Subject "1" *-- "*" Exam
+
+Exam "1" *-- "*" Question
+Exam "1" *-- "*" ExamSubmission
+
+ExamSubmission "1" *-- "*" QuestionSubmission
+
+Question "1" *-- "*" QuestionSubmission
+
+MultipleChoiceQuestion "1" *-- "1..*" Answer
+
+@enduml
