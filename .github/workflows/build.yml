@@ -31,31 +31,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Build with Maven
-        run: |
-          mvn -B -T 1C verify --file pom.xml && \
-          echo "::set-env name=BUILD_STATE::successful"
-      - name: Failed Build
-        if: failure()
-        run: echo "::set-env name=BUILD_STATE::failed"
-      - name: Login to Jira
-        if: always()
-        uses: atlassian/gajira-login@master
-        env:
-          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-      - name: Find Jira Issue ID
-        id: jira_issue
-        if: always()
-        uses: atlassian/gajira-find-issue-key@master
-        with:
-          from: branch
-      - name: Update Jira Build Status
-        if: always() && steps.jira_issue.outputs.issue != ''
-        uses: HighwayThree/jira-upload-build-info@master
-        with:
-          build-state: "${{ env.BUILD_STATE }}"
-          client-id: '${{ secrets.JIRA_CLIENT_ID }}'
-          client-secret: '${{ secrets.JIRA_CLIENT_SECRET }}'
-          cloud-instance-base-url: '${{ secrets.JIRA_BASE_URL }}'
-          issue-keys: "${{ steps.jira_issue.outputs.issue }}"
+        run: mvn -B -T 1C verify --file pom.xml
