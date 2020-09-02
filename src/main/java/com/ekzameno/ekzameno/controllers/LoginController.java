@@ -1,4 +1,4 @@
-package com.ekzameno.ekzameno;
+package com.ekzameno.ekzameno.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,15 +13,8 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class LoginServlet.
  */
 @WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Constructor for the LoginServlet.
-     */
-    public LoginServlet() {
-        super();
-    }
 
     protected void doGet(
         HttpServletRequest request,

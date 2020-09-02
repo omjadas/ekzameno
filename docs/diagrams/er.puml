@@ -1,77 +1,88 @@
 @startuml ER Diagram
 
-entity Users {
-    * id : INTEGER <<generated>>
+entity users {
+    * id : UUID <<generated>>
     --
+    * email : TEXT
     * name : TEXT
-    * passwordHash : TEXT
+    * password_hash : TEXT
     * type : TEXT
 }
 
-entity Subjects {
-    * id : INTEGER <<generated>>
+entity subjects {
+    * id : UUID <<generated>>
     --
     * name : TEXT
 }
 
-entity Exams {
-    * id : INTEGER <<generated>>
+entity exams {
+    * id : UUID <<generated>>
     --
     * name : TEXT
-    * subjectId : INTEGER <<FK>>
-    * published : BOOLEAN
+    * subject_id : UUID <<FK>>
+    publish_date : TIMESTAMP
+    close_date : TIMESTAMP
 }
 
-entity Questions {
-    * id : INTEGER <<generated>>
+entity questions {
+    * id : UUID <<generated>>
     --
     * question : TEXT
     * type : TEXT
     * marks : INTEGER
-    * examId : INTEGER <<FK>>
+    * exam_id : UUID <<FK>>
 }
 
-entity ExamSubmissions {
-    * id : INTEGER <<generated>>
-    --
-    * userId : INTEGER <<FK>>
-    * examId : INTEGER <<FK>>
-    * marks : INTEGER
-}
-
-entity QuestionSubmissions {
-    * id : INTEGER <<generated>>
+entity answers {
+    * id : UUID <<generated>>
     --
     * answer : TEXT
-    * examSubmissionId : INTEGER <<FK>>
-    * questionId : INTEGER <<FK>>
+    * correct : BOOLEAN
+    * question_id : UUID <<FK>>
 }
 
-entity InstructorSubjects {
-    * id : INTEGER <<generated>>
+entity exam_submissions {
+    * id : UUID <<generated>>
     --
-    * userId : INTEGER <<FK>>
-    * subjectId : INTEGER <<FK>>
+    * user_id : UUID <<FK>>
+    * exam_id : UUID <<FK>>
+    marks : INTEGER
 }
 
-entity StudentSubjects {
-    * id : INTEGER <<generated>>
+entity question_submissions {
+    * id : UUID <<generated>>
     --
-    * userId : INTEGER <<FK>>
-    * subjectId : INTEGER <<FK>>
+    answer : TEXT
+    * exam_submission_id : UUID <<FK>>
+    * question_id : UUID <<FK>>
 }
 
-Subjects ||--o{ Exams
-Exams ||--|{ Questions
-Users ||--o{ ExamSubmissions
-Exams ||--o{ ExamSubmissions
-ExamSubmissions ||--o{ QuestionSubmissions
-Questions ||--o{ QuestionSubmissions
+entity instructor_subjects {
+    * id : UUID <<generated>>
+    --
+    * user_id : UUID <<FK>>
+    * subject_id : UUID <<FK>>
+}
 
-Users ||--o{ InstructorSubjects
-Users ||--o{ StudentSubjects
+entity student_subjects {
+    * id : UUID <<generated>>
+    --
+    * user_id : UUID <<FK>>
+    * subject_id : UUID <<FK>>
+}
 
-Subjects ||-|{ InstructorSubjects
-Subjects ||-|{ StudentSubjects
+subjects ||--o{ exams
+exams ||--|{ questions
+users ||--o{ exam_submissions
+exams ||--o{ exam_submissions
+exam_submissions ||--o{ question_submissions
+questions ||--o{ question_submissions
+questions ||--o{ answers
+
+users ||--o{ instructor_subjects
+users ||--o{ student_subjects
+
+subjects ||-|{ instructor_subjects
+subjects ||-|{ student_subjects
 
 @enduml
