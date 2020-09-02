@@ -19,6 +19,38 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     private static final String tableName = "exam_submissions";
 
     /**
+     * Find the ExamSubmission with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param examId    ID of the exam
+     * @return the ExamSubmission with the given relation IDs
+     * @throws SQLException if unable to retrieve the ExamSubmission
+     */
+    public ExamSubmission findByRelationIds(
+        UUID studentId,
+        UUID examId
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName +
+            " WHERE user_id = ? AND exam_id = ?";
+
+        Connection connection = DBConnection.getInstance().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            statement.setObject(1, studentId);
+            statement.setObject(2, examId);
+            ResultSet rs = statement.executeQuery();
+            ExamSubmission examSubmission = load(rs);
+            IdentityMap.getInstance().put(
+                examSubmission.getId(),
+                examSubmission
+            );
+            return examSubmission;
+        }
+    }
+
+    /**
      * Retrieve all exam submissions for a given exam ID.
      *
      * @param id ID of the exam to retrieve submissions for
@@ -104,10 +136,6 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             statement.setObject(3, examSubmission.getStudentId());
             statement.setObject(4, examSubmission.getExamId());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(
-                examSubmission.getId(),
-                examSubmission
-            );
         }
     }
 

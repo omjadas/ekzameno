@@ -27,9 +27,9 @@ public class SubjectMapper extends Mapper<Subject> {
      */
     public List<Subject> findAllForStudent(UUID id) throws SQLException {
         String query = "SELECT subjects.* FROM subjects " +
-            "JOIN student_subjects " +
-            "ON subjects.id = student_subjects.subject_id " +
-            "WHERE student_subjects.user_id = ?";
+            "JOIN enrolments " +
+            "ON subjects.id = enrolments.subject_id " +
+            "WHERE enrolments.user_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -96,7 +96,6 @@ public class SubjectMapper extends Mapper<Subject> {
             statement.setObject(1, subject.getId());
             statement.setString(2, subject.getName());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(subject.getId(), subject);
         }
     }
 

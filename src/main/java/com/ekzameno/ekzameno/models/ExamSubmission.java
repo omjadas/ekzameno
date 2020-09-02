@@ -1,12 +1,12 @@
 package com.ekzameno.ekzameno.models;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamMapper;
-import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
+import com.ekzameno.ekzameno.proxies.ProxyList;
+import com.ekzameno.ekzameno.proxies.QuestionSubmissionExamSubmissionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -14,7 +14,7 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  */
 public class ExamSubmission extends Model {
     private int marks;
-    private List<QuestionSubmission> questionSubmissions = null;
+    private ProxyList<QuestionSubmission> questionSubmissions;
     private UUID studentId;
     private UUID examId;
     private Student student = null;
@@ -33,6 +33,8 @@ public class ExamSubmission extends Model {
         this.marks = marks;
         this.studentId = studentId;
         this.examId = examId;
+        this.questionSubmissions =
+            new QuestionSubmissionExamSubmissionProxyList(id);
     }
 
     /**
@@ -46,6 +48,8 @@ public class ExamSubmission extends Model {
         this.marks = marks;
         this.studentId = studentId;
         this.examId = examId;
+        this.questionSubmissions =
+            new QuestionSubmissionExamSubmissionProxyList(getId());
     }
 
     public int getMarks() {
@@ -56,16 +60,9 @@ public class ExamSubmission extends Model {
      * Retrieve QuestionSubmissions for the ExamSubmission.
      *
      * @return QuestionSubmissions for the ExamSubmission
-     * @throws SQLException if unable to retrieve the QuestionSubmissions
      */
-    public List<QuestionSubmission> getQuestionSubmissions()
-            throws SQLException {
-        if (questionSubmissions == null) {
-            return new QuestionSubmissionMapper()
-                .findAllForExamSubmission(getId());
-        } else {
-            return questionSubmissions;
-        }
+    public ProxyList<QuestionSubmission> getQuestionSubmissions() {
+        return questionSubmissions;
     }
 
     /**

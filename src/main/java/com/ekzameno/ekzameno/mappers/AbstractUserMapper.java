@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.shared.DBConnection;
-import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
  * Abstract Data Mapper for Users.
@@ -32,7 +31,6 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
             statement.setString(4, user.getPasswordHash());
             statement.setString(5, getType());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(user.getId(), user);
         }
     }
 

@@ -19,6 +19,38 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "question_submissions";
 
     /**
+     * Retrieve the QuestionSubmission with the given relation IDs.
+     *
+     * @param questionId       ID of the question
+     * @param examSubmissionId ID of the exam submission
+     * @return the QuestionSubmission with the specified relation IDs
+     * @throws SQLException if unable to retrieve the QuestionSubmission
+     */
+    public QuestionSubmission findByRelationIds(
+        UUID questionId,
+        UUID examSubmissionId
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName +
+            " WHERE question_id = ? AND exam_submission_id = ?";
+
+        Connection connection = DBConnection.getInstance().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            statement.setObject(1, questionId);
+            statement.setObject(2, examSubmissionId);
+            ResultSet rs = statement.executeQuery();
+            QuestionSubmission questionSubmission = load(rs);
+            IdentityMap.getInstance().put(
+                questionSubmission.getId(),
+                questionSubmission
+            );
+            return questionSubmission;
+        }
+    }
+
+    /**
      * Retrieve all questions submissions for a given exam submission ID.
      *
      * @param id ID of the exam submission to retrieve the question submissions
@@ -110,10 +142,6 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             statement.setObject(3, questionSubmission.getExamSubmissionId());
             statement.setObject(4, questionSubmission.getQuestionId());
             statement.executeUpdate();
-            IdentityMap.getInstance().put(
-                questionSubmission.getId(),
-                questionSubmission
-            );
         }
     }
 
