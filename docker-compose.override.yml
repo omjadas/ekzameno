@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile.dev-server
     ports:
       - "8080:8080"
+    environment:
+      - "JDBC_DATABASE_URL=jdbc:postgresql://postgres:5432?user=postgres&password=postgres"
     volumes:
       - ./target:/app/target
       - maven_cache:/m2
