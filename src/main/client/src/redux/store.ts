@@ -1,7 +1,14 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import examsReducer from "./slices/examsSlice";
+import subjectsReducer from "./slices/subjectsSlice";
+import usersReducer from "./slices/usersSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    users: usersReducer,
+    exams: examsReducer,
+    subjects: subjectsReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
