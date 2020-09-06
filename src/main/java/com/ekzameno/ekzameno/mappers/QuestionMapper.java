@@ -54,9 +54,9 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
 
         Mapper<?> mapper;
 
-        if (type == MultipleChoiceQuestion.TYPE) {
+        if (type.equals(MultipleChoiceQuestion.TYPE)) {
             mapper = new MultipleChoiceQuestionMapper();
-        } else if (type == ShortAnswerQuestion.TYPE) {
+        } else if (type.equals(ShortAnswerQuestion.TYPE)) {
             mapper = new ShortAnswerQuestionMapper();
         } else {
             throw new RuntimeException();
