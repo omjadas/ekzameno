@@ -3,7 +3,10 @@
 ![Build](https://github.com/omjadas/swen90007-group1/workflows/Build/badge.svg?branch=master)
 ![Lint](https://github.com/omjadas/swen90007-group1/workflows/Lint/badge.svg?branch=master)
 
+## Table of Contents
+
 - [swen90007-group1](#swen90007-group1)
+  - [Table of Contents](#table-of-contents)
   - [Contributors](#contributors)
   - [Development Information](#development-information)
     - [Running Ekzameno](#running-ekzameno)
