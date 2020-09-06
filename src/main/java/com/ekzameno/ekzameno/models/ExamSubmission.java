@@ -92,7 +92,7 @@ public class ExamSubmission extends Model {
      */
     public Student getStudent() throws SQLException {
         if (student == null) {
-            student = new StudentMapper().find(studentId);
+            student = new StudentMapper().findById(studentId);
         }
         return student;
     }
@@ -105,7 +105,7 @@ public class ExamSubmission extends Model {
      */
     public Exam getExam() throws SQLException {
         if (exam == null) {
-            exam = new ExamMapper().find(examId);
+            exam = new ExamMapper().findById(examId);
         }
         return exam;
     }
