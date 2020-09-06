@@ -35,11 +35,11 @@ public class AuthService {
             );
 
             try (DBConnection connection = DBConnection.getInstance()) {
-                if (type == "student") {
+                if (type.equals("student")) {
                     user = new Student(email, name, passwordHash);
-                } else if (type == "instructor") {
+                } else if (type.equals("instructor")) {
                     user = new Instructor(email, name, passwordHash);
-                } else if (type == "administrator") {
+                } else if (type.equals("administrator")) {
                     user = new Administrator(email, name, passwordHash);
                 } else {
                     return null;
@@ -48,6 +48,7 @@ public class AuthService {
                 UnitOfWork.getCurrent().commit();
                 return user;
             } catch (SQLException t) {
+                t.printStackTrace();
                 return null;
             }
         }
@@ -69,6 +70,7 @@ public class AuthService {
                 .verified;
             return authenticated ? user : null;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }

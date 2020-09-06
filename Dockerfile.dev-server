@@ -8,4 +8,4 @@ RUN mvn -B -T 1C -Dmaven.repo.local=/m2 dependency:go-offline
 
 COPY . ./
 
-CMD ["mvn", "-Dmaven.repo.local=/m2", "cargo:run"]
+CMD ["./scripts/dev-server.sh"]
