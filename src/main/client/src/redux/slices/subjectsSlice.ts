@@ -2,7 +2,7 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
-interface Subject{
+interface Subject {
   name: string,
 }
 
