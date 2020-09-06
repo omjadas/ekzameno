@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
@@ -11,10 +11,11 @@ interface SubjectState extends Subject {
   slug: string,
 }
 
-const initialState: State<SubjectState[]> = {
-  data: [],
+const subjectsAdapter = createEntityAdapter<SubjectState>();
+
+const initialState = subjectsAdapter.getInitialState({
   status: "idle",
-};
+} as State);
 
 export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async () => {
   const res = await fetch("api/users", {
@@ -48,18 +49,23 @@ export const subjectsSlice = createSlice({
     });
     builder.addCase(fetchSubjects.fulfilled, (state, action) => {
       state.status = "finished";
-      state.data = action.payload;
+      subjectsAdapter.upsertMany(state, action.payload);
     });
     builder.addCase(fetchSubjects.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     });
     builder.addCase(addSubject.fulfilled, (state, action) => {
-      state.data.push(action.payload);
+      subjectsAdapter.addOne(state, action.payload);
     });
   },
 });
 
 export const selectSubjectsStatus = (state: RootState): Status => state.subjects.status;
+export const {
+  selectAll: selectAllSubjects,
+  selectById: selectSubjectById,
+  selectIds: selectSubjectIds,
+} = subjectsAdapter.getSelectors();
 
 export default subjectsSlice.reducer;

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
@@ -11,10 +11,12 @@ interface ExamState extends Exam {
   slug: string,
 }
 
-const initialState: State<ExamState[]> = {
+const examsAdapter = createEntityAdapter<ExamState>();
+
+const initialState = examsAdapter.getInitialState({
   data: [],
   status: "idle",
-};
+} as State);
 
 export const fetchExams = createAsyncThunk(
   "exams/fetchExams",
@@ -54,18 +56,23 @@ export const examsSlice = createSlice({
     });
     builder.addCase(fetchExams.fulfilled, (state, action) => {
       state.status = "finished";
-      state.data = action.payload;
+      examsAdapter.upsertMany(state, action.payload);
     });
     builder.addCase(fetchExams.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
     });
     builder.addCase(addExam.fulfilled, (state, action) => {
-      state.data.push(action.payload);
+      examsAdapter.addOne(state, action.payload);
     });
   },
 });
 
 export const selectExamsStatus = (state: RootState): Status => state.exams.status;
+export const {
+  selectAll: selectAllExams,
+  selectById: selectExamById,
+  selectIds: selectExamIds,
+} = examsAdapter.getSelectors();
 
 export default examsSlice.reducer;
