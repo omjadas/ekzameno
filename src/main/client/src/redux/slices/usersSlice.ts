@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { State } from "../state";
+import { State, Status } from "../state";
 import { RootState } from "../store";
 
 interface User {
@@ -62,6 +62,6 @@ export const usersSlice = createSlice({
   },
 });
 
-export const selectUsersStatus = (state: RootState) => state.users.status;
+export const selectUsersStatus = (state: RootState): Status => state.users.status;
 
 export default usersSlice.reducer;

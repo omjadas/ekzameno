@@ -1,5 +1,7 @@
+export type Status = "idle" | "loading" | "finished" | "error";
+
 export interface State<T> {
   data: T,
-  status: "idle" | "loading" | "finished" | "error",
+  status: Status,
   error?: string,
 }
