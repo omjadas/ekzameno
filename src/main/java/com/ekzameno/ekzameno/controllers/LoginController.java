@@ -48,6 +48,7 @@ public class LoginController extends HttpServlet {
                 .compact();
             Cookie cookie = new Cookie("jwt", jwt);
             cookie.setHttpOnly(true);
+            response.addCookie(cookie);
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }

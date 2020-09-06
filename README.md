@@ -10,6 +10,7 @@
   - [Contributors](#contributors)
   - [Development Information](#development-information)
     - [Running Ekzameno](#running-ekzameno)
+    - [Environment Variables](#environment-variables)
     - [Git Workflow](#git-workflow)
 
 ## Contributors
@@ -39,6 +40,11 @@ the following command can be run:
 ```bash
 docker-compose down -v
 ```
+
+### Environment Variables
+
+- `JDBC_DATABASE_URL`: URL to the database
+- `JWT_SECRET`: secret to sign JWTs with
 
 ### Git Workflow
 

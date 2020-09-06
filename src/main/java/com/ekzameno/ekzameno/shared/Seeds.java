@@ -9,14 +9,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.stream.Collectors;
 
-import com.ekzameno.ekzameno.services.AuthService;
+import com.ekzameno.ekzameno.services.UserService;
 
+/**
+ * Seed the database.
+ */
 public class Seeds {
     private static final String connectionUrl = System.getenv(
         "JDBC_DATABASE_URL"
     );
     private static final String ddl = "./scripts/ekzameno.sql";
 
+    /**
+     * Create DB tables and add default admin user.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         try (
             Connection connection = DriverManager.getConnection(connectionUrl);
@@ -30,7 +38,7 @@ public class Seeds {
         }
 
         try (DBConnection connection = DBConnection.getInstance()) {
-            new AuthService().registerUser(
+            new UserService().registerUser(
                 "Admin",
                 "admin@ekzame.no",
                 "password",
