@@ -34,7 +34,12 @@ public class UnitOfWork {
      * @return thread local UnitOfWork
      */
     public static UnitOfWork getCurrent() {
-        return current.get();
+        UnitOfWork uow = current.get();
+        if (uow == null) {
+            uow = new UnitOfWork();
+            setCurrent(uow);
+        }
+        return uow;
     }
 
     private boolean objectInAnyList(Model obj) {
@@ -103,5 +108,6 @@ public class UnitOfWork {
         }
 
         DBConnection.getInstance().getConnection().commit();
+        current.set(null);
     }
 }

@@ -1,13 +1,21 @@
 package com.ekzameno.ekzameno.controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
+import javax.crypto.SecretKey;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ekzameno.ekzameno.models.User;
+import com.ekzameno.ekzameno.services.AuthService;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 /**
  * Servlet implementation class LoginServlet.
@@ -15,21 +23,26 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/auth/login")
 public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private AuthService authService = new AuthService();
 
-    protected void doGet(
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws ServletException, IOException {
-        response.setContentType("application/json");
-        System.out.println("Hello from Get method");
-        PrintWriter writer = response.getWriter();
-        writer.println("{\"msg\": \"hello, world\"}");
-    }
-
+    @Override
     protected void doPost(
         HttpServletRequest request,
         HttpServletResponse response
     ) throws ServletException, IOException {
-        doGet(request, response);
+        User user = authService.authenticateUser("email", "password");
+
+        if (user != null) {
+            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode("abc"));
+            String jwt = Jwts
+                .builder()
+                .setSubject(user.getId().toString())
+                .signWith(key)
+                .compact();
+            Cookie cookie = new Cookie("jwt", jwt);
+            cookie.setHttpOnly(true);
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
     }
 }

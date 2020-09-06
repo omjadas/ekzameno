@@ -15,6 +15,10 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     private static final String tableName = "users";
 
+    public User findByEmail(String email) throws SQLException {
+        return findByProp("email", email);
+    }
+
     @Override
     public void insert(T user) throws SQLException {
         String query = "INSERT INTO " + tableName +
