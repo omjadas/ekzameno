@@ -22,6 +22,17 @@ public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
 
     /**
+     * Find a model for a given slug.
+     *
+     * @param slug ID of the model to find
+     * @return model with the given ID
+     * @throws SQLException if unable to retrieve the model
+     */
+    public Exam findBySlug(String slug) throws SQLException {
+        return findByProp("slug", slug);
+    }
+
+    /**
      * Retrieve all exams for a given subject ID.
      *
      * @param id ID of the subject to retrieve exams for
@@ -29,7 +40,7 @@ public class ExamMapper extends Mapper<Exam> {
      * @throws SQLException if unable to retrieve the exams
      */
     public List<Exam> findAllForSubject(UUID id) throws SQLException {
-        String query = "SELECT * FROM exams WHERE subject_id = ?";
+        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -107,11 +118,12 @@ public class ExamMapper extends Mapper<Exam> {
     protected Exam load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
+        String slug = rs.getString("slug");
         Date publishDate = rs.getTimestamp("publish_date");
         Date closeDate = rs.getTimestamp("close_date");
         DateRange dateRange = new DateRange(publishDate, closeDate);
         UUID subjectId = rs.getObject("subject_id", java.util.UUID.class);
-        return new Exam(id, name, dateRange, subjectId);
+        return new Exam(id, name, dateRange, subjectId, slug);
     }
 
     @Override

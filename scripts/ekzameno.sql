@@ -9,11 +9,13 @@ CREATE TABLE users (
 CREATE TABLE subjects (
     id uuid PRIMARY KEY,
     name text NOT NULL,
+    slug text UNIQUE NOT NULL,
 );
 
 CREATE TABLE exams (
     id uuid PRIMARY KEY,
     name text NOT NULL,
+    slug text UNIQUE NOT NULL,
     subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
     publish_date timestamp,
     close_date timestamp,

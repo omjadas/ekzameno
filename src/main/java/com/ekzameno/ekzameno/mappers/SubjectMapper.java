@@ -19,6 +19,17 @@ public class SubjectMapper extends Mapper<Subject> {
     private static final String tableName = "subjects";
 
     /**
+     * Find a subject for a given slug.
+     *
+     * @param slug ID of the subject to find
+     * @return subject with the given ID
+     * @throws SQLException if unable to retrieve the subject
+     */
+    public Subject findBySlug(String slug) throws SQLException {
+        return findByProp("slug", slug);
+    }
+
+    /**
      * Retrieve all subjects for a given student ID.
      *
      * @param id ID of the student to retrieve subjects for
@@ -118,7 +129,8 @@ public class SubjectMapper extends Mapper<Subject> {
     protected Subject load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
-        return new Subject(id, name);
+        String slug = rs.getString("slug");
+        return new Subject(id, name, slug);
     }
 
     @Override

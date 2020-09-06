@@ -56,7 +56,7 @@ public class InstructorSubject extends Model {
      */
     public Instructor getInstructor() throws SQLException {
         if (instructor == null) {
-            instructor = new InstructorMapper().find(instructorId);
+            instructor = new InstructorMapper().findById(instructorId);
         }
         return instructor;
     }
@@ -69,7 +69,7 @@ public class InstructorSubject extends Model {
      */
     public Subject getSubject() throws SQLException {
         if (subject == null) {
-            subject = new SubjectMapper().find(subjectId);
+            subject = new SubjectMapper().findById(subjectId);
         }
         return subject;
     }

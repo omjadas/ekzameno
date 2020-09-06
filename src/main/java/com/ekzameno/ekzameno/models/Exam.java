@@ -9,12 +9,14 @@ import com.ekzameno.ekzameno.proxies.ExamSubmissionExamProxyList;
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.QuestionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.github.slugify.Slugify;
 
 /**
  * Exam for a Subject.
  */
 public class Exam extends Model {
     private String name;
+    private String slug;
     private DateRange dateRange;
     private ProxyList<Question> questions;
     private ProxyList<ExamSubmission> examSubmissions;
@@ -28,10 +30,18 @@ public class Exam extends Model {
      * @param name      name of the exam
      * @param dateRange date range of the exam
      * @param subjectId ID of the related subject
+     * @param slug      slug for the exam
      */
-    public Exam(UUID id, String name, DateRange dateRange, UUID subjectId) {
+    public Exam(
+        UUID id,
+        String name,
+        DateRange dateRange,
+        UUID subjectId,
+        String slug
+    ) {
         super(id);
         this.name = name;
+        this.slug = slug;
         this.dateRange = dateRange;
         this.subjectId = subjectId;
         this.questions = new QuestionProxyList(id);
@@ -47,6 +57,7 @@ public class Exam extends Model {
      */
     public Exam(String name, DateRange dateRange, UUID subjectId) {
         this.name = name;
+        this.slug = new Slugify().slugify(name);
         this.dateRange = dateRange;
         this.subjectId = subjectId;
         this.questions = new QuestionProxyList(getId());
@@ -55,6 +66,10 @@ public class Exam extends Model {
 
     public String getName() {
         return name;
+    }
+
+    public String getSlug() {
+        return slug;
     }
 
     public Date getPublishDate() {
@@ -125,7 +140,7 @@ public class Exam extends Model {
      */
     public Subject getSubject() throws SQLException {
         if (subject == null) {
-            subject = new SubjectMapper().find(subjectId);
+            subject = new SubjectMapper().findById(subjectId);
         }
         return subject;
     }

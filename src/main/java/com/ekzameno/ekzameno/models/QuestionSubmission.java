@@ -84,7 +84,7 @@ public class QuestionSubmission extends Model {
      */
     public Question getQuestion() throws SQLException {
         if (question == null) {
-            question = new QuestionMapper().find(questionId);
+            question = new QuestionMapper().findById(questionId);
         }
         return question;
     }
@@ -97,7 +97,9 @@ public class QuestionSubmission extends Model {
      */
     public ExamSubmission getExamSubmission() throws SQLException {
         if (examSubmission == null) {
-            examSubmission = new ExamSubmissionMapper().find(examSubmissionId);
+            examSubmission = new ExamSubmissionMapper().findById(
+                examSubmissionId
+            );
         }
         return examSubmission;
     }

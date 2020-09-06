@@ -56,7 +56,7 @@ public class Enrolment extends Model {
      */
     public Student getStudent() throws SQLException {
         if (student == null) {
-            student = new StudentMapper().find(studentId);
+            student = new StudentMapper().findById(studentId);
         }
         return student;
     }
@@ -69,7 +69,7 @@ public class Enrolment extends Model {
      */
     public Subject getSubject() throws SQLException {
         if (subject == null) {
-            subject = new SubjectMapper().find(subjectId);
+            subject = new SubjectMapper().findById(subjectId);
         }
         return subject;
     }

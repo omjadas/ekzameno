@@ -81,7 +81,7 @@ public class Answer extends Model {
      */
     public Question getQuestion() throws SQLException {
         if (question == null) {
-            question = new QuestionMapper().find(questionId);
+            question = new QuestionMapper().findById(questionId);
         }
         return question;
     }

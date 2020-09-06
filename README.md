@@ -3,6 +3,15 @@
 ![Build](https://github.com/omjadas/swen90007-group1/workflows/Build/badge.svg?branch=master)
 ![Lint](https://github.com/omjadas/swen90007-group1/workflows/Lint/badge.svg?branch=master)
 
+## Table of Contents
+
+- [swen90007-group1](#swen90007-group1)
+  - [Table of Contents](#table-of-contents)
+  - [Contributors](#contributors)
+  - [Development Information](#development-information)
+    - [Running Ekzameno](#running-ekzameno)
+    - [Git Workflow](#git-workflow)
+
 ## Contributors
 
 | Name                         | Student ID | Email                               |
@@ -11,7 +20,27 @@
 | Omja Das                     | 835780     | odas@student.unimelb.edu.au         |
 | Joao Pereira                 | 1016983    | jfpereira@student.unimelb.edu.au    |
 
-## Development Workflow
+## Development Information
+
+### Running Ekzameno
+
+To start Ekzameno using [Docker](https://www.docker.com/get-started) Compose run
+the following command:
+
+```bash
+docker-compose up --build
+```
+
+To stop Ekzameno you can hit <kbd>ctrl</kbd> + <kbd>c</kbd>
+
+If you wish to delete the containers, network, and volumes that were created,
+the following command can be run:
+
+```bash
+docker-compose down -v
+```
+
+### Git Workflow
 
 For the development workflow, the team has decided to follow a feature branch
 strategy.

@@ -13,12 +13,14 @@ entity subjects {
     * id : UUID <<generated>>
     --
     * name : TEXT
+    * slug : TEXT
 }
 
 entity exams {
     * id : UUID <<generated>>
     --
     * name : TEXT
+    * slug : TEXT
     * subject_id : UUID <<FK>>
     publish_date : TIMESTAMP
     close_date : TIMESTAMP
