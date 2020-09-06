@@ -1,9 +1,9 @@
 package com.ekzameno.ekzameno.controllers;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.stream.Collectors;
 
-import javax.crypto.SecretKey;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -27,6 +27,9 @@ import io.jsonwebtoken.security.Keys;
 public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private AuthService authService = new AuthService();
+    private Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(System.getenv(
+        "JWT_SECRET"
+    )));
 
     @Override
     protected void doPost(
@@ -38,7 +41,6 @@ public class LoginController extends HttpServlet {
         User user = authService.authenticateUser(dto.email, dto.password);
 
         if (user != null) {
-            SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode("abc"));
             String jwt = Jwts
                 .builder()
                 .setSubject(user.getId().toString())

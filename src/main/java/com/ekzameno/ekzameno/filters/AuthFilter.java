@@ -1,6 +1,7 @@
 package com.ekzameno.ekzameno.filters;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -16,12 +17,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 /**
  * Filter to determine whether requests are authenticated.
  */
 @WebFilter("/api/*")
 public class AuthFilter implements Filter {
+    private Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(System.getenv(
+        "JWT_SECRET"
+    )));
+
     @Override
     public void doFilter(
         ServletRequest request,
@@ -42,7 +49,7 @@ public class AuthFilter implements Filter {
         } else {
             try {
                 Jwts.parserBuilder()
-                    .setSigningKey("abc")
+                    .setSigningKey(key)
                     .build()
                     .parseClaimsJws(jwt.get().getValue());
             } catch (JwtException ex) {
