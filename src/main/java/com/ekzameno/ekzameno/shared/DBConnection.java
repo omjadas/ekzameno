@@ -16,6 +16,7 @@ public class DBConnection implements AutoCloseable {
 
     private DBConnection() throws SQLException {
         connection = DriverManager.getConnection(connectionUrl);
+        connection.setAutoCommit(false);
     }
 
     /**
@@ -28,7 +29,8 @@ public class DBConnection implements AutoCloseable {
         DBConnection dbc = dbConnection.get();
 
         if (dbc == null)  {
-            return new DBConnection();
+            dbc = new DBConnection();
+            dbConnection.set(dbc);
         }
 
         return dbConnection.get();
