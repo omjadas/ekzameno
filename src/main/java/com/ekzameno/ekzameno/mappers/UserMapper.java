@@ -18,11 +18,11 @@ public class UserMapper extends AbstractUserMapper<User> {
 
         Mapper<?> mapper;
 
-        if (type == Student.TYPE) {
+        if (type.equals(Student.TYPE)) {
             mapper = new StudentMapper();
-        } else if (type == Instructor.TYPE) {
+        } else if (type.equals(Instructor.TYPE)) {
             mapper = new InstructorMapper();
-        } else if (type == Administrator.TYPE) {
+        } else if (type.equals(Administrator.TYPE)) {
             mapper = new AdministratorMapper();
         } else {
             throw new RuntimeException();

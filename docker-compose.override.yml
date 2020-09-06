@@ -8,9 +8,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - "JDBC_DATABASE_URL=jdbc:postgresql://postgres:5432?user=postgres&password=postgres"
+      - "JDBC_DATABASE_URL=jdbc:postgresql://postgres:5432/postgres?user=postgres&password=postgres"
+      - "JWT_SECRET=${JWT_SECRET}"
     volumes:
-      - ./target:/app/target
       - maven_cache:/m2
 
   ekzameno-client:

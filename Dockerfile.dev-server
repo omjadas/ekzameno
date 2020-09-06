@@ -2,10 +2,14 @@ FROM maven:3-jdk-11
 
 WORKDIR /app
 
+RUN mkdir -p /app/src/main/client/build
+
 COPY pom.xml ./
 
 RUN mvn -B -T 1C -Dmaven.repo.local=/m2 dependency:go-offline
 
 COPY . ./
 
-CMD ["mvn", "-Dmaven.repo.local=/m2", "tomcat7:run"]
+RUN mvn -Dmaven.repo.local=/m2 -DskipTests package
+
+CMD ["./scripts/dev-server.sh"]

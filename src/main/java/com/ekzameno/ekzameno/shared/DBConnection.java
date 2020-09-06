@@ -15,7 +15,13 @@ public class DBConnection implements AutoCloseable {
     );
 
     private DBConnection() throws SQLException {
-        connection = DriverManager.getConnection(connectionUrl);
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(connectionUrl);
+            connection.setAutoCommit(false);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -27,8 +33,9 @@ public class DBConnection implements AutoCloseable {
     public static DBConnection getInstance() throws SQLException {
         DBConnection dbc = dbConnection.get();
 
-        if (dbc == null)  {
-            return new DBConnection();
+        if (dbc == null) {
+            dbc = new DBConnection();
+            dbConnection.set(dbc);
         }
 
         return dbConnection.get();

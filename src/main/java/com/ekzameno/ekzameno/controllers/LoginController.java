@@ -1,13 +1,24 @@
 package com.ekzameno.ekzameno.controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.security.Key;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ekzameno.ekzameno.dtos.SignInUserDTO;
+import com.ekzameno.ekzameno.models.User;
+import com.ekzameno.ekzameno.services.AuthService;
+import com.google.gson.Gson;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 /**
  * Servlet implementation class LoginServlet.
@@ -15,21 +26,31 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/auth/login")
 public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private AuthService authService = new AuthService();
+    private Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(System.getenv(
+        "JWT_SECRET"
+    )));
 
-    protected void doGet(
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws ServletException, IOException {
-        response.setContentType("application/json");
-        System.out.println("Hello from Get method");
-        PrintWriter writer = response.getWriter();
-        writer.println("{\"msg\": \"hello, world\"}");
-    }
-
+    @Override
     protected void doPost(
         HttpServletRequest request,
         HttpServletResponse response
     ) throws ServletException, IOException {
-        doGet(request, response);
+        String body = request.getReader().lines().collect(Collectors.joining());
+        SignInUserDTO dto = new Gson().fromJson(body, SignInUserDTO.class);
+        User user = authService.authenticateUser(dto.email, dto.password);
+
+        if (user != null) {
+            String jwt = Jwts
+                .builder()
+                .setSubject(user.getId().toString())
+                .signWith(key)
+                .compact();
+            Cookie cookie = new Cookie("jwt", jwt);
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
     }
 }
