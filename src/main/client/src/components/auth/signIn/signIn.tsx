@@ -20,7 +20,7 @@ const FormSchema = yup.object().shape({
 
 export const SignIn = (props: Props): JSX.Element => {
   const onSubmit = (values: FormValues): Promise<any> => {
-    return fetch("/api/login", {
+    return fetch("/auth/login", {
       method: "post",
       body: JSON.stringify({
         email: values.email,
@@ -30,7 +30,7 @@ export const SignIn = (props: Props): JSX.Element => {
         "Content-Type": "application/json",
       },
     }).then(res => {
-      if (res.status === 200) {
+      if (res.ok) {
         props.onHide();
       } else {
         // TODO: handle errors
