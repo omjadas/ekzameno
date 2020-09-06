@@ -15,6 +15,13 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     private static final String tableName = "users";
 
+    /**
+     * Find a user by their email address.
+     *
+     * @param email email address of the user to find
+     * @return the user with the specified email address
+     * @throws SQLException if unable to retrieve the user
+     */
     public User findByEmail(String email) throws SQLException {
         return findByProp("email", email);
     }
@@ -22,7 +29,7 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     @Override
     public void insert(T user) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, email, name, password_hash, type) VALUES (?,?,?)";
+            " (id, email, name, password_hash, type) VALUES (?,?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
