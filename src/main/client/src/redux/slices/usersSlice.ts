@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { State } from "../state";
+import { RootState } from "../store";
 
 interface User {
   name: string,
@@ -60,5 +61,7 @@ export const usersSlice = createSlice({
     });
   },
 });
+
+export const selectUsersStatus = (state: RootState) => state.users.status;
 
 export default usersSlice.reducer;
