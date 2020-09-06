@@ -9,6 +9,7 @@ interface Exam {
 interface ExamState extends Exam {
   id: string,
   slug: string,
+  questionIds: string[],
 }
 
 const examsAdapter = createEntityAdapter<ExamState>();

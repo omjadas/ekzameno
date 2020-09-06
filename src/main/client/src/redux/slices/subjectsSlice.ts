@@ -9,6 +9,7 @@ interface Subject{
 interface SubjectState extends Subject {
   id: string,
   slug: string,
+  examIds: string[],
 }
 
 const subjectsAdapter = createEntityAdapter<SubjectState>();
