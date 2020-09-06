@@ -56,8 +56,8 @@ public class UserService {
 
                 UnitOfWork.getCurrent().commit();
                 return user;
-            } catch (SQLException t) {
-                t.printStackTrace();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
                 return null;
             }
         }
