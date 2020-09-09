@@ -20,7 +20,7 @@ const FormSchema = yup.object().shape({
 
 export const SignIn = (props: Props): JSX.Element => {
   const onSubmit = (values: FormValues): Promise<any> => {
-    return fetch("/auth/login", {
+    return fetch("/api/auth/login", {
       method: "post",
       body: JSON.stringify({
         email: values.email,

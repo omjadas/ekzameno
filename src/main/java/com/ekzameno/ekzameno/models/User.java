@@ -3,6 +3,7 @@ package com.ekzameno.ekzameno.models;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Users of the system.
@@ -10,6 +11,7 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 public abstract class User extends Model {
     private String email;
     private String name;
+    @JsonIgnore
     private String passwordHash;
 
     /**
