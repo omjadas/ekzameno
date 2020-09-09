@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Tab } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 export interface AuthProps {
   show: boolean,

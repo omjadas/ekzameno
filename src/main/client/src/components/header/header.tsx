@@ -3,8 +3,6 @@ import { Button, Container, Form, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthModal } from "../auth/authModal";
 
-
-
 export const Header = (): JSX.Element => {
   const [authModalShow, setAuthModalShow] = useState(false);
   return (
