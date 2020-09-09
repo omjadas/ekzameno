@@ -18,17 +18,19 @@ import io.jsonwebtoken.security.Keys;
 
 /**
  * Controller for Exam Page
+ * @Path
+ * @POST
+ * @Consumes 
+ * @Produces
  */
-//@Protected
 public class ExamController {
     private CreateExamService examCreation = new CreateExamService();
     @Path("/createExam")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createExam(Exam exam) 
-    {
-        examCreation.CreateanExam(exam);// CreateanExam
-            return Response.ok().build();
+    public Response createExam(Exam exam) {
+        examCreation.CreateAnExam(exam);// CreateanExam
+        return Response.ok().build();
     }
 }

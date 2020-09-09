@@ -1,7 +1,5 @@
 package com.ekzameno.ekzameno.services;
-
 import java.sql.SQLException;
-
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
@@ -16,10 +14,9 @@ public class CreateExamService {
 
     /**
      * Create a new Exam
-     *
      * @param exam Details of Exam
      */
-    public void CreateanExam(Exam exam) {
+    public void CreateAnExam(Exam exam) {
         try (DBConnection connection = DBConnection.getInstance()) {
             examMapper.insert(exam);
             UnitOfWork.getCurrent().commit();

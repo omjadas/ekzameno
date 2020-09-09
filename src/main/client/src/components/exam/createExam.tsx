@@ -33,7 +33,7 @@ const FormSchema = yup.object().shape({
   description: yup.string(),
 });
 
-export const CreateExamModel = (props:UpdateExamProps | ExamModalProps): JSX.Element => {
+export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useDispatch();
   const examsStatus = useSelector(selectExamsStatus);
@@ -44,7 +44,6 @@ export const CreateExamModel = (props:UpdateExamProps | ExamModalProps): JSX.Ele
     }
   }, [slug, dispatch, examsStatus]);
   
-
   const onSubmit = (values: FormValues): Promise<any> => {
     return fetch("/exams/:slug", {
       method: "post",
@@ -70,7 +69,7 @@ export const CreateExamModel = (props:UpdateExamProps | ExamModalProps): JSX.Ele
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title> 
-          Creating Exam for "SubjectID"
+        Creating Exam for "SubjectID"
         </Modal.Title>
       </Modal.Header>
       <Formik
