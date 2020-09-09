@@ -10,16 +10,15 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
  * Service to handle authentication.
- * 
  */
 public class CreateExamService {
     private ExamMapper examMapper = new ExamMapper();
     /**
-     * Create a new Exam
+     * Create a new Exam.
      * 
-     * @param exam Details of Exam
+     * @param exam Details of Exam.
      */
-    public void CreateAnExam(Exam exam) {
+    public void createAnExam(Exam exam) {
         try (DBConnection connection = DBConnection.getInstance()) {
             examMapper.insert(exam);
             UnitOfWork.getCurrent().commit();

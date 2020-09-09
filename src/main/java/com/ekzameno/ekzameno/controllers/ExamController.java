@@ -17,7 +17,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 /**
- * Controller for Exam Page
+ * Controller for Exam Page.
  * @return response for creating the exam
  */
 public class ExamController {
@@ -27,7 +27,7 @@ public class ExamController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createExam(Exam exam) {
-        examCreation.CreateAnExam(exam);// CreateanExam
+        examCreation.createAnExam(exam);// CreateanExam
         return Response.ok().build();
     }
 }
