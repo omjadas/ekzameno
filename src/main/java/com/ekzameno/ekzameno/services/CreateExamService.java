@@ -1,6 +1,7 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
+
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
@@ -9,12 +10,13 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
  * Service to handle authentication.
+ * 
  */
 public class CreateExamService {
     private ExamMapper examMapper = new ExamMapper();
-
     /**
      * Create a new Exam
+     * 
      * @param exam Details of Exam
      */
     public void CreateAnExam(Exam exam) {

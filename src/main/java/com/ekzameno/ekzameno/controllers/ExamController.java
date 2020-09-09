@@ -18,8 +18,6 @@ import io.jsonwebtoken.security.Keys;
 
 /**
  * Controller for Exam Page
- * 
- * @param exam return a new exam 
  * @return response for creating the exam
  */
 public class ExamController {
