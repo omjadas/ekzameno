@@ -15,7 +15,6 @@ public class CreateExamService {
     private ExamMapper examMapper = new ExamMapper();
     /**
      * Create a new Exam.
-     * 
      * @param exam Details of Exam.
      */
     public void createAnExam(Exam exam) {

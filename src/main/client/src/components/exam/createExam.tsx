@@ -51,7 +51,7 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
         name: values.name,
         startTime: values.startTime,
         finishTime: values.finishTime,
-        description: values.description
+        description: values.description,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> Creating Exam for "SubjectID"
+        <Modal.Title> Creating Exam for SubjectID
         </Modal.Title>
       </Modal.Header>
       <Formik
@@ -114,7 +114,6 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
           )
         }
       </Formik>
-  </Modal>
+    </Modal>
   );
-
 };

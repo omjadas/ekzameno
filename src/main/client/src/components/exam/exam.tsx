@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchExams, selectExamsStatus } from "../../redux/slices/examsSlice";
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { CreateExamModel } from "../exam/createExam";
 import { PublishExamModel } from "./publishExam";
 import { ViewPublishedExamModal } from "./viewPublishedExams";
@@ -25,32 +25,31 @@ export const Exam = (): JSX.Element => {
   const [viewAllExamshow, setviewAllExamShow] = useState(false);
 
   return (
-
-        <Form className="ml-auto" inline>
-          <Button
-            variant="outline-info"
-            onClick={() => setcreateExamShow(true)}>
-            Create Exam
-          </Button>
-          <Button
-            variant="outline-info"
-            onClick={() => setpublishExamShow(true)}>
-            Publish Exam
-          </Button>
-          <Button
-            variant="outline-info"
-            onClick={() => setviewPublishedExamShow(true)}>
-            View Published
-          </Button>
-          <Button
-            variant="outline-info"
-            onClick={() => setviewAllExamShow(true)}>
-            View All The Exams
-          </Button>
-          <CreateExamModel show={createExamshow} onHide={() => setcreateExamShow(false)} />
-          <PublishExamModel show={publishExamshow} onHide={() => setpublishExamShow(false)} />
-          <ViewPublishedExamModal show={viewPublishedExamshow} onHide={() => setviewPublishedExamShow(false)} />
-          <ViewAllExamModal show={viewAllExamshow} onHide={() => setviewAllExamShow(false)} />
-        </Form>
-    );
+    <Form className="ml-auto" inline>
+      <Button
+        variant="outline-info"
+        onClick={() => setcreateExamShow(true)}>
+        Create Exam
+      </Button>
+      <Button
+        variant="outline-info"
+        onClick={() => setpublishExamShow(true)}>
+        Publish Exam
+      </Button>
+      <Button
+        variant="outline-info"
+        onClick={() => setviewPublishedExamShow(true)}>
+        View Published
+      </Button>
+      <Button
+        variant="outline-info"
+        onClick={() => setviewAllExamShow(true)}>
+        View All The Exams
+      </Button>
+      <CreateExamModel show={createExamshow} onHide={() => setcreateExamShow(false)} />
+      <PublishExamModel show={publishExamshow} onHide={() => setpublishExamShow(false)} />
+      <ViewPublishedExamModal show={viewPublishedExamshow} onHide={() => setviewPublishedExamShow(false)} />
+      <ViewAllExamModal show={viewAllExamshow} onHide={() => setviewAllExamShow(false)} />
+    </Form>
+  );
 };

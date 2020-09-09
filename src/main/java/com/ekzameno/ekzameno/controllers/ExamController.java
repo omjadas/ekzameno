@@ -22,6 +22,12 @@ import io.jsonwebtoken.security.Keys;
  */
 public class ExamController {
     private CreateExamService examCreation = new CreateExamService();
+    /**
+     * creating an exam.
+     *
+     * @param exam details for creating exam
+     * @return response
+     */
     @Path("/createExam")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
