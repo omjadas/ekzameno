@@ -43,7 +43,7 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
       dispatch(fetchExams(slug));
     }
   }, [slug, dispatch, examsStatus]);
-  
+
   const onSubmit = (values: FormValues): Promise<any> => {
     return fetch("/exams/:slug", {
       method: "post",
@@ -68,8 +68,7 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> 
-        Creating Exam for "SubjectID"
+        <Modal.Title> Creating Exam for "SubjectID"
         </Modal.Title>
       </Modal.Header>
       <Formik

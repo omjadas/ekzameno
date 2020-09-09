@@ -18,10 +18,9 @@ import io.jsonwebtoken.security.Keys;
 
 /**
  * Controller for Exam Page
- * @Path
- * @POST
- * @Consumes 
- * @Produces
+ * 
+ * @param exam return a new exam 
+ * @return response for creating the exam
  */
 public class ExamController {
     private CreateExamService examCreation = new CreateExamService();
