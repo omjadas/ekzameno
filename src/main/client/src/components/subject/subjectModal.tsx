@@ -80,7 +80,7 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
                   label="Name"
                   name="name" />
                 <FormikControl
-                  type="textarea"
+                  as="textarea"
                   label="Description"
                   name="description" />
                 <FormikControl
