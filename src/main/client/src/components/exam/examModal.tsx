@@ -50,9 +50,7 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
   const onSubmit = (values: FormValues): void => {
     dispatch(addExam({
       subjectId: props.subjectId,
-      exam: {
-        values,
-      },
+      exam: values,
     }));
   };
 
@@ -66,8 +64,8 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
         initialValues={{
           name: (props as any).name ?? "",
           description: (props as any).description ?? "",
-          publishDate: (props as any).startTime === undefined ? "" : new Date(new Date((props as any).startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
-          closeDate: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+          startTime: (props as any).startTime === undefined ? "" : new Date(new Date((props as any).startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+          finishTime: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}
