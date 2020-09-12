@@ -26,6 +26,7 @@ interface FormValues {
   students: string,
   description: string,
 }
+
 const FormSchema = yup.object().shape({
   name: yup.string().required(),
   instructors: yup.string(),
