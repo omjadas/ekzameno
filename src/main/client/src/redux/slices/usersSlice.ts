@@ -16,7 +16,7 @@ interface UsersState extends State {
   me?: string,
 }
 
-const usersAdapter = createEntityAdapter();
+const usersAdapter = createEntityAdapter<UserState>();
 
 const initialState = usersAdapter.getInitialState({
   status: "idle",
