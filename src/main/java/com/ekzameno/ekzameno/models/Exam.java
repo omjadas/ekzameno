@@ -9,6 +9,7 @@ import com.ekzameno.ekzameno.proxies.ExamSubmissionExamProxyList;
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.QuestionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.slugify.Slugify;
 
 /**
@@ -16,9 +17,12 @@ import com.github.slugify.Slugify;
  */
 public class Exam extends Model {
     private String name;
+    private String description;
     private String slug;
     private DateRange dateRange;
+    @JsonIgnore
     private ProxyList<Question> questions;
+    @JsonIgnore
     private ProxyList<ExamSubmission> examSubmissions;
     private UUID subjectId;
     private Subject subject = null;
@@ -28,6 +32,7 @@ public class Exam extends Model {
      *
      * @param id        ID of the exam
      * @param name      name of the exam
+     * @param description description of the exam
      * @param dateRange date range of the exam
      * @param subjectId ID of the related subject
      * @param slug      slug for the exam
@@ -35,12 +40,14 @@ public class Exam extends Model {
     public Exam(
         UUID id,
         String name,
+        String description,
         DateRange dateRange,
         UUID subjectId,
         String slug
     ) {
         super(id);
         this.name = name;
+        this.description = description;
         this.slug = slug;
         this.dateRange = dateRange;
         this.subjectId = subjectId;
@@ -52,11 +59,13 @@ public class Exam extends Model {
      * Create an exam without an ID (registers as new).
      *
      * @param name      name of the exam
+     * @param description description of the exam
      * @param dateRange date range of the exam
      * @param subjectId ID of the related subject
      */
-    public Exam(String name, DateRange dateRange, UUID subjectId) {
+    public Exam(String name,String description, DateRange dateRange, UUID subjectId) {
         this.name = name;
+        this.description = description;
         this.slug = new Slugify().slugify(name);
         this.dateRange = dateRange;
         this.subjectId = subjectId;
@@ -68,6 +77,9 @@ public class Exam extends Model {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
     public String getSlug() {
         return slug;
     }
@@ -105,6 +117,15 @@ public class Exam extends Model {
      */
     public void setName(String name) {
         this.name = name;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+    /**
+     * Set the description of the Exam (marks the Exam as dirty).
+     *
+     * @param description name of the Exam
+     */
+    public void setDescription(String description) {
+        this.description = description;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 

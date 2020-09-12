@@ -6,7 +6,7 @@ import { Form, Button, Modal } from "react-bootstrap";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import * as yup from "yup";
-//import { useMutation } from "@apollo/client";
+import { addExam } from "../../redux/slices/examsSlice";
 
 export interface ExamModalProps {
   show: boolean,
@@ -22,9 +22,9 @@ interface UpdateExamProps extends ExamModalProps {
 
 interface FormValues {
   name: string,
+  description: String,
   startTime: string,
-  finishTime: string,
-  description: string,
+  finishTime: string
 }
 const FormSchema = yup.object().shape({
   name: yup.string().required(),
@@ -44,26 +44,12 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
     }
   }, [slug, dispatch, examsStatus]);
 
-  const onSubmit = (values: FormValues): Promise<any> => {
-    return fetch("/exams/:slug", {
-      method: "post",
-      body: JSON.stringify({
-        name: values.name,
-        startTime: values.startTime,
-        finishTime: values.finishTime,
-        description: values.description,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(res => {
-      if (res.ok) {
-        props.onHide();
-      } else {
-        // TODO: handle errors
-      }
-    }).catch();
-  };
+  const onSubmit = (values: FormValues): void => {
+  dispatch(addExam({
+    subjectId: props.id,
+    
+  }));
+};
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>

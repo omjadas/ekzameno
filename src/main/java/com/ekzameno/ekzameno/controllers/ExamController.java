@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Exam;
-import com.ekzameno.ekzameno.services.CreateExamService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -20,20 +19,32 @@ import io.jsonwebtoken.security.Keys;
  * Controller for Exam Page.
  * @return response for creating the exam
  */
+@Path("/exams")
 public class ExamController {
-    private CreateExamService examCreation = new CreateExamService();
+    private ExamService examService = new ExamService();
     /**
-     * creating an exam.
+     * Handles creation of new exam.
      *
-     * @param exam details for creating exam
-     * @return response
+     * @param dto exam DTO
+     * @return response to the client
      */
-    @Path("/createExam")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createExam(Exam exam) {
-        examCreation.createAnExam(exam);// CreateanExam
-        return Response.ok().build();
+    public Response createExam(CreateExamDto dto) {
+        Exam exam = examService.createExam(
+        dto.name,
+        dto.description,
+        dto.publishDate,
+        dto.closeDate);
+        
+        if(exam != null) {
+            return Response.ok().entity(exam).build();
+        } else {
+            return Response.status(Response
+            .Status
+            .INTERNAL_SERVER_ERROR)
+            .build();
+        }
     }
 }

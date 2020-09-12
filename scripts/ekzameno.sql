@@ -18,7 +18,8 @@ CREATE TABLE exams (
     slug text UNIQUE NOT NULL,
     subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
     publish_date timestamp,
-    close_date timestamp
+    close_date timestamp,
+    description text NOT NULL
 );
 
 CREATE TABLE questions (
