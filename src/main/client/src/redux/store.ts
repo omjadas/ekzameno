@@ -1,4 +1,5 @@
 import { Action, combineReducers, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import examsReducer from "./slices/examsSlice";
@@ -25,6 +26,9 @@ export const store = configureStore({
 export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const useAppDispatch = () => useDispatch<typeof store.dispatch>();
 
 /* eslint-disable @typescript-eslint/indent */
 export type AppThunk<ReturnType = void> = ThunkAction<

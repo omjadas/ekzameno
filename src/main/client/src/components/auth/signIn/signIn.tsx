@@ -2,9 +2,10 @@ import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal, Tab } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as yup from "yup";
 import { selectMe, signIn } from "../../../redux/slices/usersSlice";
+import { useAppDispatch } from "../../../redux/store";
 
 interface Props {
   onHide: () => any,
@@ -21,7 +22,7 @@ const FormSchema = yup.object().shape({
 });
 
 export const SignIn = (props: Props): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const me = useSelector(selectMe);
 
   const onSubmit = (values: FormValues): void => {

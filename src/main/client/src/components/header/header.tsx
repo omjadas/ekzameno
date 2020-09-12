@@ -1,26 +1,27 @@
 import React, { useState } from "react";
 import { Button, Container, Form, Navbar } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { selectMe, signOut } from "../../redux/slices/usersSlice";
+import { useAppDispatch } from "../../redux/store";
 import { AuthModal } from "../auth/authModal";
 import { CreateSubjectModal } from "../subject/subjectModal";
 
 export const Header = (): JSX.Element => {
   const [authModalShow, setAuthModalShow] = useState(false);
   const [createSubjectShow, setCreateSubjectShow] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const me = useSelector(selectMe);
 
   return (
     <Navbar bg="dark" variant="dark">
       <Container>
         <Link className="navbar-brand" to="/">Ekzameno</Link>
-        <Button onClick={() => setCreateSubjectShow(true)}>
-          Create Subject
-        </Button>
         <CreateSubjectModal show={createSubjectShow} onHide={() => setCreateSubjectShow(false)} />
         <Form className="ml-auto" inline>
+          <Button onClick={() => setCreateSubjectShow(true)}>
+            Create Subject
+          </Button>
           {
             me === undefined ?
               <Button

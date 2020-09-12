@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchExams, selectExamsStatus } from "../../redux/slices/examsSlice";
+import { useAppDispatch } from "../../redux/store";
 
 export const Exam = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const examsStatus = useSelector(selectExamsStatus);
 
   useEffect(() => {
