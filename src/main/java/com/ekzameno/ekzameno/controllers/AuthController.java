@@ -19,7 +19,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 /**
- * Servlet implementation class LoginServlet.
+ * Controller to handle authentication.
  */
 @Path("/auth")
 public class AuthController {

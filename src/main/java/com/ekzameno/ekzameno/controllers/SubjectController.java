@@ -1,22 +1,29 @@
 package com.ekzameno.ekzameno.controllers;
 
+import java.util.UUID;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.ekzameno.ekzameno.dtos.CreateExamDTO;
 import com.ekzameno.ekzameno.dtos.CreateSubjectDTO;
+import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.Subject;
+import com.ekzameno.ekzameno.services.ExamService;
 import com.ekzameno.ekzameno.services.SubjectService;
 
 /**
- * Servlet implementation class SubjectServlet.
+ * Controller for subjects.
  */
 @Path("/subjects")
 public class SubjectController {
     private SubjectService subjectService = new SubjectService();
+    private ExamService examService = new ExamService();
 
     /**
      * Handles creation of new subject.
@@ -41,6 +48,36 @@ public class SubjectController {
             .Status
             .INTERNAL_SERVER_ERROR)
             .build();
+        }
+    }
+
+    /**
+     * Create an exam.
+     *
+     * @param subjectId ID of the subject to create the exam for
+     * @param dto Exam DTO
+     * @return Response to the client
+     */
+    @Path("/{subjectId}/exams")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createExam(
+        @PathParam("subjectId") String subjectId,
+        CreateExamDTO dto
+    ) {
+        Exam exam = examService.createExam(
+            dto.name,
+            dto.description,
+            dto.startTime,
+            dto.finishTime,
+            UUID.fromString(subjectId));
+        if (exam != null) {
+            return Response.ok().entity(exam).build();
+        } else {
+            return Response
+                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .build();
         }
     }
 }
