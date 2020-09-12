@@ -111,7 +111,7 @@ public class Subject extends Model {
     }
 
     /**
-     * Set the description of the Subject (register the subject as dirty).
+     * Set the description of the Subject (registers the subject as dirty).
      *
      * @param description description of the Subject
      */
