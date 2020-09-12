@@ -15,11 +15,16 @@ interface SubjectState extends Subject {
   examIds: string[],
 }
 
+interface SubjectsState extends State {
+  slugs: Record<string, string>,
+}
+
 const subjectsAdapter = createEntityAdapter<SubjectState>();
 
 const initialState = subjectsAdapter.getInitialState({
   status: "idle",
-} as State);
+  slugs: {},
+} as SubjectsState);
 
 export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async () => {
   const res = await fetch("api/subjects", {
@@ -71,5 +76,11 @@ export const {
   selectById: selectSubjectById,
   selectIds: selectSubjectIds,
 } = subjectsAdapter.getSelectors();
+
+export const selectSubjectBySlug = (slug: string) => {
+  return (state: RootState): SubjectState => {
+    return selectSubjectById(state.subjects, state.subjects.slugs[slug]);
+  };
+};
 
 export default subjectsSlice.reducer;

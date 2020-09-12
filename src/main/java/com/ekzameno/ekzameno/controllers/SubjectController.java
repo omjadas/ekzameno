@@ -1,8 +1,10 @@
 package com.ekzameno.ekzameno.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -24,6 +26,12 @@ import com.ekzameno.ekzameno.services.SubjectService;
 public class SubjectController {
     private SubjectService subjectService = new SubjectService();
     private ExamService examService = new ExamService();
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Subject> getSubjects() {
+        return subjectService.getSubjects();
+    }
 
     /**
      * Handles creation of new subject.

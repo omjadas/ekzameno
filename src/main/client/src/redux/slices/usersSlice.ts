@@ -105,7 +105,7 @@ export const {
   selectIds: selectUserIds,
 } = usersAdapter.getSelectors();
 
-export const selectMe = (state: RootState): unknown => {
+export const selectMe = (state: RootState): UserState | undefined => {
   if (state.users.me !== undefined) {
     return selectUserById(state.users, state.users.me);
   }

@@ -15,12 +15,16 @@ interface ExamState extends Exam {
   questionIds: string[],
 }
 
+interface ExamsState extends State {
+  slugs: Record<string, string>,
+}
+
 const examsAdapter = createEntityAdapter<ExamState>();
 
 const initialState = examsAdapter.getInitialState({
-  data: [],
   status: "idle",
-} as State);
+  slugs: {},
+} as ExamsState);
 
 export const fetchExams = createAsyncThunk(
   "exams/fetchExams",
@@ -73,10 +77,17 @@ export const examsSlice = createSlice({
 });
 
 export const selectExamsStatus = (state: RootState): Status => state.exams.status;
+
 export const {
   selectAll: selectAllExams,
   selectById: selectExamById,
   selectIds: selectExamIds,
 } = examsAdapter.getSelectors();
+
+export const selectExamBySlug = (slug: string) => {
+  return (state: RootState): ExamState => {
+    return selectExamById(state.exams, state.exams.slugs[slug]);
+  };
+};
 
 export default examsSlice.reducer;
