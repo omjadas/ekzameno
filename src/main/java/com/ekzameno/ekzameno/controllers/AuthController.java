@@ -32,13 +32,13 @@ public class AuthController {
      * Sign a user in to Ekzameno.
      *
      * @param dto DTO for user sign in
-     * @return response
+     * @return response with jwt cookie set
      */
-    @Path("/login")
+    @Path("/signin")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(SignInUserDTO dto) {
+    public Response signIn(SignInUserDTO dto) {
         User user = authService.authenticateUser(dto.email, dto.password);
 
         if (user != null) {
@@ -62,5 +62,22 @@ public class AuthController {
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+    }
+
+    /**
+     * Sign a user out of Ekzameno.
+     *
+     * @return response with jwt cookie deleted
+     */
+    @Path("/signout")
+    @POST
+    public Response signOut() {
+        return Response
+            .ok()
+            .header(
+                "set-cookie",
+                "jwt=;Expires=Thu, 01-Jan-1970 00:00:01 GMT"
+            )
+            .build();
     }
 }

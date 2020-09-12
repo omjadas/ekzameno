@@ -2,7 +2,9 @@ import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal, Tab } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
+import { selectMe, signIn } from "../../../redux/slices/usersSlice";
 
 interface Props {
   onHide: () => any,
@@ -19,24 +21,17 @@ const FormSchema = yup.object().shape({
 });
 
 export const SignIn = (props: Props): JSX.Element => {
-  const onSubmit = (values: FormValues): Promise<any> => {
-    return fetch("/api/auth/login", {
-      method: "post",
-      body: JSON.stringify({
-        email: values.email,
-        password: values.password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(res => {
-      if (res.ok) {
-        props.onHide();
-      } else {
-        // TODO: handle errors
-      }
-    }).catch();
+  const dispatch = useDispatch();
+  const me = useSelector(selectMe);
+
+  const onSubmit = (values: FormValues): void => {
+    dispatch(signIn(values));
   };
+
+  if (me !== undefined) {
+    props.onHide();
+    return <></>;
+  }
 
   return (
     <Tab.Pane eventKey="signIn">

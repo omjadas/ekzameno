@@ -19,7 +19,7 @@ const initialState = subjectsAdapter.getInitialState({
 } as State);
 
 export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async () => {
-  const res = await fetch("api/users", {
+  const res = await fetch("api/subjects", {
     headers: {
       "content-type": "application/json",
     },
@@ -29,7 +29,7 @@ export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async ()
 });
 
 export const addSubject = createAsyncThunk("subjects/addSubject", async (subject: Subject) => {
-  const res = await fetch("/api/users", {
+  const res = await fetch("/api/subjects", {
     method: "post",
     body: JSON.stringify(subject),
     headers: {
