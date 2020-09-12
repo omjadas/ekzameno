@@ -18,14 +18,11 @@ export const Subjects = (): JSX.Element => {
 
   return (
     <Container>
-      <Card onClick={() => setcreateSubjectShow(true)} border="info" style={{ width: '18rem', margin: '6rem' }}>
-        <Card.Img src="plusIcon.png"/>
-        <Card.ImgOverlay>
-          <Card.Title style={{ textAlign: 'center' }}>New Subject</Card.Title>
-          <Card.Text>
-            Write something here.
-          </Card.Text>
-        </Card.ImgOverlay>
+      <Card onClick={() => setcreateSubjectShow(true)} border="info" style={{ width: "18rem", margin: "6rem" }}>
+        <Card.Title style={{ textAlign: "center" }}>New Subject</Card.Title>
+        <Card.Text>
+          Write something here.
+        </Card.Text>
       </Card>
       <CreateSubjectModal show={createSubjectshow} onHide={() => setcreateSubjectShow(false)} />
     </Container>

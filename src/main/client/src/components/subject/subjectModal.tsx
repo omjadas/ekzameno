@@ -50,7 +50,7 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
       name: values.name,
       description: values.description,
       instructors: [values.instructors],
-      students: [values.students]
+      students: [values.students],
     }));
   };
 
