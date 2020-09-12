@@ -78,7 +78,7 @@ export const {
 } = subjectsAdapter.getSelectors();
 
 export const selectSubjectBySlug = (slug: string) => {
-  return (state: RootState): SubjectState => {
+  return (state: RootState): SubjectState | undefined => {
     return selectSubjectById(state.subjects, state.subjects.slugs[slug]);
   };
 };

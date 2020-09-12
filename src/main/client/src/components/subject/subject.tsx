@@ -18,6 +18,12 @@ export const Subject = (): JSX.Element => {
     }
   }, [dispatch, subjectsStatus]);
 
+  if (subject === undefined) {
+    return (
+      <div>Unable to find subject</div>
+    );
+  }
+
   return (
     <Container>
       <Jumbotron>
