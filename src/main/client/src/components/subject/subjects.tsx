@@ -15,12 +15,6 @@ export const Subjects = (): JSX.Element => {
 
   return (
     <Container>
-      <Card border="info" style={{ width: "18rem", margin: "6rem" }}>
-        <Card.Title style={{ textAlign: "center" }}>New Subject</Card.Title>
-        <Card.Text>
-          Write something here.
-        </Card.Text>
-      </Card>
     </Container>
   );
 };
