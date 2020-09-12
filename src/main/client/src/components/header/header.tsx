@@ -8,7 +8,7 @@ import { CreateSubjectModal } from "../subject/subjectModal";
 
 export const Header = (): JSX.Element => {
   const [authModalShow, setAuthModalShow] = useState(false);
-  const [createSubjectshow, setcreateSubjectShow] = useState(false);
+  const [createSubjectShow, setCreateSubjectShow] = useState(false);
   const dispatch = useDispatch();
   const me = useSelector(selectMe);
 
