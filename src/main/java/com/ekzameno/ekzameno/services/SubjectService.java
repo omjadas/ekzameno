@@ -1,13 +1,6 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
-/*
-import com.ekzameno.ekzameno.models.Enrolment;
-import com.ekzameno.ekzameno.models.Instructor;
-import com.ekzameno.ekzameno.models.InstructorSubject;
-import com.ekzameno.ekzameno.mappers.SubjectMapper;
-import com.ekzameno.ekzameno.models.Student;
-import com.ekzameno.ekzameno.proxies.ProxyList;*/
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
