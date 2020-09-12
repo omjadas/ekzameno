@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Container } from "react-bootstrap";
 import { fetchSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
 
-export const Subject = (): JSX.Element => {
-  const { slug } = useParams<{ slug: string }>();
+export const Subjects = (): JSX.Element => {
   const dispatch = useDispatch();
   const subjectsStatus = useSelector(selectSubjectsStatus);
 
@@ -12,7 +11,10 @@ export const Subject = (): JSX.Element => {
     if (subjectsStatus === "idle") {
       dispatch(fetchSubjects());
     }
-  }, [slug, dispatch, subjectsStatus]);
+  }, [dispatch, subjectsStatus]);
 
-  return <></>;
+  return (
+    <Container>
+    </Container>
+  );
 };

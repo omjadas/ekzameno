@@ -9,6 +9,7 @@ CREATE TABLE users (
 CREATE TABLE subjects (
     id uuid PRIMARY KEY,
     name text NOT NULL,
+    description text NOT NULL,
     slug text UNIQUE NOT NULL
 );
 
