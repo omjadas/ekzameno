@@ -5,7 +5,6 @@ import { Form, Button, Modal } from "react-bootstrap";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import * as yup from "yup";
-
 import { addSubject, fetchSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
 
 export interface SubjectModalProps {
