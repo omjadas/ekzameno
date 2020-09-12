@@ -65,8 +65,8 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void insert(Exam exam) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, name, description, start_time, finish_time, subject_id) " +
-            "VALUES (?,?,?,?,?,?)";
+            " (id, slug, name, description, start_time, finish_time, " +
+            "subject_id) VALUES (?,?,?,?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -74,17 +74,18 @@ public class ExamMapper extends Mapper<Exam> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, exam.getId());
-            statement.setString(2, exam.getName());
-            statement.setObject(3,exam.getDescription());
+            statement.setString(2, exam.getSlug());
+            statement.setString(3, exam.getName());
+            statement.setObject(4,exam.getDescription());
             statement.setTimestamp(
-                4,
+                5,
                 new Timestamp(exam.getStartTime().getTime())
             );
             statement.setTimestamp(
-                5,
+                6,
                 new Timestamp(exam.getFinishTime().getTime())
             );
-            statement.setObject(6, exam.getSubjectId());
+            statement.setObject(7, exam.getSubjectId());
             statement.executeUpdate();
         }
     }
