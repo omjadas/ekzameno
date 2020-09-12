@@ -97,7 +97,9 @@ public class SubjectMapper extends Mapper<Subject> {
 
     @Override
     public void insert(Subject subject) throws SQLException {
-        String query = "INSERT INTO " + tableName + " (id, name) VALUES (?,?)";
+        String query = "INSERT INTO " +
+            tableName +
+            " (id, slug, name, description) VALUES (?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -105,14 +107,18 @@ public class SubjectMapper extends Mapper<Subject> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, subject.getId());
-            statement.setString(2, subject.getName());
+            statement.setString(2, subject.getSlug());
+            statement.setString(3, subject.getName());
+            statement.setString(4, subject.getDescription());
             statement.executeUpdate();
         }
     }
 
     @Override
     public void update(Subject subject) throws SQLException {
-        String query = "UPDATE " + tableName + " SET name = ? WHERE id = ?";
+        String query = "UPDATE " +
+            tableName +
+            " SET name = ?, description = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -120,7 +126,8 @@ public class SubjectMapper extends Mapper<Subject> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, subject.getName());
-            statement.setObject(2, subject.getId());
+            statement.setString(2, subject.getDescription());
+            statement.setObject(3, subject.getId());
             statement.executeUpdate();
         }
     }
@@ -129,8 +136,9 @@ public class SubjectMapper extends Mapper<Subject> {
     protected Subject load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
+        String description = rs.getString("description");
         String slug = rs.getString("slug");
-        return new Subject(id, name, slug);
+        return new Subject(id, name, description, slug);
     }
 
     @Override

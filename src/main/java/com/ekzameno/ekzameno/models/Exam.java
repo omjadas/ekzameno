@@ -11,6 +11,8 @@ import com.ekzameno.ekzameno.proxies.QuestionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 import com.github.slugify.Slugify;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 /**
  * Exam for a Subject.
  */
@@ -57,7 +59,9 @@ public class Exam extends Model {
      */
     public Exam(String name, DateRange dateRange, UUID subjectId) {
         this.name = name;
-        this.slug = new Slugify().slugify(name);
+        this.slug = new Slugify().slugify(name) + "-" +
+            RandomStringUtils.randomAlphanumeric(8);
+
         this.dateRange = dateRange;
         this.subjectId = subjectId;
         this.questions = new QuestionProxyList(getId());
