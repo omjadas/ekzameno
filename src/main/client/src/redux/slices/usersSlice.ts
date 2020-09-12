@@ -10,14 +10,17 @@ interface User {
 
 interface UserState extends User {
   id: string,
-  slug: string,
+}
+
+interface UsersState extends State {
+  me?: string,
 }
 
 const usersAdapter = createEntityAdapter();
 
 const initialState = usersAdapter.getInitialState({
   status: "idle",
-} as State);
+} as UsersState);
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   const res = await fetch("api/users", {
@@ -41,6 +44,31 @@ export const addUser = createAsyncThunk("users/addUser", async (user: User) => {
   return res.json() as Promise<UserState>;
 });
 
+export const signIn = createAsyncThunk(
+  "users/signIn",
+  async ({ email, password }: {email: string, password: string}) => {
+    const res = await fetch("/api/auth/signin", {
+      method: "post",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    return res.json() as Promise<UserState>;
+  }
+);
+
+export const signOut = createAsyncThunk(
+  "users/signOut",
+  () => fetch("/api/auth/signout", {
+    method: "post",
+  })
+);
+
 export const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -60,6 +88,13 @@ export const usersSlice = createSlice({
     builder.addCase(addUser.fulfilled, (state, action) => {
       usersAdapter.addOne(state, action.payload);
     });
+    builder.addCase(signIn.fulfilled, (state, action) => {
+      state.me = action.payload.id;
+      usersAdapter.addOne(state, action.payload);
+    });
+    builder.addCase(signOut.fulfilled, state => {
+      state.me = undefined;
+    });
   },
 });
 
@@ -69,5 +104,11 @@ export const {
   selectById: selectUserById,
   selectIds: selectUserIds,
 } = usersAdapter.getSelectors();
+
+export const selectMe = (state: RootState): unknown => {
+  if (state.users.me !== undefined) {
+    return selectUserById(state.users, state.users.me);
+  }
+};
 
 export default usersSlice.reducer;
