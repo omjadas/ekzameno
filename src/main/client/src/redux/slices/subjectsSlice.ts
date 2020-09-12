@@ -4,6 +4,9 @@ import { RootState } from "../store";
 
 interface Subject {
   name: string,
+  description: string,
+  instructors: string[],
+  students: string[],
 }
 
 interface SubjectState extends Subject {
