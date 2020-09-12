@@ -116,8 +116,7 @@ public class SubjectMapper extends Mapper<Subject> {
 
     @Override
     public void update(Subject subject) throws SQLException {
-        String query = "UPDATE " +
-            tableName +
+        String query = "UPDATE " + tableName +
             " SET name = ?, description = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
