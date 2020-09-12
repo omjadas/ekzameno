@@ -16,10 +16,10 @@ export const Header = (): JSX.Element => {
     <Navbar bg="dark" variant="dark">
       <Container>
         <Link className="navbar-brand" to="/">Ekzameno</Link>
-        <Button onClick={() => setcreateSubjectShow(true)}>
+        <Button onClick={() => setCreateSubjectShow(true)}>
           Create Subject
         </Button>
-        <CreateSubjectModal show={createSubjectshow} onHide={() => setcreateSubjectShow(false)} />
+        <CreateSubjectModal show={createSubjectShow} onHide={() => setCreateSubjectShow(false)} />
         <Form className="ml-auto" inline>
           {
             me === undefined ?
