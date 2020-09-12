@@ -20,6 +20,7 @@ import com.ekzameno.ekzameno.services.ExamService;
 @Path("/exams")
 public class ExamController {
     private ExamService examService = new ExamService();
+
     /**
      * Handles creation of new exam.
      *
@@ -39,10 +40,9 @@ public class ExamController {
         if (exam != null) {
             return Response.ok().entity(exam).build();
         } else {
-            return Response.status(Response
-            .Status
-            .INTERNAL_SERVER_ERROR)
-            .build();
+            return Response
+                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .build();
         }
     }
 }
