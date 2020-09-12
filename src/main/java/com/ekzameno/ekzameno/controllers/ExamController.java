@@ -33,12 +33,11 @@ public class ExamController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createExam(CreateExamDto dto) {
         Exam exam = examService.createExam(
-        dto.name,
-        dto.description,
-        dto.publishDate,
-        dto.closeDate);
-        
-        if(exam != null) {
+            dto.name,
+            dto.description,
+            dto.publishDate,
+            dto.closeDate);
+        if (exam != null) {
             return Response.ok().entity(exam).build();
         } else {
             return Response.status(Response
