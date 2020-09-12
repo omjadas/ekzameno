@@ -30,12 +30,12 @@ public class Exam extends Model {
     /**
      * Crete an exam with an ID.
      *
-     * @param id        ID of the exam
-     * @param name      name of the exam
+     * @param id          ID of the exam
+     * @param name        name of the exam
      * @param description description of the exam
-     * @param dateRange date range of the exam
-     * @param subjectId ID of the related subject
-     * @param slug      slug for the exam
+     * @param dateRange   date range of the exam
+     * @param subjectId   ID of the related subject
+     * @param slug        slug for the exam
      */
     public Exam(
         UUID id,
@@ -58,12 +58,17 @@ public class Exam extends Model {
     /**
      * Create an exam without an ID (registers as new).
      *
-     * @param name      name of the exam
+     * @param name        name of the exam
      * @param description description of the exam
-     * @param dateRange date range of the exam
-     * @param subjectId ID of the related subject
+     * @param dateRange   date range of the exam
+     * @param subjectId   ID of the related subject
      */
-    public Exam(String name,String description, DateRange dateRange, UUID subjectId) {
+    public Exam(
+        String name,
+        String description,
+        DateRange dateRange,
+        UUID subjectId
+    ) {
         this.name = name;
         this.description = description;
         this.slug = new Slugify().slugify(name);
@@ -80,6 +85,7 @@ public class Exam extends Model {
     public String getDescription() {
         return description;
     }
+
     public String getSlug() {
         return slug;
     }
@@ -119,6 +125,7 @@ public class Exam extends Model {
         this.name = name;
         UnitOfWork.getCurrent().registerDirty(this);
     }
+
     /**
      * Set the description of the Exam (marks the Exam as dirty).
      *

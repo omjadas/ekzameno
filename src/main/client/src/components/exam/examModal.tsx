@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { addExam } from "../../redux/slices/examsSlice";
 
 export interface ExamModalProps {
+  subjectId: string,
   show: boolean,
   onHide: () => any,
 }
@@ -22,10 +23,11 @@ interface UpdateExamProps extends ExamModalProps {
 
 interface FormValues {
   name: string,
-  description: String,
-  startTime: string,
-  finishTime: string
+  description: string,
+  publishDate: string,
+  closeDate: string,
 }
+
 const FormSchema = yup.object().shape({
   name: yup.string().required(),
   startTime: yup.date().required(),
@@ -33,7 +35,7 @@ const FormSchema = yup.object().shape({
   description: yup.string(),
 });
 
-export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.Element => {
+export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useDispatch();
   const examsStatus = useSelector(selectExamsStatus);
@@ -45,11 +47,13 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
   }, [slug, dispatch, examsStatus]);
 
   const onSubmit = (values: FormValues): void => {
-  dispatch(addExam({
-    subjectId: props.id,
-    
-  }));
-};
+    dispatch(addExam({
+      subjectId: props.subjectId,
+      exam: {
+        values,
+      },
+    }));
+  };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
@@ -60,9 +64,9 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
       <Formik
         initialValues={{
           name: (props as any).name ?? "",
-          startTime: (props as any).startTime === undefined ? "" : new Date(new Date((props as any).startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
-          finishTime: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
           description: (props as any).description ?? "",
+          publishDate: (props as any).startTime === undefined ? "" : new Date(new Date((props as any).startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+          closeDate: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}
@@ -79,17 +83,17 @@ export const CreateExamModel = (props: UpdateExamProps | ExamModalProps): JSX.El
                   label="Name"
                   name="name" />
                 <FormikControl
-                  type="datetime-local"
-                  label="Start Time"
-                  name="startTime" />
-                <FormikControl
-                  type="datetime-local"
-                  label="Finish Time"
-                  name="finishTime" />
-                <FormikControl
                   as="textarea"
                   label="Description"
                   name="description" />
+                <FormikControl
+                  type="datetime-local"
+                  label="Start Time"
+                  name="publishDate" />
+                <FormikControl
+                  type="datetime-local"
+                  label="Finish Time"
+                  name="closeDate" />
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>

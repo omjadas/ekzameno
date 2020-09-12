@@ -1,6 +1,6 @@
 package com.ekzameno.ekzameno.dtos;
 
-import org.glassfish.jersey.message.internal.OutboundMessageContext.StreamProvider;
+import java.util.Date;
 
 /**
  * DTO for creating exams.

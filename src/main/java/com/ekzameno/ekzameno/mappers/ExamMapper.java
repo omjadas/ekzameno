@@ -92,8 +92,8 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void update(Exam exam) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET name = ?, description = ?, publish_date = ?, close_date = ?, subject_id = ? " +
-            "WHERE id = ?";
+            " SET name = ?, description = ?, publish_date = ?, " +
+            "close_date = ?, subject_id = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -126,7 +126,7 @@ public class ExamMapper extends Mapper<Exam> {
         Date closeDate = rs.getTimestamp("close_date");
         DateRange dateRange = new DateRange(publishDate, closeDate);
         UUID subjectId = rs.getObject("subject_id", java.util.UUID.class);
-        return new Exam(id, name, dateRange, subjectId, slug);
+        return new Exam(id, name, description, dateRange, subjectId, slug);
     }
 
     @Override

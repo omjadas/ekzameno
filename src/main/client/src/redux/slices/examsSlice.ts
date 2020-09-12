@@ -4,6 +4,9 @@ import { RootState } from "../store";
 
 interface Exam {
   name: string,
+  description: string,
+  publishDate: string,
+  closeDate: string,
 }
 
 interface ExamState extends Exam {
