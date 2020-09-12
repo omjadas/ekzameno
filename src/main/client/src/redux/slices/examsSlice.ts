@@ -65,6 +65,9 @@ export const examsSlice = createSlice({
     builder.addCase(fetchExams.fulfilled, (state, action) => {
       state.status = "finished";
       examsAdapter.upsertMany(state, action.payload);
+      action.payload.forEach(exam => {
+        state.slugs[exam.slug] = exam.id;
+      });
     });
     builder.addCase(fetchExams.rejected, (state, action) => {
       state.status = "error";
@@ -72,6 +75,7 @@ export const examsSlice = createSlice({
     });
     builder.addCase(addExam.fulfilled, (state, action) => {
       examsAdapter.addOne(state, action.payload);
+      state.slugs[action.payload.slug] = action.payload.id;
     });
   },
 });
