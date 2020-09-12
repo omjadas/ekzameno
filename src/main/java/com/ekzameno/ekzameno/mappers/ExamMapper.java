@@ -65,8 +65,8 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void insert(Exam exam) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, name, publish_date, close_date, subject_id) " +
-            "VALUES (?,?,?,?,?)";
+            " (id, slug, name, description, start_time, finish_time, " +
+            "subject_id) VALUES (?,?,?,?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -74,16 +74,18 @@ public class ExamMapper extends Mapper<Exam> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, exam.getId());
-            statement.setString(2, exam.getName());
+            statement.setString(2, exam.getSlug());
+            statement.setString(3, exam.getName());
+            statement.setObject(4,exam.getDescription());
             statement.setTimestamp(
-                3,
-                new Timestamp(exam.getPublishDate().getTime())
+                5,
+                new Timestamp(exam.getStartTime().getTime())
             );
             statement.setTimestamp(
-                4,
-                new Timestamp(exam.getCloseDate().getTime())
+                6,
+                new Timestamp(exam.getFinishTime().getTime())
             );
-            statement.setObject(5, exam.getSubjectId());
+            statement.setObject(7, exam.getSubjectId());
             statement.executeUpdate();
         }
     }
@@ -91,8 +93,8 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     public void update(Exam exam) throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET name = ?, publish_date = ?, close_date = ?, subject_id = ? " +
-            "WHERE id = ?";
+            " SET name = ?, description = ?, start_time = ?, " +
+            "finish_time = ?, subject_id = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -100,16 +102,17 @@ public class ExamMapper extends Mapper<Exam> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setString(1, exam.getName());
-            statement.setTimestamp(
-                2,
-                new Timestamp(exam.getPublishDate().getTime())
-            );
+            statement.setString(2, exam.getDescription());
             statement.setTimestamp(
                 3,
-                new Timestamp(exam.getCloseDate().getTime())
+                new Timestamp(exam.getStartTime().getTime())
             );
-            statement.setObject(4, exam.getSubjectId());
-            statement.setObject(5, exam.getId());
+            statement.setTimestamp(
+                4,
+                new Timestamp(exam.getFinishTime().getTime())
+            );
+            statement.setObject(5, exam.getSubjectId());
+            statement.setObject(6, exam.getId());
             statement.executeUpdate();
         }
     }
@@ -118,12 +121,13 @@ public class ExamMapper extends Mapper<Exam> {
     protected Exam load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String name = rs.getString("name");
+        String description = rs.getString("description");
         String slug = rs.getString("slug");
-        Date publishDate = rs.getTimestamp("publish_date");
-        Date closeDate = rs.getTimestamp("close_date");
-        DateRange dateRange = new DateRange(publishDate, closeDate);
+        Date startTime = rs.getTimestamp("start_time");
+        Date finishTime = rs.getTimestamp("finish_time");
+        DateRange dateRange = new DateRange(startTime, finishTime);
         UUID subjectId = rs.getObject("subject_id", java.util.UUID.class);
-        return new Exam(id, name, dateRange, subjectId, slug);
+        return new Exam(id, name, description, dateRange, subjectId, slug);
     }
 
     @Override

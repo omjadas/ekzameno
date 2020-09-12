@@ -14,5 +14,7 @@ export const Exam = (): JSX.Element => {
     }
   }, [slug, dispatch, examsStatus]);
 
-  return <></>;
+  return (
+    <></>
+  );
 };

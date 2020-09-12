@@ -16,7 +16,7 @@ interface UsersState extends State {
   me?: string,
 }
 
-const usersAdapter = createEntityAdapter();
+const usersAdapter = createEntityAdapter<UserState>();
 
 const initialState = usersAdapter.getInitialState({
   status: "idle",
@@ -103,11 +103,11 @@ export const {
   selectAll: selectAllUsers,
   selectById: selectUserById,
   selectIds: selectUserIds,
-} = usersAdapter.getSelectors();
+} = usersAdapter.getSelectors<RootState>(state => state.users);
 
-export const selectMe = (state: RootState): unknown => {
+export const selectMe = (state: RootState): UserState | undefined => {
   if (state.users.me !== undefined) {
-    return selectUserById(state.users, state.users.me);
+    return selectUserById(state, state.users.me);
   }
 };
 

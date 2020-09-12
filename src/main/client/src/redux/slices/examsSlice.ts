@@ -4,6 +4,9 @@ import { RootState } from "../store";
 
 interface Exam {
   name: string,
+  description: string,
+  startTime: string,
+  finishTime: string,
 }
 
 interface ExamState extends Exam {
@@ -12,12 +15,16 @@ interface ExamState extends Exam {
   questionIds: string[],
 }
 
+interface ExamsState extends State {
+  slugs: Record<string, string>,
+}
+
 const examsAdapter = createEntityAdapter<ExamState>();
 
 const initialState = examsAdapter.getInitialState({
-  data: [],
   status: "idle",
-} as State);
+  slugs: {},
+} as ExamsState);
 
 export const fetchExams = createAsyncThunk(
   "exams/fetchExams",
@@ -58,6 +65,9 @@ export const examsSlice = createSlice({
     builder.addCase(fetchExams.fulfilled, (state, action) => {
       state.status = "finished";
       examsAdapter.upsertMany(state, action.payload);
+      action.payload.forEach(exam => {
+        state.slugs[exam.slug] = exam.id;
+      });
     });
     builder.addCase(fetchExams.rejected, (state, action) => {
       state.status = "error";
@@ -65,15 +75,23 @@ export const examsSlice = createSlice({
     });
     builder.addCase(addExam.fulfilled, (state, action) => {
       examsAdapter.addOne(state, action.payload);
+      state.slugs[action.payload.slug] = action.payload.id;
     });
   },
 });
 
 export const selectExamsStatus = (state: RootState): Status => state.exams.status;
+
 export const {
   selectAll: selectAllExams,
   selectById: selectExamById,
   selectIds: selectExamIds,
-} = examsAdapter.getSelectors();
+} = examsAdapter.getSelectors<RootState>(state => state.exams);
+
+export const selectExamBySlug = (slug: string) => {
+  return (state: RootState): ExamState | undefined => {
+    return selectExamById(state, state.exams.slugs[slug]);
+  };
+};
 
 export default examsSlice.reducer;

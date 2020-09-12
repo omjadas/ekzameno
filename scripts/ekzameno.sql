@@ -16,10 +16,11 @@ CREATE TABLE subjects (
 CREATE TABLE exams (
     id uuid PRIMARY KEY,
     name text NOT NULL,
+    description text NOT NULL,
     slug text UNIQUE NOT NULL,
     subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
-    publish_date timestamp,
-    close_date timestamp
+    start_time timestamp,
+    finish_time timestamp
 );
 
 CREATE TABLE questions (

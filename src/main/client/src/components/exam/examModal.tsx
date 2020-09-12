@@ -5,66 +5,66 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import * as yup from "yup";
-import { addSubject, fetchSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { addExam, fetchExams, selectExamsStatus } from "../../redux/slices/examsSlice";
 
-export interface SubjectModalProps {
+export interface ExamModalProps {
+  subjectId: string,
   show: boolean,
   onHide: () => any,
 }
 
-interface UpdateSubjectProps extends SubjectModalProps {
+interface UpdateExamProps extends ExamModalProps {
+  id: string,
   name: string,
-  slug: string,
-  instructors: string[],
-  students: string[],
+  startTime: string,
+  finishTime: string,
   description: string,
 }
 
 interface FormValues {
   name: string,
-  instructors: string,
-  students: string,
   description: string,
+  startTime: string,
+  finishTime: string,
 }
 
 const FormSchema = yup.object().shape({
   name: yup.string().required(),
-  instructors: yup.string(),
-  students: yup.string(),
+  startTime: yup.date().required(),
+  finishTime: yup.date().min(yup.ref("startTime")).required(),
   description: yup.string(),
 });
 
-export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
+export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useDispatch();
-  const subjectStatus = useSelector(selectSubjectsStatus);
+  const examsStatus = useSelector(selectExamsStatus);
 
   useEffect(() => {
-    if (subjectStatus === "idle") {
-      dispatch(fetchSubjects());
+    if (examsStatus === "idle") {
+      dispatch(fetchExams(slug));
     }
-  }, [slug, dispatch, subjectStatus]);
+  }, [slug, dispatch, examsStatus]);
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(addSubject({
-      name: values.name,
-      description: values.description,
-      instructors: [values.instructors],
-      students: [values.students],
+    dispatch(addExam({
+      subjectId: props.subjectId,
+      exam: values,
     }));
   };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> Create Subject </Modal.Title>
+        <Modal.Title> Creating Exam for SubjectID
+        </Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{
           name: (props as any).name ?? "",
-          instructors: (props as any).instructors ?? "",
-          students: (props as any).students ?? "",
           description: (props as any).description ?? "",
+          startTime: (props as any).startTime === undefined ? "" : new Date(new Date((props as any).startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+          finishTime: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}
@@ -74,7 +74,7 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
             handleSubmit,
             isSubmitting,
           }) => (
-            <Form id="createSubject" onSubmit={handleSubmit as any}>
+            <Form id="createExam" onSubmit={handleSubmit as any}>
               <Modal.Body>
                 <FormikControl
                   type="text"
@@ -85,17 +85,17 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
                   label="Description"
                   name="description" />
                 <FormikControl
-                  type="text"
-                  label="Instructors"
-                  name="instructors" />
+                  type="datetime-local"
+                  label="Start Time"
+                  name="startTime" />
                 <FormikControl
-                  type="text"
-                  label="Students"
-                  name="students" />
+                  type="datetime-local"
+                  label="Finish Time"
+                  name="finishTime" />
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
-                  Create Subject
+                  Create Exam
                 </Button>
               </Modal.Footer>
             </Form>
