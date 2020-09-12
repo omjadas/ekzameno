@@ -65,9 +65,9 @@ export const signIn = createAsyncThunk(
 export const signOut = createAsyncThunk(
   "users/signOut",
   () => fetch("/api/auth/signout", {
-    method: "post"
+    method: "post",
   })
-)
+);
 
 export const usersSlice = createSlice({
   name: "users",
@@ -94,7 +94,7 @@ export const usersSlice = createSlice({
     });
     builder.addCase(signOut.fulfilled, state => {
       state.me = undefined;
-    })
+    });
   },
 });
 

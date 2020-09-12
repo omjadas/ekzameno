@@ -1,9 +1,9 @@
 import { Action, combineReducers, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import examsReducer from "./slices/examsSlice";
 import subjectsReducer from "./slices/subjectsSlice";
 import usersReducer from "./slices/usersSlice";
-import { persistReducer, persistStore } from "redux-persist";
-import storage from 'redux-persist/lib/storage';
 
 const reducers = combineReducers({
   users: usersReducer,
@@ -12,7 +12,7 @@ const reducers = combineReducers({
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   storage,
 };
 

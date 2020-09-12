@@ -17,17 +17,17 @@ export const Header = (): JSX.Element => {
         <Form className="ml-auto" inline>
           {
             me === undefined ?
-            <Button
-              variant="outline-info"
-              onClick={() => setAuthModalShow(true)}>
-              Sign In
-            </Button>
-            :
-            <Button
-              variant="outline-info"
-              onClick={() => dispatch(signOut())}>
-              Sign Out
-            </Button>
+              <Button
+                variant="outline-info"
+                onClick={() => setAuthModalShow(true)}>
+                Sign In
+              </Button>
+              :
+              <Button
+                variant="outline-info"
+                onClick={() => dispatch(signOut())}>
+                Sign Out
+              </Button>
           }
         </Form>
         <AuthModal show={authModalShow} onHide={() => setAuthModalShow(false)} />

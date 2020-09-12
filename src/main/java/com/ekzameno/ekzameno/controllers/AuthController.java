@@ -32,7 +32,7 @@ public class AuthController {
      * Sign a user in to Ekzameno.
      *
      * @param dto DTO for user sign in
-     * @return response
+     * @return response with jwt cookie set
      */
     @Path("/signin")
     @POST
@@ -64,6 +64,11 @@ public class AuthController {
         }
     }
 
+    /**
+     * Sign a user out of Ekzameno.
+     *
+     * @return response with jwt cookie deleted
+     */
     @Path("/signout")
     @POST
     public Response signOut() {
