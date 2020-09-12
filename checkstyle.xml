@@ -102,6 +102,7 @@
             <message key="todo.match" value="Resolve unexpected comment." />
         </module>
         <module name="TypeName" />
+        <module name="UnusedImports"/>
         <module name="UpperEll" />
         <module name="VariableDeclarationUsageDistance" />
         <module name="WhitespaceAround" />
