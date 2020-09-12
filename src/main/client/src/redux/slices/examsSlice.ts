@@ -82,11 +82,11 @@ export const {
   selectAll: selectAllExams,
   selectById: selectExamById,
   selectIds: selectExamIds,
-} = examsAdapter.getSelectors();
+} = examsAdapter.getSelectors<RootState>(state => state.exams);
 
 export const selectExamBySlug = (slug: string) => {
   return (state: RootState): ExamState | undefined => {
-    return selectExamById(state.exams, state.exams.slugs[slug]);
+    return selectExamById(state, state.exams.slugs[slug]);
   };
 };
 

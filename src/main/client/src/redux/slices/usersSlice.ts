@@ -103,11 +103,11 @@ export const {
   selectAll: selectAllUsers,
   selectById: selectUserById,
   selectIds: selectUserIds,
-} = usersAdapter.getSelectors();
+} = usersAdapter.getSelectors<RootState>(state => state.users);
 
 export const selectMe = (state: RootState): UserState | undefined => {
   if (state.users.me !== undefined) {
-    return selectUserById(state.users, state.users.me);
+    return selectUserById(state, state.users.me);
   }
 };
 

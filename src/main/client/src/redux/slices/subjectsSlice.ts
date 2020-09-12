@@ -75,11 +75,13 @@ export const {
   selectAll: selectAllSubjects,
   selectById: selectSubjectById,
   selectIds: selectSubjectIds,
-} = subjectsAdapter.getSelectors();
+} = subjectsAdapter.getSelectors<RootState>(
+  state => state.subjects
+);
 
 export const selectSubjectBySlug = (slug: string) => {
   return (state: RootState): SubjectState | undefined => {
-    return selectSubjectById(state.subjects, state.subjects.slugs[slug]);
+    return selectSubjectById(state, state.subjects.slugs[slug]);
   };
 };
 
