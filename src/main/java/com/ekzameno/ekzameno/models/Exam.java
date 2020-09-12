@@ -27,6 +27,7 @@ public class Exam extends Model {
     @JsonIgnore
     private ProxyList<ExamSubmission> examSubmissions;
     private UUID subjectId;
+    @JsonIgnore
     private Subject subject = null;
 
     /**

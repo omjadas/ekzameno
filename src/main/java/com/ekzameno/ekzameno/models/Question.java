@@ -7,6 +7,7 @@ import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.QuestionSubmissionQuestionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Question for an Exam.
@@ -16,6 +17,7 @@ public abstract class Question extends Model {
     private int marks;
     private ProxyList<QuestionSubmission> questionSubmissions;
     private UUID examId;
+    @JsonIgnore
     private Exam exam = null;
 
     /**

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Answer for a MultipleChoiceQuestion.
@@ -13,6 +14,7 @@ public class Answer extends Model {
     private String answer;
     private boolean correct;
     private UUID questionId;
+    @JsonIgnore
     private Question question = null;
 
     /**
