@@ -19,20 +19,20 @@ public class ExamService {
      *
      * @param name        name of the exam
      * @param description description of the exam
-     * @param publishDate publish date of the exam
-     * @param closeDate   close date of the exam
+     * @param startTime   publish date of the exam
+     * @param finishTime  close date of the exam
      * @param subjectId   id of the subject
      * @return a new exam
      */
     public Exam createExam(
         String name,
         String description,
-        Date publishDate,
-        Date closeDate,
+        Date startTime,
+        Date finishTime,
         UUID subjectId
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
-            DateRange dateRange = new DateRange(publishDate, closeDate);
+            DateRange dateRange = new DateRange(startTime, finishTime);
             Exam exam = new Exam(name, description, dateRange, subjectId);
             UnitOfWork.getCurrent().commit();
             return exam;

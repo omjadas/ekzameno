@@ -90,11 +90,11 @@ public class Exam extends Model {
         return slug;
     }
 
-    public Date getPublishDate() {
+    public Date getStartTime() {
         return dateRange.getFromDate();
     }
 
-    public Date getCloseDate() {
+    public Date getFinishTime() {
         return dateRange.getToDate();
     }
 

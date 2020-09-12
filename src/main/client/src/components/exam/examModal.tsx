@@ -13,6 +13,7 @@ export interface ExamModalProps {
   show: boolean,
   onHide: () => any,
 }
+
 interface UpdateExamProps extends ExamModalProps {
   id: string,
   name: string,
@@ -24,8 +25,8 @@ interface UpdateExamProps extends ExamModalProps {
 interface FormValues {
   name: string,
   description: string,
-  publishDate: string,
-  closeDate: string,
+  startTime: string,
+  finishTime: string,
 }
 
 const FormSchema = yup.object().shape({
@@ -89,11 +90,11 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
                 <FormikControl
                   type="datetime-local"
                   label="Start Time"
-                  name="publishDate" />
+                  name="startTime" />
                 <FormikControl
                   type="datetime-local"
                   label="Finish Time"
-                  name="closeDate" />
+                  name="finishTime" />
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>

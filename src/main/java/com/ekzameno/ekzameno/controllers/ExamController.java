@@ -33,8 +33,8 @@ public class ExamController {
         Exam exam = examService.createExam(
             dto.name,
             dto.description,
-            dto.publishDate,
-            dto.closeDate,
+            dto.startTime,
+            dto.finishTime,
             UUID.randomUUID());
         if (exam != null) {
             return Response.ok().entity(exam).build();

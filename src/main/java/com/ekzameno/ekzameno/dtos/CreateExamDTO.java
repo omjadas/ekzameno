@@ -8,6 +8,6 @@ import java.util.Date;
 public class CreateExamDTO {
     public String name;
     public String description;
-    public Date publishDate;
-    public Date closeDate;
+    public Date startTime;
+    public Date finishTime;
 }
