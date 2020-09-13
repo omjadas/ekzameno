@@ -22,13 +22,15 @@ export const Subjects = (): JSX.Element => {
         {
           subjects.map(subject => {
             return (
-              <Card key={subject.id} style={{ width: "18rem", height: "16rem", margin: "4rem" }}>
-                <Card.Title style={{ textAlign: "center" }}>
-                  <Link to={`/subjects/${subject.slug}`}>
-                    {subject.name}
-                  </Link>
-                </Card.Title>
-                <Card.Body>{subject.description}</Card.Body>
+              <Card key={subject.id}>
+                <Card.Body>
+	              <Card.Title>
+	                <Link to={`/subjects/${subject.slug}`}>
+	                  {subject.name}
+	                </Link>
+	              </Card.Title>
+	              <Card.Text>{subject.description}</Card.Text>
+                </Card.Body>
               </Card>
             );
           })
