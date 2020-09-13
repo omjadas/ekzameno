@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { fetchSubjects, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
+import styles from "./subject.module.scss";
 
 export const Subject = (): JSX.Element => {
   const { slug } = useParams<{slug: string}>();
@@ -26,7 +27,7 @@ export const Subject = (): JSX.Element => {
   }
 
   return (
-    <Container>
+    <Container className={styles.margin}>
       <Jumbotron>
         <h1>{subject.name}</h1>
         <p>{subject.description}</p>
