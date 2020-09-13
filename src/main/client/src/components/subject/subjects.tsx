@@ -17,7 +17,7 @@ export const Subjects = (): JSX.Element => {
   }, [dispatch, subjectsStatus]);
 
   return (
-    <Container style={{ marginTop: "4rem" }}>
+    <Container className="mt-4">
       <CardColumns>
         {
           subjects.map(subject => {
