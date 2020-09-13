@@ -14,12 +14,17 @@ export const Header = (): JSX.Element => {
   const me = useSelector(selectMe);
 
   return (
-    <Navbar bg="dark" variant="dark">
+    <Navbar bg="dark" variant="dark" fixed="top">
       <Container>
         <Link className="navbar-brand" to="/">Ekzameno</Link>
         <CreateSubjectModal show={createSubjectShow} onHide={() => setCreateSubjectShow(false)} />
         <Form className="ml-auto" inline>
-          <Button onClick={() => setCreateSubjectShow(true)}>
+          <Link to="/subjects">
+            <Button>
+              View All Subjects
+            </Button>
+          </Link>
+          <Button onClick={() => setCreateSubjectShow(true)} style={{margin: "0.5rem"}}>
             Create Subject
           </Button>
           {

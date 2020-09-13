@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Card, Container } from "react-bootstrap";
+import { Container, Card, CardColumns } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchSubjects, selectAllSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
@@ -17,21 +17,23 @@ export const Subjects = (): JSX.Element => {
   }, [dispatch, subjectsStatus]);
 
   return (
-    <Container>
-      {
-        subjects.map(subject => {
-          return (
-            <Card key={subject.id}>
-              <Card.Title>
-                <Link to={`/subjects/${subject.slug}`}>
-                  {subject.name}
-                </Link>
-              </Card.Title>
-              <Card.Body>{subject.description}</Card.Body>
-            </Card>
-          );
-        })
-      }
+    <Container style={{marginTop: "4rem"}}>
+      <CardColumns>
+        {
+          subjects.map(subject => {
+            return (
+              <Card key={subject.id} style={{ width: "18rem", height: "16rem", margin: "4rem" }}>
+                <Card.Title style={{textAlign: "center"}}>
+                  <Link to={`/subjects/${subject.slug}`}>
+                    {subject.name}
+                  </Link>
+                </Card.Title>
+                <Card.Body>{subject.description}</Card.Body>
+              </Card>
+            );
+          })
+        }
+      </CardColumns>
     </Container>
   );
 };
