@@ -17,13 +17,13 @@ export const Subjects = (): JSX.Element => {
   }, [dispatch, subjectsStatus]);
 
   return (
-    <Container style={{marginTop: "4rem"}}>
+    <Container style={{ marginTop: "4rem" }}>
       <CardColumns>
         {
           subjects.map(subject => {
             return (
               <Card key={subject.id} style={{ width: "18rem", height: "16rem", margin: "4rem" }}>
-                <Card.Title style={{textAlign: "center"}}>
+                <Card.Title style={{ textAlign: "center" }}>
                   <Link to={`/subjects/${subject.slug}`}>
                     {subject.name}
                   </Link>

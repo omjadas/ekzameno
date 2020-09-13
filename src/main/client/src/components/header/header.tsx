@@ -24,7 +24,7 @@ export const Header = (): JSX.Element => {
               View All Subjects
             </Button>
           </Link>
-          <Button onClick={() => setCreateSubjectShow(true)} style={{margin: "0.5rem"}}>
+          <Button onClick={() => setCreateSubjectShow(true)} style={{ margin: "0.5rem" }}>
             Create Subject
           </Button>
           {
