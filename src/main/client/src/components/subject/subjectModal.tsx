@@ -1,11 +1,13 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import * as yup from "yup";
 import { addSubject, fetchSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { useAppDispatch } from "../../redux/store";
 
 export interface SubjectModalProps {
   show: boolean,
@@ -36,7 +38,7 @@ const FormSchema = yup.object().shape({
 
 export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const subjectStatus = useSelector(selectSubjectsStatus);
 
   useEffect(() => {
@@ -51,7 +53,14 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
       description: values.description,
       instructors: [values.instructors],
       students: [values.students],
-    }));
+    }))
+      .then(unwrapResult)
+      .then(() => {
+        props.onHide();
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   return (

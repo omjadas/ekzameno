@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSubjects, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
 
 export const Subject = (): JSX.Element => {
   const { slug } = useParams<{slug: string}>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const subjectsStatus = useSelector(selectSubjectsStatus);
   const subject = useSelector(selectSubjectBySlug(slug));
   const [examModalShow, setExamModalShow] = useState(false);

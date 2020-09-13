@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Card, Container } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchSubjects, selectAllSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { useAppDispatch } from "../../redux/store";
 
 export const Subjects = (): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const subjectsStatus = useSelector(selectSubjectsStatus);
   const subjects = useSelector(selectAllSubjects);
 
