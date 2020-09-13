@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, Form, Navbar } from "react-bootstrap";
+import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { selectMe, signOut } from "../../redux/slices/usersSlice";
@@ -14,12 +14,20 @@ export const Header = (): JSX.Element => {
   const me = useSelector(selectMe);
 
   return (
-    <Navbar bg="dark" variant="dark">
+    <Navbar bg="dark" variant="dark" fixed="top">
       <Container>
         <Link className="navbar-brand" to="/">Ekzameno</Link>
+        <Nav>
+          {
+            me !== undefined &&
+              <Link className="nav-link" to="/subjects">
+                Subjects
+              </Link>
+          }
+        </Nav>
         <CreateSubjectModal show={createSubjectShow} onHide={() => setCreateSubjectShow(false)} />
         <Form className="ml-auto" inline>
-          <Button onClick={() => setCreateSubjectShow(true)}>
+          <Button className="mr-2" onClick={() => setCreateSubjectShow(true)}>
             Create Subject
           </Button>
           {

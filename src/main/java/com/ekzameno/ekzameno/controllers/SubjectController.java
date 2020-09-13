@@ -27,6 +27,11 @@ public class SubjectController {
     private SubjectService subjectService = new SubjectService();
     private ExamService examService = new ExamService();
 
+    /**
+     * Handles the fetching of all subjects from the database.
+     *
+     * @return list of all subjects in the database.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Subject> getSubjects() {
