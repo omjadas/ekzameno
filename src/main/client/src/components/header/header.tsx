@@ -17,6 +17,14 @@ export const Header = (): JSX.Element => {
     <Navbar bg="dark" variant="dark" fixed="top">
       <Container>
         <Link className="navbar-brand" to="/">Ekzameno</Link>
+        <Nav>
+          {
+            me !== undefined &&
+              <Link className="nav-link" to="/subjects">
+                Subjects
+              </Link>
+          }
+        </Nav>
         <CreateSubjectModal show={createSubjectShow} onHide={() => setCreateSubjectShow(false)} />
         <Form className="ml-auto" inline>
           <Link to="/subjects">
