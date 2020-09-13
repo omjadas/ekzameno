@@ -27,12 +27,7 @@ export const Header = (): JSX.Element => {
         </Nav>
         <CreateSubjectModal show={createSubjectShow} onHide={() => setCreateSubjectShow(false)} />
         <Form className="ml-auto" inline>
-          <Link to="/subjects">
-            <Button>
-              View All Subjects
-            </Button>
-          </Link>
-          <Button onClick={() => setCreateSubjectShow(true)} style={{ margin: "0.5rem" }}>
+          <Button className="mr-2" onClick={() => setCreateSubjectShow(true)}>
             Create Subject
           </Button>
           {
