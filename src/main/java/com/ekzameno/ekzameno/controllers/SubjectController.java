@@ -24,8 +24,8 @@ import com.ekzameno.ekzameno.services.SubjectService;
  */
 @Path("/subjects")
 public class SubjectController {
-    private SubjectService subjectService = new SubjectService();
-    private ExamService examService = new ExamService();
+    private final SubjectService subjectService = new SubjectService();
+    private final ExamService examService = new ExamService();
 
     /**
      * Handles the fetching of all subjects from the database.
