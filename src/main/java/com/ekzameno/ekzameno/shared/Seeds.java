@@ -41,18 +41,18 @@ public class Seeds {
 
         try (DBConnection connection = DBConnection.getInstance()) {
             try {
-				new UserService().registerUser(
-				    "Admin",
-				    "admin@ekzame.no",
-				    "password",
-				    "administrator"
-				);
-			} catch (UnknownUserTypeException e) {
+                new UserService().registerUser(
+                    "Admin",
+                    "admin@ekzame.no",
+                    "password",
+                    "administrator"
+                );
+            } catch (UnknownUserTypeException e) {
                 // this should only occur if the above user type is modified
-				e.printStackTrace();
+                e.printStackTrace();
             } catch (UserAlreadyExistsException e) {
                 System.out.println("Admin already exists");
-			}
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

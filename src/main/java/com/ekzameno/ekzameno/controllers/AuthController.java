@@ -24,9 +24,13 @@ import io.jsonwebtoken.security.Keys;
 @Path("/auth")
 public class AuthController {
     private final AuthService authService = new AuthService();
-    private final Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(System.getenv(
-        "JWT_SECRET"
-    )));
+    private final Key key = Keys.hmacShaKeyFor(
+        Decoders.BASE64.decode(
+            System.getenv(
+               "JWT_SECRET"
+            )
+        )
+    );
 
     /**
      * Sign a user in to Ekzameno.

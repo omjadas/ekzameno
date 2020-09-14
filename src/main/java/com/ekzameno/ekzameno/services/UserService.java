@@ -25,8 +25,8 @@ public class UserService {
      * @param password password of the user to register
      * @param type type of the user to register
      * @return the new user
-     * @throws UnknownUserTypeException
-     * @throws UserAlreadyExistsException
+     * @throws UnknownUserTypeException if the user type is unknown
+     * @throws UserAlreadyExistsException if the user already exists
      */
     public User registerUser(
         String name,
