@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
@@ -23,16 +24,17 @@ const FormSchema = yup.object().shape({
 
 export const SignIn = (props: Props): JSX.Element => {
   const dispatch = useAppDispatch();
-  const me = useSelector(selectMe);
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(signIn(values));
+    dispatch(signIn(values))
+      .then(unwrapResult)
+      .then(() => {
+        props.onHide();
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
-
-  if (me !== undefined) {
-    props.onHide();
-    return <></>;
-  }
 
   return (
     <Tab.Pane eventKey="signIn">
