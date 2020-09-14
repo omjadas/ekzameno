@@ -3,9 +3,8 @@ import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal, Tab } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import * as yup from "yup";
-import { selectMe, signIn } from "../../../redux/slices/usersSlice";
+import { signIn } from "../../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../../redux/store";
 
 interface Props {
