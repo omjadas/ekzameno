@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateUserDTO;
 import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
+import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.services.UserService;
 
@@ -35,6 +36,8 @@ public class UserController {
             }
         } catch (UnknownUserTypeException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        } catch (UserAlreadyExistsException e) {
+            return Response.status(Response.Status.CONFLICT).build();
+		}
     }
 }

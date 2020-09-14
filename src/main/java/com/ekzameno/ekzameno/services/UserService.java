@@ -3,6 +3,7 @@ package com.ekzameno.ekzameno.services;
 import java.sql.SQLException;
 
 import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
+import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.models.Administrator;
 import com.ekzameno.ekzameno.models.Instructor;
 import com.ekzameno.ekzameno.models.Student;
@@ -25,13 +26,14 @@ public class UserService {
      * @param type type of the user to register
      * @return the new user
      * @throws UnknownUserTypeException
+     * @throws UserAlreadyExistsException
      */
     public User registerUser(
         String name,
         String email,
         String password,
         String type
-    ) throws UnknownUserTypeException {
+    ) throws UnknownUserTypeException, UserAlreadyExistsException {
         String passwordHash = BCrypt.withDefaults().hashToString(
             12,
             password.toCharArray()
@@ -53,6 +55,10 @@ public class UserService {
             UnitOfWork.getCurrent().commit();
             return user;
         } catch (SQLException e) {
+            if ("23505".equals(e.getSQLState())) {
+                throw new UserAlreadyExistsException();
+            }
+
             e.printStackTrace();
             return null;
         }
