@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 import { selectMe, signOut } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { AuthModal } from "../auth/authModal";
-import { CreateSubjectModal } from "../subject/subjectModal";
+import { SubjectModal } from "../subject/subjectModal";
 
 export const Header = (): JSX.Element => {
   const [authModalShow, setAuthModalShow] = useState(false);
-  const [createSubjectShow, setCreateSubjectShow] = useState(false);
+  const [subjectModal, setSubjectModalShow] = useState(false);
   const dispatch = useAppDispatch();
   const me = useSelector(selectMe);
 
@@ -25,9 +25,9 @@ export const Header = (): JSX.Element => {
               </Link>
           }
         </Nav>
-        <CreateSubjectModal show={createSubjectShow} onHide={() => setCreateSubjectShow(false)} />
+        <SubjectModal show={subjectModal} onHide={() => setSubjectModalShow(false)} />
         <Form className="ml-auto" inline>
-          <Button className="mr-2" onClick={() => setCreateSubjectShow(true)}>
+          <Button className="mr-2" onClick={() => setSubjectModalShow(true)}>
             Create Subject
           </Button>
           {

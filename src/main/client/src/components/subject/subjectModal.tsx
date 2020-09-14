@@ -36,7 +36,7 @@ const FormSchema = yup.object().shape({
   description: yup.string(),
 });
 
-export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
+export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
   const subjectStatus = useSelector(selectSubjectsStatus);
