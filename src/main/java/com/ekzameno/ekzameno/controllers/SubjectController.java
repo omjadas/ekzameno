@@ -66,7 +66,7 @@ public class SubjectController {
 
     /**
      * Handles the fetching of all exams from the database.
-     * 
+     *
      * @param subjectId ID of the subject to create the exam for
      * @return list of all exams for the subject
      */

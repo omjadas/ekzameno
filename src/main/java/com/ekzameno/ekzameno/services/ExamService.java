@@ -1,12 +1,10 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.List;
-
-import javax.validation.constraints.Null;
+import java.util.UUID;
+import java.util.Date;
 
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
