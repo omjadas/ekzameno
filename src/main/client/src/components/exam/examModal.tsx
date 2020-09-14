@@ -65,7 +65,7 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> Creating Exam for SubjectID
+        <Modal.Title> Creating Exam
         </Modal.Title>
       </Modal.Header>
       <Formik

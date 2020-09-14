@@ -65,6 +65,19 @@ public class SubjectController {
     }
 
     /**
+     * Handles the fetching of all exams from the database.
+     * 
+     * @param subjectId ID of the subject to create the exam for
+     * @return list of all exams for the subject
+     */
+    @Path("/{subjectId}/exams")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Exam> getExams(@PathParam("subjectId") String subjectId) {
+        return examService.getExams(UUID.fromString(subjectId));
+    }
+
+    /**
      * Create an exam.
      *
      * @param subjectId ID of the subject to create the exam for

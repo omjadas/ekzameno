@@ -2,8 +2,13 @@ package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.UUID;
+import java.util.List;
 
+import javax.validation.constraints.Null;
+
+import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -13,6 +18,22 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  * Service to handle authentication.
  */
 public class ExamService {
+    private ExamMapper examMapper = new ExamMapper();
+
+    /**
+     * Retrieve all Exams.
+     *
+     * @param subjectId   id of the subject
+     * @return all exams for the subject
+     */
+    public List<Exam> getExams(UUID subjectId) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return examMapper.findAllForSubject(subjectId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 
     /**
      * Create an exam for a given subject.
