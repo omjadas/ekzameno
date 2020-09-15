@@ -30,8 +30,10 @@ public abstract class Mapper<T extends Model> {
             return (Mapper<T>) Class
                 .forName(
                     "com.ekzameno.ekzameno.mappers." +
-                            klass.getSimpleName() + "Mapper")
-                    .getDeclaredConstructor().newInstance();
+                        klass.getSimpleName() + "Mapper"
+                )
+                .getDeclaredConstructor()
+                .newInstance();
         } catch (Exception e) {
             return null;
         }
