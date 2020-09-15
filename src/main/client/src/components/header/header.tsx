@@ -38,10 +38,13 @@ export const Header = (): JSX.Element => {
               </Button>
               :
               <>
-                <DropdownButton className="mr-2" title="Create">
-                  <Dropdown.Item onClick={() => setSubjectModalShow(true)}>Subject</Dropdown.Item>
-                  <Dropdown.Item onClick={() => setUserModalShow(true)}>User</Dropdown.Item>
-                </DropdownButton>
+                {
+                  me.type === "ADMINISTRATOR" &&
+                    <DropdownButton className="mr-2" title="Create">
+                      <Dropdown.Item onClick={() => setSubjectModalShow(true)}>Subject</Dropdown.Item>
+                      <Dropdown.Item onClick={() => setUserModalShow(true)}>User</Dropdown.Item>
+                    </DropdownButton>
+                }
                 <Button
                   variant="outline-info"
                   onClick={() => dispatch(signOut())}>
