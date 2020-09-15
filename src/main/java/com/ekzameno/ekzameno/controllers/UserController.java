@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import com.ekzameno.ekzameno.dtos.CreateUserDTO;
 import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
 import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
+import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.services.UserService;
 
@@ -20,6 +21,7 @@ import com.ekzameno.ekzameno.services.UserService;
  * Controller for Users.
  */
 @Path("/users")
+@Protected
 public class UserController {
     private final UserService userService = new UserService();
 

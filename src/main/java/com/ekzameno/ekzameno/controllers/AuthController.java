@@ -55,7 +55,7 @@ public class AuthController {
             NewCookie cookie = new NewCookie(
                 "jwt",
                 jwt,
-                null,
+                "/",
                 null,
                 null,
                 -1,
