@@ -18,7 +18,6 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
  * @param <T> type of model the Data Mapper is for.
  */
 public abstract class Mapper<T extends Model> {
-
     /**
      * Retrieve a Data Mapper for a given class.
      *
