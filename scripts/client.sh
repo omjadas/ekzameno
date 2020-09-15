@@ -3,7 +3,7 @@
 set -e
 
 if ! command -v npm &> /dev/null; then
-    exit
+    exit 1
 fi
 
 cd "${BASH_SOURCE%/*}/../src/main/client" || exit

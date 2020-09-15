@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Button, Container, Form, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Dropdown, DropdownButton, Form, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { selectMe, signOut } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { AuthModal } from "../auth/authModal";
 import { SubjectModal } from "../subject/subjectModal";
+import { UserModal } from "../user/userModal";
 
 export const Header = (): JSX.Element => {
   const [authModalShow, setAuthModalShow] = useState(false);
-  const [subjectModal, setSubjectModalShow] = useState(false);
+  const [subjectModalShow, setSubjectModalShow] = useState(false);
+  const [userModalShow, setUserModalShow] = useState(false);
   const dispatch = useAppDispatch();
   const me = useSelector(selectMe);
 
@@ -25,11 +27,8 @@ export const Header = (): JSX.Element => {
               </Link>
           }
         </Nav>
-        <SubjectModal show={subjectModal} onHide={() => setSubjectModalShow(false)} />
+        <SubjectModal show={subjectModalShow} onHide={() => setSubjectModalShow(false)} />
         <Form className="ml-auto" inline>
-          <Button className="mr-2" onClick={() => setSubjectModalShow(true)}>
-            Create Subject
-          </Button>
           {
             me === undefined ?
               <Button
@@ -38,14 +37,21 @@ export const Header = (): JSX.Element => {
                 Sign In
               </Button>
               :
-              <Button
-                variant="outline-info"
-                onClick={() => dispatch(signOut())}>
-                Sign Out
-              </Button>
+              <>
+                <DropdownButton className="mr-2" title="Create">
+                  <Dropdown.Item onClick={() => setSubjectModalShow(true)}>Subject</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setUserModalShow(true)}>User</Dropdown.Item>
+                </DropdownButton>
+                <Button
+                  variant="outline-info"
+                  onClick={() => dispatch(signOut())}>
+                  Sign Out
+                </Button>
+              </>
           }
         </Form>
         <AuthModal show={authModalShow} onHide={() => setAuthModalShow(false)} />
+        <UserModal show={userModalShow} onHide={() => setUserModalShow(false)} />
       </Container>
     </Navbar>
   );

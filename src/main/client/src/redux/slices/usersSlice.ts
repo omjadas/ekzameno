@@ -8,6 +8,10 @@ interface User {
   type: "student" | "instructor" | "administrator",
 }
 
+interface CreateUser extends User {
+  password: string,
+}
+
 interface UserState extends User {
   id: string,
 }
@@ -32,7 +36,7 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   return res.json() as Promise<UserState[]>;
 });
 
-export const addUser = createAsyncThunk("users/addUser", async (user: User) => {
+export const addUser = createAsyncThunk("users/addUser", async (user: CreateUser) => {
   const res = await fetch("/api/users", {
     method: "post",
     body: JSON.stringify(user),

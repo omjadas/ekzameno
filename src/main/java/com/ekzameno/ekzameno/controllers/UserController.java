@@ -41,7 +41,7 @@ public class UserController {
             if (user != null) {
                 return Response
                     .status(Response.Status.CREATED)
-                    .entity("")
+                    .entity(user)
                     .build();
             } else {
                 return Response

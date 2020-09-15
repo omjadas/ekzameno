@@ -1,12 +1,10 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import * as yup from "yup";
-import { addSubject, fetchSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { addSubject } from "../../redux/slices/subjectsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface SubjectModalProps {
@@ -37,15 +35,7 @@ const FormSchema = yup.object().shape({
 });
 
 export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
-  const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
-  const subjectStatus = useSelector(selectSubjectsStatus);
-
-  useEffect(() => {
-    if (subjectStatus === "idle") {
-      dispatch(fetchSubjects());
-    }
-  }, [slug, dispatch, subjectStatus]);
 
   const onSubmit = (values: FormValues): void => {
     dispatch(addSubject({
@@ -66,7 +56,9 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> Create Subject </Modal.Title>
+        <Modal.Title>
+          Create Subject
+        </Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{
