@@ -74,19 +74,19 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
         .catch(e => {
           console.error(e);
         });
-      }
+    }
   };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> 
-        {
-          "id" in props ?
-            "Update Exam"
-            :
-            "Create Exam"
-        }
+        <Modal.Title>
+          {
+            "id" in props ?
+              "Update Exam"
+              :
+              "Create Exam"
+          }
         </Modal.Title>
       </Modal.Header>
       <Formik
@@ -125,12 +125,12 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
-                {
-                  "id" in props ?
-                    "Update Election"
-                    :
-                    "Create Election"
-                }
+                  {
+                    "id" in props ?
+                      "Update Election"
+                      :
+                      "Create Election"
+                  }
                 </Button>
               </Modal.Footer>
             </Form>

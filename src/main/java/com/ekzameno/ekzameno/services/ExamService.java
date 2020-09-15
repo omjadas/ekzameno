@@ -65,7 +65,8 @@ public class ExamService {
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             DateRange dateRange = new DateRange(startTime, finishTime);
-            Exam exam = new Exam(examId, name, description, dateRange, subjectId);
+            Exam exam = new Exam(examId, name, description,
+                dateRange, subjectId);
             examMapper.update(exam);
             UnitOfWork.getCurrent().commit();
             return exam;
