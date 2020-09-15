@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -13,6 +14,7 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  * Service to handle authentication.
  */
 public class ExamService {
+    private ExamMapper examMapper = new ExamMapper();
 
     /**
      * Create an exam for a given subject.
@@ -34,6 +36,37 @@ public class ExamService {
         try (DBConnection connection = DBConnection.getInstance()) {
             DateRange dateRange = new DateRange(startTime, finishTime);
             Exam exam = new Exam(name, description, dateRange, subjectId);
+            UnitOfWork.getCurrent().commit();
+            return exam;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Update an exam for a given subject.
+     *
+     * @param examId      Id of the exam
+     * @param name        name of the exam
+     * @param description description of the exam
+     * @param startTime   publish date of the exam
+     * @param finishTime  close date of the exam
+     * @param subjectId   id of the subject
+     * @return a new exam
+     */
+    public Exam updateExam(
+        String name,
+        String description,
+        Date startTime,
+        Date finishTime,
+        UUID subjectId,
+        UUID examId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            DateRange dateRange = new DateRange(startTime, finishTime);
+            Exam exam = new Exam(examId, name, description, dateRange, subjectId);
+            examMapper.update(exam);
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException ex) {

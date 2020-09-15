@@ -6,7 +6,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import * as yup from "yup";
-import { addExam, fetchExams, selectExamsStatus } from "../../redux/slices/examsSlice";
+import { updateExam, addExam, fetchExams, selectExamsStatus } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface ExamModalProps {
@@ -49,23 +49,44 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
   }, [slug, dispatch, examsStatus]);
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(addExam({
-      subjectId: props.subjectId,
-      exam: values,
-    }))
-      .then(unwrapResult)
-      .then(() => {
-        props.onHide();
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    if ("id" in props) {
+      dispatch(updateExam({
+        id: props.id,
+        subjectId: props.subjectId,
+        exam: values,
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      dispatch(addExam({
+        subjectId: props.subjectId,
+        exam: values,
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+      }
   };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> Creating Exam for SubjectID
+        <Modal.Title> 
+        {
+          "id" in props ?
+            "Update Exam"
+            :
+            "Create Exam"
+        }
         </Modal.Title>
       </Modal.Header>
       <Formik
@@ -104,7 +125,12 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
-                  Create Exam
+                {
+                  "id" in props ?
+                    "Update Election"
+                    :
+                    "Create Election"
+                }
                 </Button>
               </Modal.Footer>
             </Form>
