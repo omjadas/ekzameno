@@ -1,6 +1,9 @@
 package com.ekzameno.ekzameno.controllers;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,6 +22,17 @@ import com.ekzameno.ekzameno.services.UserService;
 @Path("/users")
 public class UserController {
     private final UserService userService = new UserService();
+
+    /**
+     * Retrieve all users.
+     *
+     * @return all users
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> getUsers() {
+        return userService.getUsers();
+    }
 
     /**
      * Create a user using the information provided in the DTO.

@@ -1,9 +1,12 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
 import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
+import com.ekzameno.ekzameno.mappers.UserMapper;
 import com.ekzameno.ekzameno.models.Administrator;
 import com.ekzameno.ekzameno.models.Instructor;
 import com.ekzameno.ekzameno.models.Student;
@@ -17,6 +20,22 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
  * Service to handle users.
  */
 public class UserService {
+    private final UserMapper userMapper = new UserMapper();
+
+    /**
+     * Retrieve all users.
+     *
+     * @return all subjects
+     */
+    public List<User> getUsers() {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return userMapper.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
     /**
      * Register a user.
      *
