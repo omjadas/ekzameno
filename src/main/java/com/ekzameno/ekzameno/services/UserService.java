@@ -42,11 +42,11 @@ public class UserService {
         try (DBConnection connection = DBConnection.getInstance()) {
             User user;
 
-            if (type.equals("student")) {
+            if (type.toLowerCase().equals("student")) {
                 user = new Student(email, name, passwordHash);
-            } else if (type.equals("instructor")) {
+            } else if (type.toLowerCase().equals("instructor")) {
                 user = new Instructor(email, name, passwordHash);
-            } else if (type.equals("administrator")) {
+            } else if (type.toLowerCase().equals("administrator")) {
                 user = new Administrator(email, name, passwordHash);
             } else {
                 throw new UnknownUserTypeException();

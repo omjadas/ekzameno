@@ -2,10 +2,12 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
+export type UserType = "STUDENT" | "INSTRUCTOR" | "ADMINISTRATOR";
+
 interface User {
   name: string,
   email: string,
-  type: "student" | "instructor" | "administrator",
+  type: UserType,
 }
 
 interface CreateUser extends User {

@@ -5,7 +5,7 @@ import React from "react";
 import { Button, Form, FormGroup, Modal } from "react-bootstrap";
 import Select from "react-select";
 import * as yup from "yup";
-import { addUser } from "../../redux/slices/usersSlice";
+import { addUser, UserType } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface UserModalProps {
@@ -20,14 +20,14 @@ interface FormValues {
   confirmPassword: string,
   type: {
     label: string,
-    value: "administrator" | "instructor" | "student",
+    value: UserType,
   },
 }
 
 const selectOptions = [
-  { value: "administrator", label: "Administrator" },
-  { value: "instructor", label: "Instructor" },
-  { value: "student", label: "Student" },
+  { value: "ADMINISTRATOR", label: "Administrator" },
+  { value: "INSTRUCTOR", label: "Instructor" },
+  { value: "STUDENT", label: "Student" },
 ];
 
 const FormSchema = yup.object().shape({
@@ -43,7 +43,7 @@ const FormSchema = yup.object().shape({
   ).required(""),
   type: yup.object().shape({
     label: yup.string().required(),
-    value: yup.string().oneOf(["administrator", "instructor", "student"]).required(),
+    value: yup.string().oneOf(["ADMINISTRATOR", "INSTRUCTOR", "STUDENT"]).required(),
   }).required(),
 });
 
@@ -79,7 +79,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
           email: "",
           password: "",
           confirmPassword: "",
-          type: { label: "Student", value: "student" },
+          type: { label: "Student", value: "STUDENT" },
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}>
