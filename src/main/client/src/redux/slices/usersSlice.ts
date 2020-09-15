@@ -119,4 +119,16 @@ export const selectMe = (state: RootState): UserState | undefined => {
   }
 };
 
+export const selectStudents = (state: RootState): UserState[] => {
+  return selectAllUsers(state).filter(user => user.type === "STUDENT");
+};
+
+export const selectInstructors = (state: RootState): UserState[] => {
+  return selectAllUsers(state).filter(user => user.type === "INSTRUCTOR");
+};
+
+export const selectAdministrators = (state: RootState): UserState[] => {
+  return selectAllUsers(state).filter(user => user.type === "ADMINISTRATOR");
+};
+
 export default usersSlice.reducer;
