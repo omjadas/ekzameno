@@ -34,7 +34,6 @@ export const Header = (): JSX.Element => {
               </Link>
           }
         </Nav>
-        <SubjectModal show={subjectModalShow} onHide={() => setSubjectModalShow(false)} />
         <Form className="ml-auto" inline>
           {
             me === undefined ?
@@ -61,7 +60,13 @@ export const Header = (): JSX.Element => {
           }
         </Form>
         <AuthModal show={authModalShow} onHide={() => setAuthModalShow(false)} />
-        <UserModal show={userModalShow} onHide={() => setUserModalShow(false)} />
+        {
+          me?.type === "ADMINISTRATOR" &&
+            <>
+              <SubjectModal show={subjectModalShow} onHide={() => setSubjectModalShow(false)} />
+              <UserModal show={userModalShow} onHide={() => setUserModalShow(false)} />
+            </>
+        }
       </Container>
     </Navbar>
   );

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
 import { addSubject } from "../../redux/slices/subjectsSlice";
-import { fetchUsers, selectInstructors, selectStudents, selectUsersStatus } from "../../redux/slices/usersSlice";
+import { fetchUsers, selectInstructors, selectMe, selectStudents, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface SubjectModalProps {
@@ -48,12 +48,13 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
   const usersStatus = useSelector(selectUsersStatus);
   const students = useSelector(selectStudents);
   const instructors = useSelector(selectInstructors);
+  const me = useSelector(selectMe);
 
   useEffect(() => {
-    if (usersStatus === "idle") {
+    if (usersStatus === "idle" && me !== undefined) {
       dispatch(fetchUsers());
     }
-  }, [dispatch]);
+  }, [dispatch, usersStatus, me]);
 
   const onSubmit = (values: FormValues): void => {
     dispatch(addSubject({
