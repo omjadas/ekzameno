@@ -70,9 +70,11 @@ export const signIn = createAsyncThunk(
 
 export const signOut = createAsyncThunk(
   "users/signOut",
-  () => fetch("/api/auth/signout", {
-    method: "post",
-  })
+  async () => {
+    await fetch("/api/auth/signout", {
+      method: "post",
+    });
+  }
 );
 
 export const usersSlice = createSlice({

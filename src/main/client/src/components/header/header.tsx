@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Container, Dropdown, DropdownButton, Form, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { selectMe, signOut } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { AuthModal } from "../auth/authModal";
@@ -13,7 +13,14 @@ export const Header = (): JSX.Element => {
   const [subjectModalShow, setSubjectModalShow] = useState(false);
   const [userModalShow, setUserModalShow] = useState(false);
   const dispatch = useAppDispatch();
+  const history = useHistory();
   const me = useSelector(selectMe);
+
+  const onSignOut = (): void => {
+    dispatch(signOut())
+      .then(() => dispatch({ type: "RESET" }))
+      .then(() => history.push("/"));
+  };
 
   return (
     <Navbar bg="dark" variant="dark" fixed="top">
@@ -47,7 +54,7 @@ export const Header = (): JSX.Element => {
                 }
                 <Button
                   variant="outline-info"
-                  onClick={() => dispatch(signOut())}>
+                  onClick={onSignOut}>
                   Sign Out
                 </Button>
               </>
