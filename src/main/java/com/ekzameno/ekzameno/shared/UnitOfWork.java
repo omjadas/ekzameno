@@ -11,11 +11,10 @@ import com.ekzameno.ekzameno.models.Model;
  * Keeps track of changes to models.
  */
 public class UnitOfWork {
-    private static ThreadLocal<UnitOfWork> current = new ThreadLocal<>();
-
-    private List<Model> newObjects = new ArrayList<>();
-    private List<Model> dirtyObjects = new ArrayList<>();
-    private List<Model> deletedObjects = new ArrayList<>();
+    private static final ThreadLocal<UnitOfWork> current = new ThreadLocal<>();
+    private final List<Model> newObjects = new ArrayList<>();
+    private final List<Model> dirtyObjects = new ArrayList<>();
+    private final List<Model> deletedObjects = new ArrayList<>();
 
     /**
      * Create a new thread local UnitOfWork.

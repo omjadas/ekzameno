@@ -16,7 +16,7 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  * Service to handle subjects.
  */
 public class SubjectService {
-    private SubjectMapper subjectMapper = new SubjectMapper();
+    private final SubjectMapper subjectMapper = new SubjectMapper();
 
     /**
      * Retrieve all subjects.

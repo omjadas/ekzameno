@@ -24,9 +24,13 @@ import io.jsonwebtoken.security.Keys;
 @Provider
 @Protected
 public class AuthFilter implements ContainerRequestFilter {
-    private Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(System.getenv(
-        "JWT_SECRET"
-    )));
+    private final Key key = Keys.hmacShaKeyFor(
+        Decoders.BASE64.decode(
+            System.getenv(
+                "JWT_SECRET"
+            )
+        )
+    );
 
     @Override
     public void filter(

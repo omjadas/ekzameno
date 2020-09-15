@@ -13,7 +13,7 @@ public abstract class User extends Model {
     private String name;
     @JsonIgnore
     private String passwordHash;
-    private String type;
+    private final String type;
 
     /**
      * Create a User with an ID.

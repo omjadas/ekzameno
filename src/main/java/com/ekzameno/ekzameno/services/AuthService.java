@@ -11,7 +11,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
  * Service to handle authentication.
  */
 public class AuthService {
-    private UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper = new UserMapper();
 
     /**
      * Authenticate a user.
