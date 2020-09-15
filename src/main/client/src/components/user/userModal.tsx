@@ -91,6 +91,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
             handleBlur,
             setFieldValue,
             errors,
+            touched,
           }) => (
             <Form id="createUser" onSubmit={handleSubmit as any}>
               <Modal.Body>
@@ -119,7 +120,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
                     onChange={option => setFieldValue("type", option)}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback className={touched.type && errors.type && "d-block"} type="invalid">
                     {errors.type}
                   </Form.Control.Feedback>
                 </FormGroup>

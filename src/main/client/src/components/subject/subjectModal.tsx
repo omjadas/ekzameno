@@ -96,6 +96,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
             handleBlur,
             setFieldValue,
             errors,
+            touched,
           }) => (
             <Form id="createSubject" onSubmit={handleSubmit as any}>
               <Modal.Body>
@@ -117,7 +118,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
                     onChange={option => setFieldValue("instructors", option)}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
                     {errors.instructors}
                   </Form.Control.Feedback>
                 </FormGroup>
@@ -131,7 +132,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
                     onChange={option => setFieldValue("students", option)}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
                     {errors.students}
                   </Form.Control.Feedback>
                 </FormGroup>
