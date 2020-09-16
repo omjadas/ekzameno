@@ -8,19 +8,19 @@ import { updateExam, addExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface ExamModalProps {
-  subjectId: string,
   show: boolean,
   onHide: () => any,
 }
-
-interface UpdateExamProps extends ExamModalProps {
-  examId: string,
+interface CreateExamModalProps extends ExamModalProps {
+  subjectId: string,
+}
+interface UpdateExamModalProps extends ExamModalProps {
+  id: string,
   name: string,
   startTime: string,
   finishTime: string,
   description: string,
 }
-
 interface FormValues {
   name: string,
   description: string,
@@ -35,13 +35,13 @@ const FormSchema = yup.object().shape({
   description: yup.string(),
 });
 
-export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element => {
+export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const onSubmit = (values: FormValues): void => {
-    if ("examId" in props) {
+    if ("id" in props) {
       dispatch(updateExam({
-        examId: props.examId,
+        id: props.id,
         exam: values,
       }))
         .then(unwrapResult)
@@ -71,7 +71,7 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
       <Modal.Header closeButton>
         <Modal.Title>
           {
-            "examId" in props ?
+            "id" in props ?
               "Update Exam"
               :
               "Create Exam"
@@ -115,7 +115,7 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
                   {
-                    "examId" in props ?
+                    "id" in props ?
                       "Update Exam"
                       :
                       "Create Exam"

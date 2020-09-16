@@ -1,20 +1,22 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { fetchExams, selectAllExams } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 import styles from "./exams.module.scss";
 
-export const Exams = (): JSX.Element => {
-  const { slug } = useParams<{ slug: string }>();
+interface ExamsProps {
+  subjectId: string,
+}
+
+export const Exams = (props: ExamsProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const exams = useSelector(selectAllExams);
 
   useEffect(() => {
-    dispatch(fetchExams(slug));
-  }, [slug, dispatch]);
+    dispatch(fetchExams(props.subjectId));
+  }, [props.subjectId, dispatch]);
 
   return (
     <div className={styles.wrapper}>

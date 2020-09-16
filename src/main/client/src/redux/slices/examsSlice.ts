@@ -56,8 +56,8 @@ export const addExam = createAsyncThunk(
 
 export const updateExam = createAsyncThunk(
   "exams/updateExam",
-  async ({ examId, exam }: { examId: string, exam: Exam }) => {
-    const res = await fetch(`/api/exams/${examId}`, {
+  async ({ id, exam }: { id: string, exam: Exam }) => {
+    const res = await fetch(`/api/exams/${id}`, {
       method: "put",
       body: JSON.stringify(exam),
       headers: {
@@ -72,15 +72,13 @@ export const updateExam = createAsyncThunk(
 export const deleteExam = createAsyncThunk(
   "exams/deleteExam",
   async ({ examId }: { examId: string }) => {
-    const res = await fetch(`/api/exams/${examId}`, {
-      method: "post",
-      //body: JSON.stringify(exam),
+    await fetch(`/api/exams/${examId}`, {
+      method: "delete",
       headers: {
         "content-type": "application/json",
       },
     });
-
-    return res.json() as Promise<ExamState>;
+    return examId;
   }
 );
 
@@ -106,6 +104,12 @@ export const examsSlice = createSlice({
     builder.addCase(addExam.fulfilled, (state, action) => {
       examsAdapter.addOne(state, action.payload);
       state.slugs[action.payload.slug] = action.payload.id;
+    });
+    builder.addCase(deleteExam.fulfilled, (state, action) => {
+      examsAdapter.removeOne(state, action.payload);
+    });
+    builder.addCase(updateExam.fulfilled, (state, action) => {
+      examsAdapter.upsertOne(state, action.payload);
     });
   },
 });

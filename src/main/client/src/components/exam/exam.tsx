@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Button, Container, Jumbotron } from "react-bootstrap";
-import { fetchExams, selectExamsStatus, selectExamBySlug } from "../../redux/slices/examsSlice";
+import { fetchExams, selectExamsStatus, selectExamBySlug, deleteExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 import styles from "../subject/subject.module.scss";
 import { ExamModal } from "../exam/examModal";
-//import { unwrapResult } from "@reduxjs/toolkit";
-
-// export interface ExamDeleteProps {
-//   examId: string
-// }
 
 export const Exam = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +13,7 @@ export const Exam = (): JSX.Element => {
   const examsStatus = useSelector(selectExamsStatus);
   const exam = useSelector(selectExamBySlug(slug));
   const [examModalShow, setExamModalShow] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     if (examsStatus === "idle") {
@@ -30,20 +26,19 @@ export const Exam = (): JSX.Element => {
       <div>No exams created</div>
     );
   }
-  // const onSubmit = (): void => {
-  //   dispatch(deleteExam({
-  //     examId: props.examId,
-  //   }))
-  //     .then(unwrapResult)
-  //     .then(() => {
-  //       props.onHide();
-  //     })
-  //     .catch(e => {
-  //       console.error(e);
-  //     });
-  // };
-  //
-  //
+
+  const onClick = (): void => {
+    dispatch(deleteExam({
+      examId: exam.id,
+    }))
+      .then(() => {
+        history.goBack();
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
   return (
     <Container className={styles.margin}>
       <Jumbotron>
@@ -52,12 +47,12 @@ export const Exam = (): JSX.Element => {
         <Button onClick={() => setExamModalShow(true)}>
           Edit Exam
         </Button>
-        <Button>
+        <Button onClick={onClick}>
           Delete Exam
         </Button>
       </Jumbotron>
       <ExamModal show={examModalShow} onHide={() => setExamModalShow(false)}
-        examId={exam.id}
+        id={exam.id}
         name={exam.name}
         description={exam.description}
         startTime={exam.startTime}

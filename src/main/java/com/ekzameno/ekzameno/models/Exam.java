@@ -144,20 +144,20 @@ public class Exam extends Model {
     /**
      * Set the publish date of the Exam (marks the Exam as dirty).
      *
-     * @param publishDate publish date of the Exam
+     * @param startTime publish date of the Exam
      */
-    public void setPublishDate(Date publishDate) {
-        dateRange.setFromDate(publishDate);
+    public void setStartTime(Date startTime) {
+        dateRange.setFromDate(startTime);
         UnitOfWork.getCurrent().registerDirty(this);
     }
 
     /**
      * Set the close date of the Exam (marks the Exam as dirty).
      *
-     * @param closeDate close date of the Exam
+     * @param finishTime close date of the Exam
      */
-    public void setCloseDate(Date closeDate) {
-        dateRange.setToDate(closeDate);
+    public void setFinishTime(Date finishTime) {
+        dateRange.setToDate(finishTime);
         UnitOfWork.getCurrent().registerDirty(this);
     }
 

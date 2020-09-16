@@ -68,7 +68,6 @@ public class ExamService {
      * @param description description of the exam
      * @param startTime   publish date of the exam
      * @param finishTime  close date of the exam
-     * @param subjectId   id of the subject
      * @param examId id of the exam
      * @return a new exam
      */
@@ -80,15 +79,33 @@ public class ExamService {
         UUID examId
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
-            DateRange dateRange = new DateRange(startTime, finishTime);
-            Exam exam = new Exam( name, description,
-                dateRange, examId);
-            examMapper.update(exam);
+            Exam exam = examMapper.findById(examId);
+            exam.setName(name);
+            exam.setDescription(description);
+            exam.setStartTime(startTime);
+            exam.setFinishTime(finishTime);
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Delete an exam for a given subject.
+     *
+     * @param examId id of the exam
+     */
+    public void deleteExam(
+        UUID examId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            Exam exam = examMapper.findById(examId);
+            UnitOfWork.getCurrent().registerDeleted(exam);
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 }
