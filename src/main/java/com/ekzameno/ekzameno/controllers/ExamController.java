@@ -44,7 +44,8 @@ public class ExamController {
             dto.description,
             dto.startTime,
             dto.finishTime,
-            UUID.fromString(examId));
+            UUID.fromString(examId)
+        );
         if (exam != null) {
             return Response.ok().entity(exam).build();
         } else {
