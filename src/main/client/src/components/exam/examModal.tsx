@@ -4,23 +4,25 @@ import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import * as yup from "yup";
-import { addExam } from "../../redux/slices/examsSlice";
+import { updateExam, addExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface ExamModalProps {
-  subjectId: string,
   show: boolean,
   onHide: () => any,
 }
 
-interface UpdateExamProps extends ExamModalProps {
+interface CreateExamModalProps extends ExamModalProps {
+  subjectId: string,
+}
+
+interface UpdateExamModalProps extends ExamModalProps {
   id: string,
   name: string,
   startTime: string,
   finishTime: string,
   description: string,
 }
-
 interface FormValues {
   name: string,
   description: string,
@@ -35,28 +37,55 @@ const FormSchema = yup.object().shape({
   description: yup.string(),
 });
 
-export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element => {
+export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(addExam({
-      subjectId: props.subjectId,
-      exam: values,
-    }))
-      .then(unwrapResult)
-      .then(() => {
-        props.onHide();
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    if ("id" in props) {
+      dispatch(updateExam({
+        id: props.id,
+        exam: {
+          ...values,
+          startTime: new Date(values.startTime).toISOString(),
+          finishTime: new Date(values.finishTime).toISOString(),
+        },
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      dispatch(addExam({
+        subjectId: props.subjectId,
+        exam: {
+          ...values,
+          startTime: new Date(values.startTime).toISOString(),
+          finishTime: new Date(values.finishTime).toISOString(),
+        },
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    }
   };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          Create Exam
+          {
+            "id" in props ?
+              "Update Exam"
+              :
+              "Create Exam"
+          }
         </Modal.Title>
       </Modal.Header>
       <Formik
@@ -95,7 +124,12 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
-                  Create Exam
+                  {
+                    "id" in props ?
+                      "Update Exam"
+                      :
+                      "Create Exam"
+                  }
                 </Button>
               </Modal.Footer>
             </Form>
