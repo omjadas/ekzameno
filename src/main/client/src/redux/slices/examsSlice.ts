@@ -2,16 +2,17 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
-interface Exam {
+export interface Exam {
   name: string,
   description: string,
   startTime: string,
   finishTime: string,
 }
 
-interface ExamState extends Exam {
+export interface ExamState extends Exam {
   id: string,
   slug: string,
+  subjectId: string,
   questionIds: string[],
 }
 
@@ -125,6 +126,14 @@ export const {
 export const selectExamBySlug = (slug: string) => {
   return (state: RootState): ExamState | undefined => {
     return selectExamById(state, state.exams.slugs[slug]);
+  };
+};
+
+export const selectExamsByIds = (ids: string[]) => {
+  return (state: RootState): ExamState[] => {
+    return ids
+      .map(id => selectExamById(state, id))
+      .filter(exam => exam !== undefined) as ExamState[];
   };
 };
 

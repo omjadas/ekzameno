@@ -4,17 +4,17 @@ import { RootState } from "../store";
 
 export type UserType = "STUDENT" | "INSTRUCTOR" | "ADMINISTRATOR";
 
-interface User {
+export interface User {
   name: string,
   email: string,
   type: UserType,
 }
 
-interface CreateUser extends User {
+export interface CreateUser extends User {
   password: string,
 }
 
-interface UserState extends User {
+export interface UserState extends User {
   id: string,
 }
 
