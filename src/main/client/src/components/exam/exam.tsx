@@ -29,6 +29,9 @@ export const Exam = (): JSX.Element => {
         <h1>{exam.name}</h1>
         <p>{exam.description}</p>
         <Button>
+          Edit Exam
+        </Button>
+        <Button>
           Delete Exam
         </Button>
       </Jumbotron>

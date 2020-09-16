@@ -24,7 +24,7 @@ public class ExamService {
      * @param subjectId   id of the subject
      * @return all exams for the subject
      */
-    public List<Exam> getExams(UUID subjectId) {
+    public List<Exam> getExamsForSubject(UUID subjectId) {
         try (DBConnection connection = DBConnection.getInstance()) {
             return examMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {

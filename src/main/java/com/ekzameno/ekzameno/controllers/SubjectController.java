@@ -73,8 +73,8 @@ public class SubjectController {
     @Path("/{subjectId}/exams")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Exam> getExams(@PathParam("subjectId") String subjectId) {
-        return examService.getExams(UUID.fromString(subjectId));
+    public List<Exam> getExamsForSubject(@PathParam("subjectId") String subjectId) {
+        return examService.getExamsForSubject(UUID.fromString(subjectId));
     }
 
     /**
