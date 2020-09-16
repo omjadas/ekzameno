@@ -1,29 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { Button, Container, Jumbotron } from "react-bootstrap";
-import { fetchExams, selectExamsStatus, selectExamBySlug, deleteExam } from "../../redux/slices/examsSlice";
+import { deleteExam, selectExamBySlug } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
-import styles from "../subject/subject.module.scss";
 import { ExamModal } from "../exam/examModal";
+import styles from "../subject/subject.module.scss";
 
 export const Exam = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
-  const examsStatus = useSelector(selectExamsStatus);
   const exam = useSelector(selectExamBySlug(slug));
   const [examModalShow, setExamModalShow] = useState(false);
   const history = useHistory();
 
-  useEffect(() => {
-    if (examsStatus === "idle") {
-      dispatch(fetchExams(slug));
-    }
-  }, [slug, dispatch, examsStatus]);
-
   if (exam === undefined) {
     return (
-      <div>No exams created</div>
+      <div>Unable to find exam</div>
     );
   }
 
