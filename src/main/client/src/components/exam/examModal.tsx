@@ -11,9 +11,11 @@ export interface ExamModalProps {
   show: boolean,
   onHide: () => any,
 }
+
 interface CreateExamModalProps extends ExamModalProps {
   subjectId: string,
 }
+
 interface UpdateExamModalProps extends ExamModalProps {
   id: string,
   name: string,
