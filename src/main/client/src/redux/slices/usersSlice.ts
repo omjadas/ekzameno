@@ -88,7 +88,6 @@ export const usersSlice = createSlice({
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.status = "finished";
       usersAdapter.upsertMany(state, action.payload);
-      usersAdapter.removeOne();
     });
     builder.addCase(fetchUsers.rejected, (state, action) => {
       state.status = "error";
