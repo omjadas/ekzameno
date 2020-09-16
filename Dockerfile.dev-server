@@ -8,8 +8,11 @@ COPY pom.xml ./
 
 RUN mvn -B -T 1C -Dmaven.repo.local=/m2 dependency:go-offline
 
-COPY . ./
+COPY ./src/main/java ./src/main/java
+COPY ./src/main/webapp ./src/main/webapp
 
-RUN mvn -Dmaven.repo.local=/m2 -DskipTests package
+RUN mvn -Dmaven.repo.local=/m2 -DskipClient -DskipTests package
+
+COPY . .
 
 CMD ["./scripts/dev-server.sh"]

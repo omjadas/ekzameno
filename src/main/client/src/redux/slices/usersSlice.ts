@@ -2,10 +2,16 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
+export type UserType = "STUDENT" | "INSTRUCTOR" | "ADMINISTRATOR";
+
 interface User {
   name: string,
   email: string,
-  type: "student" | "instructor" | "administrator",
+  type: UserType,
+}
+
+interface CreateUser extends User {
+  password: string,
 }
 
 interface UserState extends User {
@@ -32,7 +38,7 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   return res.json() as Promise<UserState[]>;
 });
 
-export const addUser = createAsyncThunk("users/addUser", async (user: User) => {
+export const addUser = createAsyncThunk("users/addUser", async (user: CreateUser) => {
   const res = await fetch("/api/users", {
     method: "post",
     body: JSON.stringify(user),
@@ -64,9 +70,11 @@ export const signIn = createAsyncThunk(
 
 export const signOut = createAsyncThunk(
   "users/signOut",
-  () => fetch("/api/auth/signout", {
-    method: "post",
-  })
+  async () => {
+    await fetch("/api/auth/signout", {
+      method: "post",
+    });
+  }
 );
 
 export const usersSlice = createSlice({
@@ -109,6 +117,18 @@ export const selectMe = (state: RootState): UserState | undefined => {
   if (state.users.me !== undefined) {
     return selectUserById(state, state.users.me);
   }
+};
+
+export const selectStudents = (state: RootState): UserState[] => {
+  return selectAllUsers(state).filter(user => user.type === "STUDENT");
+};
+
+export const selectInstructors = (state: RootState): UserState[] => {
+  return selectAllUsers(state).filter(user => user.type === "INSTRUCTOR");
+};
+
+export const selectAdministrators = (state: RootState): UserState[] => {
+  return selectAllUsers(state).filter(user => user.type === "ADMINISTRATOR");
 };
 
 export default usersSlice.reducer;

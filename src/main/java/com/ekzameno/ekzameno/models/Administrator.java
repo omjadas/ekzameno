@@ -22,7 +22,7 @@ public class Administrator extends User {
         String name,
         String passwordHash
     ) {
-        super(id, email, name, passwordHash);
+        super(id, email, name, passwordHash, TYPE);
     }
 
     /**
@@ -33,6 +33,6 @@ public class Administrator extends User {
      * @param passwordHash password hash of the Administrator
      */
     public Administrator(String email, String name, String passwordHash) {
-        super(email, name, passwordHash);
+        super(email, name, passwordHash, TYPE);
     }
 }

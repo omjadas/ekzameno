@@ -127,6 +127,9 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <skip>${skipClient}</skip>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

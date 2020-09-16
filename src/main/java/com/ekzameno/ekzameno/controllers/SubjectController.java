@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateExamDTO;
 import com.ekzameno.ekzameno.dtos.CreateSubjectDTO;
+import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.services.ExamService;
@@ -23,9 +24,10 @@ import com.ekzameno.ekzameno.services.SubjectService;
  * Controller for subjects.
  */
 @Path("/subjects")
+@Protected
 public class SubjectController {
-    private SubjectService subjectService = new SubjectService();
-    private ExamService examService = new ExamService();
+    private final SubjectService subjectService = new SubjectService();
+    private final ExamService examService = new ExamService();
 
     /**
      * Handles the fetching of all subjects from the database.

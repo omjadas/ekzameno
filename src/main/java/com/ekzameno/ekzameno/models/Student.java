@@ -4,13 +4,16 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.SubjectStudentProxyList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Student able to enrol in Subjects and take Exams.
  */
 public class Student extends User {
     public static final String TYPE = "STUDENT";
+    @JsonIgnore
     private ProxyList<Subject> subjects;
+    @JsonIgnore
     private ProxyList<ExamSubmission> examSubmissions;
 
     /**
@@ -22,7 +25,7 @@ public class Student extends User {
      * @param passwordHash password hash of the student
      */
     public Student(UUID id, String email, String name, String passwordHash) {
-        super(id, email, name, passwordHash);
+        super(id, email, name, passwordHash, TYPE);
         this.subjects = new SubjectStudentProxyList(id);
     }
 
@@ -34,7 +37,7 @@ public class Student extends User {
      * @param passwordHash password hash of the student
      */
     public Student(String email, String name, String passwordHash) {
-        super(email, name, passwordHash);
+        super(email, name, passwordHash, TYPE);
         this.subjects = new SubjectStudentProxyList(getId());
     }
 

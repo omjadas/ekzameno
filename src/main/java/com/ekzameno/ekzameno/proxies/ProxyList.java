@@ -12,7 +12,7 @@ import com.ekzameno.ekzameno.models.Model;
  * @param <T> type of the models
  */
 public abstract class ProxyList<T extends Model> {
-    protected UUID id;
+    protected final UUID id;
     protected List<T> models = null;
 
     /**

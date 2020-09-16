@@ -3,8 +3,11 @@ package com.ekzameno.ekzameno.services;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
+import com.ekzameno.ekzameno.models.Enrolment;
+import com.ekzameno.ekzameno.models.InstructorSubject;
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
@@ -13,7 +16,7 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  * Service to handle subjects.
  */
 public class SubjectService {
-    private SubjectMapper subjectMapper = new SubjectMapper();
+    private final SubjectMapper subjectMapper = new SubjectMapper();
 
     /**
      * Retrieve all subjects.
@@ -47,13 +50,13 @@ public class SubjectService {
         try (DBConnection connection = DBConnection.getInstance()) {
             Subject subject = new Subject(name, description);
 
-            // for (String s : instructors) {
-            //     new InstructorSubject(UUID.fromString(s), subject.getId());
-            // }
+            for (String s : instructors) {
+                new InstructorSubject(UUID.fromString(s), subject.getId());
+            }
 
-            // for (String z : students) {
-            //     new Enrolment(UUID.fromString(z), subject.getId());
-            // }
+            for (String z : students) {
+                new Enrolment(UUID.fromString(z), subject.getId());
+            }
 
             UnitOfWork.getCurrent().commit();
             return subject;
