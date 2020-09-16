@@ -76,7 +76,8 @@ public class SubjectController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Exam> getExamsForSubject(
-        @PathParam("subjectId") String subjectId) {
+        @PathParam("subjectId") String subjectId
+    ) {
         return examService.getExamsForSubject(UUID.fromString(subjectId));
     }
 
