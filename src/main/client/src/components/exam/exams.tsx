@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { fetchExams, selectExamsStatus, selectAllExams } from "../../redux/slices/examsSlice";
+import { fetchExams, selectAllExams } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 import styles from "./exams.module.scss";
 
