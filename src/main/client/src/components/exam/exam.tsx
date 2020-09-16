@@ -44,7 +44,9 @@ export const Exam = (): JSX.Element => {
           Delete Exam
         </Button>
       </Jumbotron>
-      <ExamModal show={examModalShow} onHide={() => setExamModalShow(false)}
+      <ExamModal
+        show={examModalShow}
+        onHide={() => setExamModalShow(false)}
         id={exam.id}
         name={exam.name}
         description={exam.description}
