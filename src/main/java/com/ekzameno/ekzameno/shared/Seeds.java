@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.stream.Collectors;
 
+import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
+import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.services.UserService;
 
 /**
@@ -38,12 +40,19 @@ public class Seeds {
         }
 
         try (DBConnection connection = DBConnection.getInstance()) {
-            new UserService().registerUser(
-                "Admin",
-                "admin@ekzame.no",
-                "password",
-                "administrator"
-            );
+            try {
+                new UserService().registerUser(
+                    "Admin",
+                    "admin@ekzame.no",
+                    "password",
+                    "administrator"
+                );
+            } catch (UnknownUserTypeException e) {
+                // this should only occur if the above user type is modified
+                e.printStackTrace();
+            } catch (UserAlreadyExistsException e) {
+                System.out.println("Admin already exists");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

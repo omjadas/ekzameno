@@ -12,10 +12,13 @@ import com.ekzameno.ekzameno.dtos.CreateExamDTO;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.services.ExamService;
 
+import com.ekzameno.ekzameno.filters.Protected;
+
 /**
  * Controller for Exams.
  */
 @Path("/exams")
+@Protected
 public class ExamController {
     private ExamService examService = new ExamService();
 

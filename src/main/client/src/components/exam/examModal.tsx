@@ -1,12 +1,11 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import * as yup from "yup";
 import { updateExam, addExam, fetchExams, selectExamsStatus } from "../../redux/slices/examsSlice";
+import { addExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface ExamModalProps {
@@ -38,15 +37,7 @@ const FormSchema = yup.object().shape({
 });
 
 export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element => {
-  const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
-  const examsStatus = useSelector(selectExamsStatus);
-
-  useEffect(() => {
-    if (examsStatus === "idle") {
-      dispatch(fetchExams(slug));
-    }
-  }, [slug, dispatch, examsStatus]);
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {

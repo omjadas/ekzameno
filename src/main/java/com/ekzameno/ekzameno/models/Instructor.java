@@ -5,12 +5,14 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.SubjectInstructorProxyList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Instructor for a Subject.
  */
 public class Instructor extends User {
     public static final String TYPE = "INSTRUCTOR";
+    @JsonIgnore
     private ProxyList<Subject> subjects;
 
     /**
@@ -22,7 +24,7 @@ public class Instructor extends User {
      * @param passwordHash password hash of the Instructor
      */
     public Instructor(UUID id, String email, String name, String passwordHash) {
-        super(id, email, name, passwordHash);
+        super(id, email, name, passwordHash, TYPE);
         subjects = new SubjectInstructorProxyList(id);
     }
 
@@ -34,7 +36,7 @@ public class Instructor extends User {
      * @param passwordHash password hash of the Instructor
      */
     public Instructor(String email, String name, String passwordHash) {
-        super(email, name, passwordHash);
+        super(email, name, passwordHash, TYPE);
         subjects = new SubjectInstructorProxyList(getId());
     }
 

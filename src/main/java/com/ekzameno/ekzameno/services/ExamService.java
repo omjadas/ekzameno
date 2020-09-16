@@ -1,7 +1,9 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamMapper;
@@ -15,6 +17,21 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  */
 public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
+
+    /**
+     * Retrieve all Exams.
+     *
+     * @param subjectId id of the subject
+     * @return all exams for the subject
+     */
+    public List<Exam> getExamsForSubject(UUID subjectId) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return examMapper.findAllForSubject(subjectId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 
     /**
      * Create an exam for a given subject.
