@@ -25,7 +25,7 @@ public class ExamController {
     private ExamService examService = new ExamService();
 
     /**
-     * update an exam.
+     * Update an exam.
      *
      * @param examId Id of th exam
      * @param dto Exam DTO
