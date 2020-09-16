@@ -21,7 +21,7 @@ public class ExamService {
     /**
      * Retrieve all Exams.
      *
-     * @param subjectId   id of the subject
+     * @param subjectId id of the subject
      * @return all exams for the subject
      */
     public List<Exam> getExamsForSubject(UUID subjectId) {
