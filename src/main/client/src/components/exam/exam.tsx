@@ -79,12 +79,9 @@ export const Exam = (): JSX.Element => {
         </Button>{" "}
         {
           startTime > currenTime &&
-          finishTime > currenTime ?
             <Button onClick={publishNow}>
               Publish Exam
             </Button>
-            :
-            <></>
         }
         {" "}
         {
