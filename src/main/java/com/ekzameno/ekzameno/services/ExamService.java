@@ -47,12 +47,12 @@ public class ExamService {
     /**
      * Update an exam for a given subject.
      *
-     * @param examId      Id of the exam
      * @param name        name of the exam
      * @param description description of the exam
      * @param startTime   publish date of the exam
      * @param finishTime  close date of the exam
      * @param subjectId   id of the subject
+     * @param examId id of the exam
      * @return a new exam
      */
     public Exam updateExam(
@@ -60,14 +60,13 @@ public class ExamService {
         String description,
         Date startTime,
         Date finishTime,
-        UUID subjectId,
         UUID examId
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             DateRange dateRange = new DateRange(startTime, finishTime);
-            Exam exam = new Exam(examId, name, description,
-                dateRange, subjectId);
-            examMapper.update(exam);
+            Exam exam = new Exam( name, description,
+                dateRange, examId);
+            //examMapper.update(exam);
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException ex) {

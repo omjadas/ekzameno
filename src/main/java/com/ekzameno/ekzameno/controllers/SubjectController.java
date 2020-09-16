@@ -93,37 +93,4 @@ public class SubjectController {
                 .build();
         }
     }
-
-    /**
-     * update an exam.
-     *
-     * @param examId Id of th exam
-     * @param subjectId ID of the subject to create the exam for
-     * @param dto Exam DTO
-     * @return Response to the client
-     */
-    @Path("/{subjectId}/{id}/updateexam")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateExam(
-        @PathParam("id") String examId,
-        @PathParam("subjectId") String subjectId,
-        CreateExamDTO dto
-    ) {
-        Exam exam = examService.updateExam(
-            dto.name,
-            dto.description,
-            dto.startTime,
-            dto.finishTime,
-            UUID.fromString(subjectId),
-            UUID.fromString(examId));
-        if (exam != null) {
-            return Response.ok().entity(exam).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
-    }
 }

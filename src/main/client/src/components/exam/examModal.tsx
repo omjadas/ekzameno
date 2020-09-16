@@ -51,8 +51,6 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
       dispatch(updateExam({
-        id: props.id,
-        subjectId: props.subjectId,
         exam: values,
       }))
         .then(unwrapResult)
@@ -127,9 +125,9 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
                 <Button type="submit" variant="success" disabled={isSubmitting}>
                   {
                     "id" in props ?
-                      "Update Election"
+                      "Update Exam"
                       :
-                      "Create Election"
+                      "Create Exam"
                   }
                 </Button>
               </Modal.Footer>

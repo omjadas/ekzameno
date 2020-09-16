@@ -56,9 +56,9 @@ export const addExam = createAsyncThunk(
 
 export const updateExam = createAsyncThunk(
   "exams/updateExam",
-  async ({ id, subjectId, exam }: { id: string, subjectId: string, exam: Exam }) => {
-    const res = await fetch(`/api/subjects/${subjectId}/${id}/updateexams`, {
-      method: "post",
+  async ({ exam }: { exam: Exam }) => {
+    const res = await fetch(`/api/exams`, {
+      method: "put",
       body: JSON.stringify(exam),
       headers: {
         "content-type": "application/json",
