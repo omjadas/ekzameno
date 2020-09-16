@@ -42,7 +42,11 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
     if ("id" in props) {
       dispatch(updateExam({
         id: props.id,
-        exam: values,
+        exam: {
+          ...values,
+          startTime: new Date(values.startTime).toISOString(),
+          finishTime: new Date(values.finishTime).toISOString(),
+        },
       }))
         .then(unwrapResult)
         .then(() => {
@@ -54,7 +58,11 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
     } else {
       dispatch(addExam({
         subjectId: props.subjectId,
-        exam: values,
+        exam: {
+          ...values,
+          startTime: new Date(values.startTime).toISOString(),
+          finishTime: new Date(values.finishTime).toISOString(),
+        },
       }))
         .then(unwrapResult)
         .then(() => {

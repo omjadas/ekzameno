@@ -29,7 +29,7 @@ const initialState = usersAdapter.getInitialState({
 } as UsersState);
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const res = await fetch("api/users", {
+  const res = await fetch("/api/users", {
     headers: {
       "content-type": "application/json",
     },
@@ -88,6 +88,7 @@ export const usersSlice = createSlice({
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.status = "finished";
       usersAdapter.upsertMany(state, action.payload);
+      usersAdapter.removeOne();
     });
     builder.addCase(fetchUsers.rejected, (state, action) => {
       state.status = "error";

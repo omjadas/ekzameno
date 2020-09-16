@@ -27,7 +27,7 @@ const initialState = subjectsAdapter.getInitialState({
 } as SubjectsState);
 
 export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async () => {
-  const res = await fetch("api/subjects", {
+  const res = await fetch("/api/subjects", {
     headers: {
       "content-type": "application/json",
     },
