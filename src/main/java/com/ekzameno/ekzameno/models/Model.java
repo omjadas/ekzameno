@@ -9,7 +9,7 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  * Base Model class.
  */
 public abstract class Model {
-    private UUID id;
+    private final UUID id;
 
     /**
      * Create a model without an ID (registers as new).

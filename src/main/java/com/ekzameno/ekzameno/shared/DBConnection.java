@@ -8,7 +8,8 @@ import java.sql.SQLException;
  * Wrapper class to handle connections to the database.
  */
 public class DBConnection implements AutoCloseable {
-    private static ThreadLocal<DBConnection> dbConnection = new ThreadLocal<>();
+    private static final ThreadLocal<DBConnection> dbConnection =
+        new ThreadLocal<>();
     private Connection connection = null;
     private static final String connectionUrl = System.getenv(
         "JDBC_DATABASE_URL"

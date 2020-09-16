@@ -13,7 +13,6 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  * Service to handle authentication.
  */
 public class ExamService {
-
     /**
      * Create an exam for a given subject.
      *

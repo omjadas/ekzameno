@@ -13,6 +13,7 @@ public abstract class User extends Model {
     private String name;
     @JsonIgnore
     private String passwordHash;
+    private final String type;
 
     /**
      * Create a User with an ID.
@@ -21,12 +22,20 @@ public abstract class User extends Model {
      * @param email        email address of the User
      * @param name         name of the User
      * @param passwordHash password hash of the user
+     * @param type         type of the user
      */
-    public User(UUID id, String email, String name, String passwordHash) {
+    public User(
+        UUID id,
+        String email,
+        String name,
+        String passwordHash,
+        String type
+    ) {
         super(id);
         this.email = email;
         this.name = name;
         this.passwordHash = passwordHash;
+        this.type = type;
     }
 
     /**
@@ -35,11 +44,13 @@ public abstract class User extends Model {
      * @param email        email address of the User
      * @param name         name of the User
      * @param passwordHash password hash of the user
+     * @param type         type of the user
      */
-    public User(String email, String name, String passwordHash) {
+    public User(String email, String name, String passwordHash, String type) {
         this.email = email;
         this.name = name;
         this.passwordHash = passwordHash;
+        this.type = type;
     }
 
     public String getEmail() {
@@ -52,6 +63,10 @@ public abstract class User extends Model {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+
+    public String getType() {
+        return type;
     }
 
     /**

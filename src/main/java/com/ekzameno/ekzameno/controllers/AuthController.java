@@ -23,10 +23,14 @@ import io.jsonwebtoken.security.Keys;
  */
 @Path("/auth")
 public class AuthController {
-    private AuthService authService = new AuthService();
-    private Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(System.getenv(
-        "JWT_SECRET"
-    )));
+    private final AuthService authService = new AuthService();
+    private final Key key = Keys.hmacShaKeyFor(
+        Decoders.BASE64.decode(
+            System.getenv(
+               "JWT_SECRET"
+            )
+        )
+    );
 
     /**
      * Sign a user in to Ekzameno.
@@ -51,7 +55,7 @@ public class AuthController {
             NewCookie cookie = new NewCookie(
                 "jwt",
                 jwt,
-                null,
+                "/",
                 null,
                 null,
                 -1,

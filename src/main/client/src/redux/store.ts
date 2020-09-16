@@ -1,4 +1,4 @@
-import { Action, combineReducers, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import { Action, AnyAction, combineReducers, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -12,12 +12,21 @@ const reducers = combineReducers({
   subjects: subjectsReducer,
 });
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const rootReducer = (state: any, action: AnyAction) => {
+  if (action.type === "RESET") {
+    state = undefined;
+  }
+
+  return reducers(state, action);
+};
+
 const persistConfig = {
   key: "root",
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,

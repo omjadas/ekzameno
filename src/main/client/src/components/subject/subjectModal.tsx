@@ -2,11 +2,12 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, FormGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import Select from "react-select";
 import * as yup from "yup";
-import { addSubject, fetchSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { addSubject } from "../../redux/slices/subjectsSlice";
+import { fetchUsers, selectInstructors, selectMe, selectStudents, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface SubjectModalProps {
@@ -24,35 +25,43 @@ interface UpdateSubjectProps extends SubjectModalProps {
 
 interface FormValues {
   name: string,
-  instructors: string,
-  students: string,
+  instructors: { label: string, value: string }[],
+  students: { label: string, value: string }[],
   description: string,
 }
 
 const FormSchema = yup.object().shape({
   name: yup.string().required(),
-  instructors: yup.string(),
-  students: yup.string(),
   description: yup.string(),
+  instructors: yup.array().of(yup.object().shape({
+    label: yup.string(),
+    value: yup.string(),
+  })).min(1).required(),
+  students: yup.array().of(yup.object().shape({
+    label: yup.string(),
+    value: yup.string(),
+  })).min(1).required(),
 });
 
-export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
-  const { slug } = useParams<{ slug: string }>();
+export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
-  const subjectStatus = useSelector(selectSubjectsStatus);
+  const usersStatus = useSelector(selectUsersStatus);
+  const students = useSelector(selectStudents);
+  const instructors = useSelector(selectInstructors);
+  const me = useSelector(selectMe);
 
   useEffect(() => {
-    if (subjectStatus === "idle") {
-      dispatch(fetchSubjects());
+    if (usersStatus === "idle" && me !== undefined) {
+      dispatch(fetchUsers());
     }
-  }, [slug, dispatch, subjectStatus]);
+  }, [dispatch, usersStatus, me]);
 
   const onSubmit = (values: FormValues): void => {
     dispatch(addSubject({
       name: values.name,
       description: values.description,
-      instructors: [values.instructors],
-      students: [values.students],
+      instructors: values.instructors.map(i => i.value),
+      students: values.students.map(s => s.value),
     }))
       .then(unwrapResult)
       .then(() => {
@@ -66,14 +75,16 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title> Create Subject </Modal.Title>
+        <Modal.Title>
+          Create Subject
+        </Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{
           name: (props as any).name ?? "",
-          instructors: (props as any).instructors ?? "",
-          students: (props as any).students ?? "",
           description: (props as any).description ?? "",
+          instructors: (props as any).instructors ?? [],
+          students: (props as any).students ?? [],
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}
@@ -82,6 +93,11 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
           ({
             handleSubmit,
             isSubmitting,
+            values,
+            handleBlur,
+            setFieldValue,
+            errors,
+            touched,
           }) => (
             <Form id="createSubject" onSubmit={handleSubmit as any}>
               <Modal.Body>
@@ -93,14 +109,34 @@ export const CreateSubjectModal = (props: UpdateSubjectProps | SubjectModalProps
                   as="textarea"
                   label="Description"
                   name="description" />
-                <FormikControl
-                  type="text"
-                  label="Instructors"
-                  name="instructors" />
-                <FormikControl
-                  type="text"
-                  label="Students"
-                  name="students" />
+                <FormGroup>
+                  <Form.Label>Instructors</Form.Label>
+                  <Select
+                    isMulti
+                    options={instructors.map(i => ({ label: i.name, value: i.id }))}
+                    name="instructors"
+                    value={values.instructors as any}
+                    onChange={option => setFieldValue("instructors", option)}
+                    isDisabled={isSubmitting}
+                    onBlur={handleBlur} />
+                  <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
+                    {errors.instructors}
+                  </Form.Control.Feedback>
+                </FormGroup>
+                <FormGroup>
+                  <Form.Label>Students</Form.Label>
+                  <Select
+                    isMulti
+                    options={students.map(s => ({ label: s.name, value: s.id }))}
+                    name="students"
+                    value={values.students as any}
+                    onChange={option => setFieldValue("students", option)}
+                    isDisabled={isSubmitting}
+                    onBlur={handleBlur} />
+                  <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
+                    {errors.students}
+                  </Form.Control.Feedback>
+                </FormGroup>
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
