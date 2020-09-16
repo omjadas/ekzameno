@@ -29,7 +29,7 @@ const initialState = examsAdapter.getInitialState({
 export const fetchExams = createAsyncThunk(
   "exams/fetchExams",
   async (subjectId: string) => {
-    const res = await fetch(`api/subjects/${subjectId}/exams`, {
+    const res = await fetch(`/api/subjects/${subjectId}/exams`, {
       headers: {
         "content-type": "application/json",
       },
