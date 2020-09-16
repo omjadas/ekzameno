@@ -4,17 +4,17 @@ import { RootState } from "../store";
 
 export type UserType = "STUDENT" | "INSTRUCTOR" | "ADMINISTRATOR";
 
-interface User {
+export interface User {
   name: string,
   email: string,
   type: UserType,
 }
 
-interface CreateUser extends User {
+export interface CreateUser extends User {
   password: string,
 }
 
-interface UserState extends User {
+export interface UserState extends User {
   id: string,
 }
 
@@ -29,7 +29,7 @@ const initialState = usersAdapter.getInitialState({
 } as UsersState);
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const res = await fetch("api/users", {
+  const res = await fetch("/api/users", {
     headers: {
       "content-type": "application/json",
     },

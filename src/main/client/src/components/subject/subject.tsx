@@ -36,7 +36,7 @@ export const Subject = (): JSX.Element => {
           Create Exam
         </Button>
       </Jumbotron>
-      <Exams />
+      <Exams subjectId={subject.id} />
       <ExamModal show={examModalShow} onHide={() => setExamModalShow(false)} subjectId={subject.id} />
     </Container>
   );

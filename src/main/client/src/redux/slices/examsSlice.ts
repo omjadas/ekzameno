@@ -2,16 +2,17 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
-interface Exam {
+export interface Exam {
   name: string,
   description: string,
   startTime: string,
   finishTime: string,
 }
 
-interface ExamState extends Exam {
+export interface ExamState extends Exam {
   id: string,
   slug: string,
+  subjectId: string,
   questionIds: string[],
 }
 
@@ -29,7 +30,7 @@ const initialState = examsAdapter.getInitialState({
 export const fetchExams = createAsyncThunk(
   "exams/fetchExams",
   async (subjectId: string) => {
-    const res = await fetch(`api/subjects/${subjectId}/exams`, {
+    const res = await fetch(`/api/subjects/${subjectId}/exams`, {
       headers: {
         "content-type": "application/json",
       },
@@ -51,6 +52,34 @@ export const addExam = createAsyncThunk(
     });
 
     return res.json() as Promise<ExamState>;
+  }
+);
+
+export const updateExam = createAsyncThunk(
+  "exams/updateExam",
+  async ({ id, exam }: { id: string, exam: Exam }) => {
+    const res = await fetch(`/api/exams/${id}`, {
+      method: "put",
+      body: JSON.stringify(exam),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    return res.json() as Promise<ExamState>;
+  }
+);
+
+export const deleteExam = createAsyncThunk(
+  "exams/deleteExam",
+  async ({ examId }: { examId: string }) => {
+    await fetch(`/api/exams/${examId}`, {
+      method: "delete",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    return examId;
   }
 );
 
@@ -77,6 +106,12 @@ export const examsSlice = createSlice({
       examsAdapter.addOne(state, action.payload);
       state.slugs[action.payload.slug] = action.payload.id;
     });
+    builder.addCase(deleteExam.fulfilled, (state, action) => {
+      examsAdapter.removeOne(state, action.payload);
+    });
+    builder.addCase(updateExam.fulfilled, (state, action) => {
+      examsAdapter.upsertOne(state, action.payload);
+    });
   },
 });
 
@@ -91,6 +126,14 @@ export const {
 export const selectExamBySlug = (slug: string) => {
   return (state: RootState): ExamState | undefined => {
     return selectExamById(state, state.exams.slugs[slug]);
+  };
+};
+
+export const selectExamsByIds = (ids: string[]) => {
+  return (state: RootState): ExamState[] => {
+    return ids
+      .map(id => selectExamById(state, id))
+      .filter(exam => exam !== undefined) as ExamState[];
   };
 };
 

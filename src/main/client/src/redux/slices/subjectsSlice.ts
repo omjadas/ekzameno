@@ -1,15 +1,16 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State, Status } from "../state";
 import { RootState } from "../store";
+import { addExam, fetchExams } from "./examsSlice";
 
-interface Subject {
+export interface Subject {
   name: string,
   description: string,
   instructors: string[],
   students: string[],
 }
 
-interface SubjectState extends Subject {
+export interface SubjectState extends Subject {
   id: string,
   slug: string,
   examIds: string[],
@@ -27,7 +28,7 @@ const initialState = subjectsAdapter.getInitialState({
 } as SubjectsState);
 
 export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async () => {
-  const res = await fetch("api/subjects", {
+  const res = await fetch("/api/subjects", {
     headers: {
       "content-type": "application/json",
     },
@@ -70,6 +71,17 @@ export const subjectsSlice = createSlice({
     builder.addCase(addSubject.fulfilled, (state, action) => {
       subjectsAdapter.addOne(state, action.payload);
       state.slugs[action.payload.slug] = action.payload.id;
+    });
+    builder.addCase(fetchExams.fulfilled, (state, action) => {
+      if (action.payload.length > 0) {
+        const subject = state.entities[action.payload[0].subjectId];
+        if (subject !== undefined) {
+          subject.examIds = action.payload.map(e => e.id);
+        }
+      }
+    });
+    builder.addCase(addExam.fulfilled, (state, action) => {
+      state.entities[action.payload.subjectId]?.examIds?.push(action.payload.id);
     });
   },
 });
