@@ -7,12 +7,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
 import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.models.User;
+import com.ekzameno.ekzameno.services.ExamService;
 import com.ekzameno.ekzameno.services.SubjectService;
 import com.ekzameno.ekzameno.services.UserService;
 
@@ -22,6 +25,7 @@ import com.ekzameno.ekzameno.services.UserService;
 public class Seeds {
     private static final UserService userService = new UserService();
     private static final SubjectService subjectService = new SubjectService();
+    private static final ExamService examService = new ExamService();
     private static final String connectionUrl = System.getenv(
         "JDBC_DATABASE_URL"
     );
@@ -91,15 +95,31 @@ public class Seeds {
             Subject sda = subjectService.createSubject(
                 "SDA",
                 "Software Design and Architecture",
-                new String[] {
-                    eduardo.getId().toString(),
-                    maria.getId().toString()
+                new UUID[] {
+                    eduardo.getId(),
+                    maria.getId()
                 },
-                new String[] {
-                    omja.getId().toString(),
-                    joao.getId().toString(),
-                    muzamil.getId().toString()
+                new UUID[] {
+                    omja.getId(),
+                    joao.getId(),
+                    muzamil.getId()
                 }
+            );
+
+            examService.createExam(
+                "Mid-Sem",
+                "Mid-Semester Exam",
+                new Date(),
+                new Date(new Date().getTime() + 604800000),
+                sda.getId()
+            );
+
+            examService.createExam(
+                "Final",
+                "Final Exam",
+                new Date(),
+                new Date(new Date().getTime() + 604800000),
+                sda.getId()
             );
         } catch (UnknownUserTypeException e) {
             // this should only occur if the above user types are modified

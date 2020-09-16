@@ -44,18 +44,18 @@ public class SubjectService {
     public Subject createSubject(
         String name,
         String description,
-        String[] instructors,
-        String[] students
+        UUID[] instructors,
+        UUID[] students
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             Subject subject = new Subject(name, description);
 
-            for (String s : instructors) {
-                new InstructorSubject(UUID.fromString(s), subject.getId());
+            for (UUID i : instructors) {
+                new InstructorSubject(i, subject.getId());
             }
 
-            for (String z : students) {
-                new Enrolment(UUID.fromString(z), subject.getId());
+            for (UUID s : students) {
+                new Enrolment(s, subject.getId());
             }
 
             UnitOfWork.getCurrent().commit();
