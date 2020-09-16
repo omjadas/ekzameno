@@ -108,4 +108,40 @@ public class ExamService {
             ex.printStackTrace();
         }
     }
+
+    /**
+     * Publish an exam for a given subject.
+     *
+     * @param examId id of the exam
+     */
+    public void publishExam(
+        UUID examId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            Exam exam = examMapper.findById(examId);
+            Date startDate = new Date();
+            exam.setStartTime(startDate);
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Close an exam for a given subject.
+     *
+     * @param examId id of the exam
+     */
+    public void closeExam(
+        UUID examId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            Exam exam = examMapper.findById(examId);
+            Date finishTime = new Date();
+            exam.setFinishTime(finishTime);
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

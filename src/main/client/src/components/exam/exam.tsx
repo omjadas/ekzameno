@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { deleteExam, selectExamBySlug } from "../../redux/slices/examsSlice";
+import { deflateSync } from "zlib";
+import { deleteExam, selectExamBySlug, publishExam, closeExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
 import styles from "../subject/subject.module.scss";
@@ -32,6 +33,33 @@ export const Exam = (): JSX.Element => {
       });
   };
 
+  const publishNow = (): void => {
+    dispatch(publishExam({
+      examId: exam.id,
+    }))
+      .then(() => {
+        history.goBack();
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
+  const closeNow = (): void => {
+    dispatch(closeExam({
+      examId: exam.id,
+    }))
+      .then(() => {
+        history.goBack();
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
+  const currenTime = new Date();
+  const startTime = new Date(exam.startTime);
+  const finishTime = new Date(exam.finishTime);
   return (
     <Container className={styles.margin}>
       <Jumbotron>
@@ -39,10 +67,28 @@ export const Exam = (): JSX.Element => {
         <p>{exam.description}</p>
         <Button onClick={() => setExamModalShow(true)}>
           Edit Exam
-        </Button>
+        </Button>{" "}
         <Button onClick={onClick}>
           Delete Exam
-        </Button>
+        </Button>{" "}
+        {
+          startTime > currenTime ?
+            <Button onClick={publishNow}>
+              Publish Exam
+            </Button>
+            :
+            <></>
+        }
+        {" "}
+        {
+          finishTime > currenTime ?
+            <Button onClick={closeNow}>
+              Close Exam
+            </Button>
+            :
+            <></>
+        }
+        {" "}
       </Jumbotron>
       <ExamModal
         show={examModalShow}
