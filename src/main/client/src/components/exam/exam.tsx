@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { deflateSync } from "zlib";
 import { deleteExam, selectExamBySlug, publishExam, closeExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
