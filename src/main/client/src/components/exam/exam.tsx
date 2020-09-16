@@ -86,12 +86,10 @@ export const Exam = (): JSX.Element => {
         {" "}
         {
           finishTime > currenTime &&
-          startTime < currenTime ?
+          startTime < currenTime &&
             <Button onClick={closeNow}>
               Close Exam
             </Button>
-            :
-            <></>
         }
         {" "}
       </Jumbotron>
