@@ -83,7 +83,7 @@ public class ExamService {
             DateRange dateRange = new DateRange(startTime, finishTime);
             Exam exam = new Exam( name, description,
                 dateRange, examId);
-            //examMapper.update(exam);
+            examMapper.update(exam);
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException ex) {

@@ -4,8 +4,7 @@ import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import * as yup from "yup";
-import { updateExam, addExam, fetchExams, selectExamsStatus } from "../../redux/slices/examsSlice";
-import { addExam } from "../../redux/slices/examsSlice";
+import { updateExam, addExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface ExamModalProps {
@@ -15,7 +14,7 @@ export interface ExamModalProps {
 }
 
 interface UpdateExamProps extends ExamModalProps {
-  id: string,
+  examId: string,
   name: string,
   startTime: string,
   finishTime: string,
@@ -40,8 +39,9 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
   const dispatch = useAppDispatch();
 
   const onSubmit = (values: FormValues): void => {
-    if ("id" in props) {
+    if ("examId" in props) {
       dispatch(updateExam({
+        examId: props.examId,
         exam: values,
       }))
         .then(unwrapResult)
@@ -71,7 +71,7 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
       <Modal.Header closeButton>
         <Modal.Title>
           {
-            "id" in props ?
+            "examId" in props ?
               "Update Exam"
               :
               "Create Exam"
@@ -115,7 +115,7 @@ export const ExamModal = (props: UpdateExamProps | ExamModalProps): JSX.Element 
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
                   {
-                    "id" in props ?
+                    "examId" in props ?
                       "Update Exam"
                       :
                       "Create Exam"
