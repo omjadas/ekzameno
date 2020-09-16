@@ -5,9 +5,9 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { fetchExams, selectExamsStatus, selectAllExams } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
-import styles from "../subject/subject.module.scss";
+import styles from "./exams.module.scss";
 
-export const Exam = (): JSX.Element => {
+export const Exams = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
   const examsStatus = useSelector(selectExamsStatus);
@@ -20,7 +20,7 @@ export const Exam = (): JSX.Element => {
   }, [slug, dispatch, examsStatus]);
 
   return (
-    <Container className={styles.wrapper}>
+    <div className={styles.wrapper}>
       {
         exams.map(exam => {
           return (
@@ -37,6 +37,6 @@ export const Exam = (): JSX.Element => {
           );
         })
       }
-    </Container>
+    </div>
   );
 };

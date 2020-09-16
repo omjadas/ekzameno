@@ -6,6 +6,8 @@ import { fetchSubjects, selectSubjectBySlug, selectSubjectsStatus } from "../../
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
 import styles from "./subject.module.scss";
+import { Exams } from "../exam/exams";
+import subjectsStyles from "./subjects.module.scss";
 
 export const Subject = (): JSX.Element => {
   const { slug } = useParams<{slug: string}>();
@@ -35,6 +37,7 @@ export const Subject = (): JSX.Element => {
           Create Exam
         </Button>
       </Jumbotron>
+      <Exams />
       <ExamModal show={examModalShow} onHide={() => setExamModalShow(false)} subjectId={subject.id} />
     </Container>
   );
