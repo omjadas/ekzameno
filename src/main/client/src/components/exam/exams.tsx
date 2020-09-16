@@ -10,14 +10,11 @@ import styles from "./exams.module.scss";
 export const Exams = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useAppDispatch();
-  const examsStatus = useSelector(selectExamsStatus);
   const exams = useSelector(selectAllExams);
 
   useEffect(() => {
-    if (examsStatus === "idle") {
-      dispatch(fetchExams(slug));
-    }
-  }, [slug, dispatch, examsStatus]);
+    dispatch(fetchExams(slug));
+  }, [slug, dispatch]);
 
   return (
     <div className={styles.wrapper}>
