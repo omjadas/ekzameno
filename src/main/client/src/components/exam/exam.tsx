@@ -60,6 +60,13 @@ export const Exam = (): JSX.Element => {
   const currenTime = new Date();
   const startTime = new Date(exam.startTime);
   const finishTime = new Date(exam.finishTime);
+  // let state = "new";
+  // if (startTime > currenTime) {
+  //   state = "notPublished";
+  // } else if (finishTime > currenTime) {
+  //   state = "notClosed";
+  // }
+
   return (
     <Container className={styles.margin}>
       <Jumbotron>
@@ -72,7 +79,8 @@ export const Exam = (): JSX.Element => {
           Delete Exam
         </Button>{" "}
         {
-          startTime > currenTime ?
+          startTime > currenTime &&
+          finishTime > currenTime ?
             <Button onClick={publishNow}>
               Publish Exam
             </Button>
