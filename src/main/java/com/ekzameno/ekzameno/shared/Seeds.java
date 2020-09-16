@@ -42,6 +42,7 @@ public class Seeds {
             );
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+            return;
         }
 
         try {
@@ -61,7 +62,7 @@ public class Seeds {
 
             User maria = userService.registerUser(
                 "Maria",
-                "mari@ekzame.no",
+                "maria@ekzame.no",
                 "password",
                 "instructor"
             );
@@ -75,7 +76,7 @@ public class Seeds {
 
             User joao = userService.registerUser(
                 "Joao",
-                "muzamil@ekzame.no",
+                "joao@ekzame.no",
                 "password",
                 "student"
             );
