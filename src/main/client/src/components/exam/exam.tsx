@@ -78,15 +78,15 @@ export const Exam = (): JSX.Element => {
           Delete Exam
         </Button>{" "}
         {
-          startTime > currenTime &&
+          startTime > currentTime &&
             <Button onClick={publishNow}>
               Publish Exam
             </Button>
         }
         {" "}
         {
-          finishTime > currenTime &&
-          startTime < currenTime &&
+          finishTime > currentTime &&
+          startTime < currentTime &&
             <Button onClick={closeNow}>
               Close Exam
             </Button>
