@@ -32,7 +32,7 @@ export const Exam = (): JSX.Element => {
       });
   };
 
-  const currenTime = new Date();
+  const currentTime = new Date();
   const startTime = new Date(exam.startTime);
   const finishTime = new Date(exam.finishTime);
 
