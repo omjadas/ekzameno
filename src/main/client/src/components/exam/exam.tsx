@@ -58,7 +58,7 @@ export const Exam = (): JSX.Element => {
         name: exam.name,
         description: exam.description,
         startTime: exam.startTime,
-        finishTime: new Date(currenTime).toISOString(),
+        finishTime: new Date().toISOString(),
       },
     }))
       .catch(e => {
