@@ -42,7 +42,7 @@ export const Exam = (): JSX.Element => {
       exam: {
         name: exam.name,
         description: exam.description,
-        startTime: new Date(currenTime).toISOString(),
+        startTime: new Date().toISOString(),
         finishTime: exam.finishTime,
       },
     }))
