@@ -46,9 +46,6 @@ export const Exam = (): JSX.Element => {
         finishTime: exam.finishTime,
       },
     }))
-      .then(() => {
-        history.goBack();
-      })
       .catch(e => {
         console.error(e);
       });
@@ -64,9 +61,6 @@ export const Exam = (): JSX.Element => {
         finishTime: new Date(currenTime).toISOString(),
       },
     }))
-      .then(() => {
-        history.goBack();
-      })
       .catch(e => {
         console.error(e);
       });
