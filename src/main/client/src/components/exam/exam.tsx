@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { deleteExam, selectExamBySlug, publishExam, closeExam } from "../../redux/slices/examsSlice";
+import { deleteExam, selectExamBySlug, updateExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
 import styles from "../subject/subject.module.scss";
@@ -32,9 +32,19 @@ export const Exam = (): JSX.Element => {
       });
   };
 
+  const currenTime = new Date();
+  const startTime = new Date(exam.startTime);
+  const finishTime = new Date(exam.finishTime);
+
   const publishNow = (): void => {
-    dispatch(publishExam({
-      examId: exam.id,
+    dispatch(updateExam({
+      id: exam.id,
+      exam: {
+        name: exam.name,
+        description: exam.description,
+        startTime: new Date(currenTime).toISOString(),
+        finishTime: exam.finishTime,
+      },
     }))
       .then(() => {
         history.goBack();
@@ -45,8 +55,14 @@ export const Exam = (): JSX.Element => {
   };
 
   const closeNow = (): void => {
-    dispatch(closeExam({
-      examId: exam.id,
+    dispatch(updateExam({
+      id: exam.id,
+      exam: {
+        name: exam.name,
+        description: exam.description,
+        startTime: exam.startTime,
+        finishTime: new Date(currenTime).toISOString(),
+      },
     }))
       .then(() => {
         history.goBack();
@@ -55,10 +71,6 @@ export const Exam = (): JSX.Element => {
         console.error(e);
       });
   };
-
-  const currenTime = new Date();
-  const startTime = new Date(exam.startTime);
-  const finishTime = new Date(exam.finishTime);
 
   return (
     <Container className={styles.margin}>

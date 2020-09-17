@@ -73,42 +73,4 @@ public class ExamController {
             .status(Response.Status.NO_CONTENT)
             .build();
     }
-
-    /**
-     * Publish an exam.
-     *
-     * @param examId Id of th exam
-     * @return Response to the client
-     */
-    @Path("/{examId}/publish")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response publishExam(
-        @PathParam("examId") String examId
-    ) {
-        examService.publishExam(UUID.fromString(examId));
-        return Response
-            .status(Response.Status.NO_CONTENT)
-            .build();
-    }
-
-    /**
-     * Close an exam.
-     *
-     * @param examId Id of th exam
-     * @return Response to the client
-     */
-    @Path("/{examId}/close")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response closeExam(
-        @PathParam("examId") String examId
-    ) {
-        examService.closeExam(UUID.fromString(examId));
-        return Response
-            .status(Response.Status.NO_CONTENT)
-            .build();
-    }
 }

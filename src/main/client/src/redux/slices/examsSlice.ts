@@ -83,32 +83,6 @@ export const deleteExam = createAsyncThunk(
   }
 );
 
-export const publishExam = createAsyncThunk(
-  "exams/updateExam",
-  async ({ examId }: { examId: string }) => {
-    await fetch(`/api/exams/${examId}/publish`, {
-      method: "put",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    return examId;
-  }
-);
-
-export const closeExam = createAsyncThunk(
-  "exams/updateExam",
-  async ({ examId }: { examId: string }) => {
-    await fetch(`/api/exams/${examId}/close`, {
-      method: "put",
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    return examId;
-  }
-);
-
 export const examsSlice = createSlice({
   name: "exams",
   initialState,
