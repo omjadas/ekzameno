@@ -2,6 +2,7 @@ package com.ekzameno.ekzameno.filters;
 
 import java.io.IOException;
 import java.security.Key;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -9,9 +10,11 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
 import com.ekzameno.ekzameno.mappers.UserMapper;
+import com.ekzameno.ekzameno.models.User;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -48,7 +51,34 @@ public class AuthFilter implements ContainerRequestFilter {
                     .getBody()
                     .getSubject();
 
-                new UserMapper().findById(UUID.fromString(subject));
+                User user = new UserMapper().findById(UUID.fromString(subject));
+                SecurityContext currentSecurityContext = requestContext
+                    .getSecurityContext();
+
+                requestContext.setSecurityContext(new SecurityContext() {
+                    @Override
+                    public Principal getUserPrincipal() {
+                        return () -> user.getId().toString();
+                    }
+
+                    @Override
+                    public boolean isUserInRole(String role) {
+                        return user
+                            .getType()
+                            .toLowerCase()
+                            .equals(role.toLowerCase());
+                    }
+
+                    @Override
+                    public boolean isSecure() {
+                        return currentSecurityContext.isSecure();
+                    }
+
+                    @Override
+                    public String getAuthenticationScheme() {
+                        return "JWT";
+                    }
+                });
             } catch (JwtException | SQLException e) {
                 requestContext.abortWith(
                     Response.status(Response.Status.UNAUTHORIZED).build()
