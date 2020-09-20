@@ -91,10 +91,10 @@ export const Exam = (): JSX.Element => {
             {" "}
             {
               finishTime > currentTime &&
-                startTime < currentTime &&
-                  <Button onClick={closeNow}>
-                    Close Exam
-                  </Button>
+              startTime < currentTime &&
+                <Button onClick={closeNow}>
+                  Close Exam
+                </Button>
             }
           </>
         }
