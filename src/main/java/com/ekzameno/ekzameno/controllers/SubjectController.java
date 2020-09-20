@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import com.ekzameno.ekzameno.dtos.CreateExamDTO;
 import com.ekzameno.ekzameno.dtos.CreateSubjectDTO;
@@ -78,7 +79,12 @@ public class SubjectController {
     public List<Exam> getExamsForSubject(
         @PathParam("subjectId") String subjectId
     ) {
-        return examService.getExamsForSubject(UUID.fromString(subjectId));
+        //if (SecurityContext.isUserInRole("students")) {
+            return examService.getPublishedExamsForSubject(
+                UUID.fromString(subjectId));
+        //} else {
+        //    return examService.getExamsForSubject(UUID.fromString(subjectId));
+        //}
     }
 
     /**

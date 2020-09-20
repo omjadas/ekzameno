@@ -62,6 +62,37 @@ public class ExamMapper extends Mapper<Exam> {
         }
     }
 
+    /**
+     * Retrieve all published exams for a given subject ID.
+     *
+     * @param id ID of the subject to retrieve exams for
+     * @return exams for the given subject
+     * @throws SQLException if unable to retrieve the exams
+     */
+    public List<Exam> findAllPublishedExams(UUID id) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ? " +
+            " AND start_time < NOW()";
+
+        Connection connection = DBConnection.getInstance().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Exam> exams = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Exam exam = load(rs);
+                IdentityMap.getInstance().put(exam.getId(), exam);
+                exams.add(exam);
+            }
+
+            return exams;
+        }
+    }
+
     @Override
     public void insert(Exam exam) throws SQLException {
         String query = "INSERT INTO " + tableName +

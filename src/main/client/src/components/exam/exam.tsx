@@ -3,6 +3,7 @@ import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { deleteExam, selectExamBySlug, updateExam } from "../../redux/slices/examsSlice";
+import { selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
 import styles from "../subject/subject.module.scss";
@@ -13,6 +14,7 @@ export const Exam = (): JSX.Element => {
   const exam = useSelector(selectExamBySlug(slug));
   const [examModalShow, setExamModalShow] = useState(false);
   const history = useHistory();
+  const me = useSelector(selectMe);
 
   if (exam === undefined) {
     return (
@@ -71,25 +73,30 @@ export const Exam = (): JSX.Element => {
       <Jumbotron>
         <h1>{exam.name}</h1>
         <p>{exam.description}</p>
-        <Button onClick={() => setExamModalShow(true)}>
-          Edit Exam
-        </Button>{" "}
-        <Button onClick={onClick}>
-          Delete Exam
-        </Button>{" "}
         {
-          startTime > currentTime &&
-            <Button onClick={publishNow}>
-              Publish Exam
-            </Button>
-        }
-        {" "}
-        {
-          finishTime > currentTime &&
-          startTime < currentTime &&
-            <Button onClick={closeNow}>
-              Close Exam
-            </Button>
+          me?.type === "INSTRUCTOR" &&
+          <>
+            <Button onClick={() => setExamModalShow(true)}>
+              Edit Exam
+            </Button>{" "}
+            <Button onClick={onClick}>
+              Delete Exam
+            </Button>{" "}
+            {
+              startTime > currentTime &&
+                  <Button onClick={publishNow}>
+                    Publish Exam
+                  </Button>
+            }
+            {" "}
+            {
+              finishTime > currentTime &&
+                startTime < currentTime &&
+                  <Button onClick={closeNow}>
+                    Close Exam
+                  </Button>
+            }
+          </>
         }
         {" "}
       </Jumbotron>
