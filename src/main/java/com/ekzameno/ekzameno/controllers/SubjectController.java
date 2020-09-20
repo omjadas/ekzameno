@@ -77,6 +77,7 @@ public class SubjectController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Exam> getExamsForSubject(
+        @Context SecurityContext securityContext,
         @PathParam("subjectId") String subjectId
     ) {
         //if (SecurityContext.isUserInRole("students")) {
