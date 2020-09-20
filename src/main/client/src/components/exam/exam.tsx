@@ -84,9 +84,9 @@ export const Exam = (): JSX.Element => {
             </Button>{" "}
             {
               startTime > currentTime &&
-                  <Button onClick={publishNow}>
-                    Publish Exam
-                  </Button>
+                <Button onClick={publishNow}>
+                  Publish Exam
+                </Button>
             }
             {" "}
             {
