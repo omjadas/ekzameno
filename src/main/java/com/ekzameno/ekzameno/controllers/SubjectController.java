@@ -80,12 +80,13 @@ public class SubjectController {
         @Context SecurityContext securityContext,
         @PathParam("subjectId") String subjectId
     ) {
-        //if (SecurityContext.isUserInRole("students")) {
+        if (securityContext.isUserInRole("student")) {
             return examService.getPublishedExamsForSubject(
-                UUID.fromString(subjectId));
-        //} else {
-        //    return examService.getExamsForSubject(UUID.fromString(subjectId));
-        //}
+                UUID.fromString(subjectId)
+            );
+        } else {
+            return examService.getExamsForSubject(UUID.fromString(subjectId));
+        }
     }
 
     /**
