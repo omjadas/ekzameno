@@ -71,7 +71,7 @@ public class ExamMapper extends Mapper<Exam> {
      */
     public List<Exam> findAllPublishedExams(UUID id) throws SQLException {
         String query = "SELECT * FROM " + tableName + " WHERE subject_id = ? " +
-            " AND start_time < NOW()";
+            "AND start_time < NOW()";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
