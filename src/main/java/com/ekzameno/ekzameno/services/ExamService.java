@@ -34,6 +34,21 @@ public class ExamService {
     }
 
     /**
+     * Retrieve all Published Exams.
+     *
+     * @param subjectId id of the subject
+     * @return all exams for the subject
+     */
+    public List<Exam> getPublishedExamsForSubject(UUID subjectId) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return examMapper.findAllPublishedExams(subjectId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * Create an exam for a given subject.
      *
      * @param name        name of the exam

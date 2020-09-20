@@ -9,8 +9,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import com.ekzameno.ekzameno.dtos.CreateExamDTO;
 import com.ekzameno.ekzameno.dtos.CreateSubjectDTO;
@@ -69,6 +71,7 @@ public class SubjectController {
     /**
      * Handles the fetching of all exams from the database.
      *
+     * @param securityContext User details
      * @param subjectId ID of the subject to create the exam for
      * @return list of all exams for the subject
      */
@@ -76,9 +79,16 @@ public class SubjectController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Exam> getExamsForSubject(
+        @Context SecurityContext securityContext,
         @PathParam("subjectId") String subjectId
     ) {
-        return examService.getExamsForSubject(UUID.fromString(subjectId));
+        if (securityContext.isUserInRole("student")) {
+            return examService.getPublishedExamsForSubject(
+                UUID.fromString(subjectId)
+            );
+        } else {
+            return examService.getExamsForSubject(UUID.fromString(subjectId));
+        }
     }
 
     /**
