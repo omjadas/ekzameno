@@ -33,7 +33,7 @@ public class SubjectService {
     }
 
     /**
-     * Retreive subjects for a student.
+     * Retrieve subjects for a student.
      *
      * @param id student's id.
      * @return list of subjects for which the user has access.
