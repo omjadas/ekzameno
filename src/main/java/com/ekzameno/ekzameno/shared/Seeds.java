@@ -73,7 +73,7 @@ public class Seeds {
 
             User omja = userService.registerUser(
                 "Omja",
-                "odas@ekzame.no",
+                "omja@ekzame.no",
                 "password",
                 "student"
             );
