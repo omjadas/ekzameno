@@ -52,8 +52,7 @@ public class SubjectController {
             );
         } else if (securityContext.isUserInRole("instructor")) {
             return subjectService.getSubjectsForInstructor(
-                UUID
-                .fromString(
+                UUID.fromString(
                     securityContext
                     .getUserPrincipal()
                     .getName()
