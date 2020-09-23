@@ -33,6 +33,36 @@ public class SubjectService {
     }
 
     /**
+     * Retrieve subjects for a student.
+     *
+     * @param id student's id.
+     * @return list of subjects for which the user has access.
+     */
+    public List<Subject> getSubjectsForStudent(UUID id) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return subjectMapper.findAllForStudent(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Retrieve subjects for an instructor.
+     *
+     * @param id instructor's id.
+     * @return list of subjects the instructor teaches.
+     */
+    public List<Subject> getSubjectsForInstructor(UUID id) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return subjectMapper.findAllForInstructor(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
      * Create a new subject.
      *
      * @param name name of the subject to create

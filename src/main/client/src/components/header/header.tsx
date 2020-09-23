@@ -18,8 +18,8 @@ export const Header = (): JSX.Element => {
 
   const onSignOut = (): void => {
     dispatch(signOut())
-      .then(() => dispatch({ type: "RESET" }))
-      .then(() => history.push("/"));
+      .then(() => history.push("/"))
+      .then(() => dispatch({ type: "RESET" }));
   };
 
   return (

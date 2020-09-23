@@ -34,12 +34,33 @@ public class SubjectController {
     /**
      * Handles the fetching of all subjects from the database.
      *
+     * @param securityContext provides access to user role.
      * @return list of all subjects in the database.
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Subject> getSubjects() {
-        return subjectService.getSubjects();
+    public List<Subject> getSubjects(
+        @Context SecurityContext securityContext
+    ) {
+        if (securityContext.isUserInRole("student")) {
+            return subjectService.getSubjectsForStudent(
+                UUID.fromString(
+                    securityContext
+                    .getUserPrincipal()
+                    .getName()
+                )
+            );
+        } else if (securityContext.isUserInRole("instructor")) {
+            return subjectService.getSubjectsForInstructor(
+                UUID.fromString(
+                    securityContext
+                    .getUserPrincipal()
+                    .getName()
+                )
+            );
+        } else {
+            return subjectService.getSubjects();
+        }
     }
 
     /**
