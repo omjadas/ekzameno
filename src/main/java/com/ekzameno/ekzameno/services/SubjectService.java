@@ -48,7 +48,7 @@ public class SubjectService {
     }
 
     /**
-     * Retreive subkects for an instructor.
+     * Retrieve subjects for an instructor.
      *
      * @param id instructor's id.
      * @return list of subjects the instructor teaches.
