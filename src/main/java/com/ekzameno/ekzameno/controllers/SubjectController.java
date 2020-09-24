@@ -1,6 +1,5 @@
 package com.ekzameno.ekzameno.controllers;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
