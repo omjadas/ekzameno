@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchSubjects, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { fetchSubject, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { fetchInstructorsForSubject, fetchStudentsForSubject, selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
-import styles from "./subject.module.scss";
 import { Exams } from "../exam/exams";
+import { SubjectModal } from "../subject/subjectModal";
+import styles from "./subject.module.scss";
 
 export const Subject = (): JSX.Element => {
   const { slug } = useParams<{slug: string}>();
@@ -14,12 +16,20 @@ export const Subject = (): JSX.Element => {
   const subjectsStatus = useSelector(selectSubjectsStatus);
   const subject = useSelector(selectSubjectBySlug(slug));
   const [examModalShow, setExamModalShow] = useState(false);
+  const [subjectModalShow, setSubjectModalShow] = useState(false);
+  const me = useSelector(selectMe);
+  const subjectID = subject?.id;
 
   useEffect(() => {
-    if (subjectsStatus === "idle") {
-      dispatch(fetchSubjects());
+    dispatch(fetchSubject(slug));
+  }, [dispatch, slug]);
+
+  useEffect(() => {
+    if (subjectID !== undefined) {
+      dispatch(fetchInstructorsForSubject(subjectID));
+      dispatch(fetchStudentsForSubject(subjectID));
     }
-  }, [dispatch, subjectsStatus]);
+  }, [dispatch, subjectID, subjectsStatus]);
 
   if (subject === undefined) {
     return (
@@ -32,10 +42,27 @@ export const Subject = (): JSX.Element => {
       <Jumbotron>
         <h1>{subject.name}</h1>
         <p>{subject.description}</p>
-        <Button onClick={() => setExamModalShow(true)}>
-          Create Exam
-        </Button>
+        {
+          me?.type === "INSTRUCTOR" &&
+          <>
+            <Button onClick={() => setSubjectModalShow(true)} className="mr-2">
+              Edit Subject
+            </Button>
+            <Button onClick={() => setExamModalShow(true)}>
+              Create Exam
+            </Button>
+          </>
+        }
       </Jumbotron>
+      <SubjectModal
+        show={subjectModalShow}
+        onHide={() => setSubjectModalShow(false)}
+        id={subject.id}
+        name={subject.name}
+        description={subject.description}
+        instructors={subject.instructors}
+        students={subject.students}
+      />
       <Exams subjectId={subject.id} />
       <ExamModal show={examModalShow} onHide={() => setExamModalShow(false)} subjectId={subject.id} />
     </Container>

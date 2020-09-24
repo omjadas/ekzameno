@@ -31,9 +31,9 @@ const selectOptions = [
 ];
 
 const FormSchema = yup.object().shape({
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().required(),
+  name: yup.string().required("Name is a required field."),
+  email: yup.string().email().required("Email is a required field."),
+  password: yup.string().required("Password is a required field."),
   confirmPassword: yup.string().test(
     "equal",
     "passwords do not match",
@@ -44,7 +44,7 @@ const FormSchema = yup.object().shape({
   type: yup.object().shape({
     label: yup.string().required(),
     value: yup.string().oneOf(["ADMINISTRATOR", "INSTRUCTOR", "STUDENT"]).required(),
-  }).required(),
+  }).required("You must select one of the roles."),
 });
 
 export const UserModal = (props: UserModalProps): JSX.Element => {

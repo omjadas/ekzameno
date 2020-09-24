@@ -38,6 +38,32 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   return res.json() as Promise<UserState[]>;
 });
 
+export const fetchInstructorsForSubject = createAsyncThunk(
+  "users/fetchInstructorsForSubject",
+  async (subjectId: string) => {
+    const res = await fetch(`/api/subjects/${subjectId}/instructors`, {
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    return { instructors: await res.json() as UserState[], subjectId };
+  }
+);
+
+export const fetchStudentsForSubject = createAsyncThunk(
+  "users/fetchStudentsForSubject",
+  async (subjectId: string) => {
+    const res = await fetch(`/api/subjects/${subjectId}/students`, {
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    return { students: await res.json() as UserState[], subjectId };
+  }
+);
+
 export const addUser = createAsyncThunk("users/addUser", async (user: CreateUser) => {
   const res = await fetch("/api/users", {
     method: "post",
@@ -92,6 +118,12 @@ export const usersSlice = createSlice({
     builder.addCase(fetchUsers.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
+    });
+    builder.addCase(fetchInstructorsForSubject.fulfilled, (state, action) => {
+      usersAdapter.upsertMany(state, action.payload.instructors);
+    });
+    builder.addCase(fetchStudentsForSubject.fulfilled, (state, action) => {
+      usersAdapter.upsertMany(state, action.payload.students);
     });
     builder.addCase(addUser.fulfilled, (state, action) => {
       usersAdapter.addOne(state, action.payload);

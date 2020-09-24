@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.ekzameno.ekzameno.exceptions.InternalServerErrorException;
+import com.ekzameno.ekzameno.exceptions.NotFoundException;
+import com.ekzameno.ekzameno.mappers.EnrolmentMapper;
+import com.ekzameno.ekzameno.mappers.InstructorSubjectMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
 import com.ekzameno.ekzameno.models.Enrolment;
 import com.ekzameno.ekzameno.models.InstructorSubject;
@@ -17,6 +21,9 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  */
 public class SubjectService {
     private final SubjectMapper subjectMapper = new SubjectMapper();
+    private final EnrolmentMapper enrolmentMapper = new EnrolmentMapper();
+    private final InstructorSubjectMapper instructorSubjectMapper =
+        new InstructorSubjectMapper();
 
     /**
      * Retrieve all subjects.
@@ -26,6 +33,39 @@ public class SubjectService {
     public List<Subject> getSubjects() {
         try (DBConnection connection = DBConnection.getInstance()) {
             return subjectMapper.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Fetches a subject for a given slug.
+     *
+     * @param slug subject's slug
+     * @return subject
+     */
+    public Subject getSubject(String slug)
+        throws NotFoundException, InternalServerErrorException {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return subjectMapper.findBySlug(slug);
+        } catch (SQLException e) {
+            if ("23503".equals(e.getSQLState())) {
+                throw new NotFoundException();
+            }
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Retrieve subjects for an instructor.
+     *
+     * @param id instructor's id.
+     * @return list of subjects the instructor teaches.
+     */
+    public List<Subject> getSubjectsForInstructor(UUID id) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return subjectMapper.findAllForInstructor(id);
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -48,17 +88,86 @@ public class SubjectService {
     }
 
     /**
-     * Retrieve subjects for an instructor.
+     * Adds given instructor to given subject.
      *
-     * @param id instructor's id.
-     * @return list of subjects the instructor teaches.
+     * @param subjectId subject's id
+     * @param instructorId instructor's id
+     * @throws NotFoundException not found exception
+     * @throws InternalServerErrorException internal error exception
      */
-    public List<Subject> getSubjectsForInstructor(UUID id) {
+    public void addInstructorToSubject(UUID subjectId, UUID instructorId)
+        throws NotFoundException, InternalServerErrorException {
         try (DBConnection connection = DBConnection.getInstance()) {
-            return subjectMapper.findAllForInstructor(id);
+            new InstructorSubject(instructorId, subjectId);
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException e) {
+            if ("23503".equals(e.getSQLState())) {
+                throw new NotFoundException();
+            }
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Adds given student to given subject.
+     *
+     * @param subjectId subject's id
+     * @param studentId student's id
+     * @throws NotFoundException not found exception
+     * @throws InternalServerErrorException internal error exception
+     */
+    public void addStudentToSubject(UUID subjectId, UUID studentId)
+        throws NotFoundException, InternalServerErrorException {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            new Enrolment(studentId, subjectId);
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException e) {
+            if ("23503".equals(e.getSQLState())) {
+                throw new NotFoundException();
+            }
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Deletes given instructor from given subject.
+     *
+     * @param subjectId subject's id
+     * @param instructorId instructor's id
+     */
+    public void deleteInstructorFromSubject(
+        UUID subjectId,
+        UUID instructorId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            instructorSubjectMapper.deleteByRelationIds(
+                instructorId,
+                subjectId
+            );
+            connection.getConnection().commit();
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Deletes given student from given subject.
+     *
+     * @param subjectId subject's id
+     * @param studentId student's id
+     */
+    public void deleteStudentFromSubject(
+        UUID subjectId,
+        UUID studentId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            enrolmentMapper.deleteByRelationIds(
+                studentId,
+                subjectId
+            );
+            connection.getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -96,4 +205,28 @@ public class SubjectService {
         }
     }
 
+    /**
+     * Updates a subject.
+     *
+     * @param name new name of the subject
+     * @param description new description of the subject
+     * @param subjectId subject id
+     * @return returns the updated subject
+     */
+    public Subject updateSubject(
+        String name,
+        String description,
+        UUID subjectId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            Subject subject = subjectMapper.findById(subjectId);
+            subject.setName(name);
+            subject.setDescription(description);
+            UnitOfWork.getCurrent().commit();
+            return subject;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }

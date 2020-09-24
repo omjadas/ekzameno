@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { deleteExam, selectExamBySlug, updateExam } from "../../redux/slices/examsSlice";
+import { deleteExam, fetchExam, selectExamBySlug, updateExam } from "../../redux/slices/examsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
@@ -15,6 +15,10 @@ export const Exam = (): JSX.Element => {
   const [examModalShow, setExamModalShow] = useState(false);
   const history = useHistory();
   const me = useSelector(selectMe);
+
+  useEffect(() => {
+    dispatch(fetchExam(slug));
+  }, [dispatch, slug]);
 
   if (exam === undefined) {
     return (
