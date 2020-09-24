@@ -80,9 +80,10 @@ public class SubjectController {
     @Path("/{slug}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Subject getSubject(@PathParam("slug") String slug) {
+    public Response getSubject(@PathParam("slug") String slug) {
         try {
-            return subjectService.getSubject(slug);
+            Subject subject = subjectService.getSubject(slug);
+            return Response.ok().entity(subject).build();
         } catch (NotFoundException e) {
             Response.status(Response.Status.NOT_FOUND).build();
             return null;
