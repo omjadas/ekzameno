@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.exceptions.NotFoundException;
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
@@ -26,12 +27,13 @@ public class SubjectMapper extends Mapper<Subject> {
      * @return subject with the given ID
      * @throws SQLException if unable to retrieve the subject
      */
-    public Subject findBySlug(String slug) throws SQLException {
+    public Subject findBySlug(String slug)
+        throws SQLException, NotFoundException {
         try {
             return findByProp("slug", slug);
         } catch (NotFoundException e) {
             e.printStackTrace();
-            return null;
+            throw new NotFoundException();
         }
     }
 

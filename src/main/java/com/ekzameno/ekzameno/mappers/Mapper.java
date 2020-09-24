@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.exceptions.NotFoundException;
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.Model;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
@@ -36,7 +37,7 @@ public abstract class Mapper<T extends Model> {
                 .getDeclaredConstructor()
                 .newInstance();
         } catch (Exception e) {
-            return null;
+            throw new NotFoundException();
         }
     }
 

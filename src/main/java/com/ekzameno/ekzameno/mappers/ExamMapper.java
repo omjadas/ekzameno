@@ -10,7 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.exceptions.NotFoundException;
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -34,7 +35,7 @@ public class ExamMapper extends Mapper<Exam> {
             return findByProp("slug", slug);
         } catch (NotFoundException e) {
             e.printStackTrace();
-            return null;
+            throw new NotFoundException();
         }
     }
 
