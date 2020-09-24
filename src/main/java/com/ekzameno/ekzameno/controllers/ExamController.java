@@ -41,16 +41,13 @@ public class ExamController {
             Exam exam = examService.getExam(slug);
             return Response.ok().entity(exam).build();
         } catch (NotFoundException e) {
-            Response.status(Response.Status.NOT_FOUND).build();
-            return null;
-        } catch (InternalServerErrorException ex) {
-            Response.status(
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (InternalServerErrorException e) {
+            return Response.status(
                 Response
                 .Status
                 .INTERNAL_SERVER_ERROR)
                 .build();
-
-            return null;
         }
     }
 

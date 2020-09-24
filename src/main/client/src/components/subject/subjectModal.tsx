@@ -37,11 +37,11 @@ const FormSchema = yup.object().shape({
   instructors: yup.array().of(yup.object().shape({
     label: yup.string(),
     value: yup.string(),
-  })).min(1, "There must be at least one instructor assigned to the subject.").required(),
+  })).min(1, "At least one instructor must be assigned to the subject.").required(),
   students: yup.array().of(yup.object().shape({
     label: yup.string(),
     value: yup.string(),
-  })).min(1, "There must be at least one student assigned to the subject.").required(),
+  })).min(1, "At least one student must be assigned to the subject.").required(),
 });
 
 export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {

@@ -85,16 +85,13 @@ public class SubjectController {
             Subject subject = subjectService.getSubject(slug);
             return Response.ok().entity(subject).build();
         } catch (NotFoundException e) {
-            Response.status(Response.Status.NOT_FOUND).build();
-            return null;
-        } catch (InternalServerErrorException ex) {
-            Response.status(
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (InternalServerErrorException e) {
+            return Response.status(
                 Response
                 .Status
                 .INTERNAL_SERVER_ERROR)
                 .build();
-
-            return null;
         }
     }
 
@@ -244,7 +241,7 @@ public class SubjectController {
             return Response.status(Response.Status.CREATED).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException ex) {
+        } catch (InternalServerErrorException e) {
             return Response.status(
                 Response
                 .Status
@@ -276,7 +273,7 @@ public class SubjectController {
             return Response.status(Response.Status.CREATED).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException ex) {
+        } catch (InternalServerErrorException e) {
             return Response.status(
                 Response
                 .Status

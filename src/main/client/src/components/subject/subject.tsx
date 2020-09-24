@@ -44,14 +44,14 @@ export const Subject = (): JSX.Element => {
         <p>{subject.description}</p>
         {
           me?.type === "INSTRUCTOR" &&
-          <>
-            <Button onClick={() => setSubjectModalShow(true)} className="mr-2">
-              Edit Subject
-            </Button>
-            <Button onClick={() => setExamModalShow(true)}>
-              Create Exam
-            </Button>
-          </>
+            <>
+              <Button onClick={() => setSubjectModalShow(true)} className="mr-2">
+                Edit Subject
+              </Button>
+              <Button onClick={() => setExamModalShow(true)}>
+                Create Exam
+              </Button>
+            </>
         }
       </Jumbotron>
       <SubjectModal
@@ -61,8 +61,7 @@ export const Subject = (): JSX.Element => {
         name={subject.name}
         description={subject.description}
         instructors={subject.instructors}
-        students={subject.students}
-      />
+        students={subject.students} />
       <Exams subjectId={subject.id} />
       <ExamModal show={examModalShow} onHide={() => setExamModalShow(false)} subjectId={subject.id} />
     </Container>

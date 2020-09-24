@@ -36,7 +36,7 @@ const FormSchema = yup.object().shape({
   password: yup.string().required("Password is a required field."),
   confirmPassword: yup.string().test(
     "equal",
-    "passwords do not match",
+    "Passwords do not match.",
     function(password) {
       return password === this.resolve(yup.ref("password"));
     }

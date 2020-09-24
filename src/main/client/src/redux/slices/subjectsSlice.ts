@@ -139,7 +139,7 @@ export const subjectsSlice = createSlice({
         ...action.payload.newInstructors,
       ];
       subject.students = [
-        ...subject.students.filter(i => !action.payload.deletedStudents.includes(i)),
+        ...subject.students.filter(s => !action.payload.deletedStudents.includes(s)),
         ...action.payload.newStudents,
       ];
     });
@@ -163,7 +163,7 @@ export const subjectsSlice = createSlice({
     builder.addCase(fetchStudentsForSubject.fulfilled, (state, action) => {
       const subject = state.entities[action.payload.subjectId];
       if (subject !== undefined) {
-        subject.students = action.payload.students.map(i => i.id);
+        subject.students = action.payload.students.map(s => s.id);
       }
     });
   },
