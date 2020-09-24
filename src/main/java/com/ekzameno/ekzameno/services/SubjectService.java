@@ -224,8 +224,8 @@ public class SubjectService {
             subject.setDescription(description);
             UnitOfWork.getCurrent().commit();
             return subject;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
