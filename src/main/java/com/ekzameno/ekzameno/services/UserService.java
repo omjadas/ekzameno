@@ -112,8 +112,8 @@ public class UserService {
     public List<Student> getStudentsForSubject(UUID subjectId) {
         try (DBConnection connection = DBConnection.getInstance()) {
             return studentMapper.findAllForSubject(subjectId);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return new ArrayList<>();
         }
     }
