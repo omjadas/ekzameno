@@ -85,7 +85,9 @@ export const updateSubject = createAsyncThunk(
       ...newInstructors.map(i => fetch(`/api/subjects/${id}/instructors/${i}`, { method: "post" })),
       ...newStudents.map(i => fetch(`/api/subjects/${id}/students/${i}`, { method: "post" })),
     ];
+
     await Promise.all(promises);
+
     const subjectUpdate = await fetch(`/api/subjects/${id}`, {
       method: "put",
       body: JSON.stringify(subject),

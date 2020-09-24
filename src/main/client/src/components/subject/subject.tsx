@@ -25,7 +25,7 @@ export const Subject = (): JSX.Element => {
   }, [dispatch, slug]);
 
   useEffect(() => {
-    if (subjectID !== undefined) {
+    if (subjectId !== undefined) {
       dispatch(fetchInstructorsForSubject(subjectId));
       dispatch(fetchStudentsForSubject(subjectId));
     }
