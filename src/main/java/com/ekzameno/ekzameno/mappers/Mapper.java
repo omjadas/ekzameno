@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 
 import com.ekzameno.ekzameno.models.Model;
@@ -37,7 +38,7 @@ public abstract class Mapper<T extends Model> {
                 .getDeclaredConstructor()
                 .newInstance();
         } catch (Exception e) {
-            throw new NotFoundException();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -48,7 +49,7 @@ public abstract class Mapper<T extends Model> {
      * @return model with the given ID
      * @throws SQLException if unable to retrieve the model
      */
-    public T findById(UUID id) throws SQLException {
+    public T findById(UUID id) throws SQLException, NotFoundException {
         IdentityMap identityMap = IdentityMap.getInstance();
         T obj = (T) identityMap.get(id);
 
@@ -56,12 +57,7 @@ public abstract class Mapper<T extends Model> {
             return obj;
         }
 
-        try {
-            return findByProp("id", id);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return findByProp("id", id);
     }
 
     protected T findByProp(String prop, Object value)

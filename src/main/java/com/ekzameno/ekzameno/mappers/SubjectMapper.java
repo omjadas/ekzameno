@@ -29,12 +29,7 @@ public class SubjectMapper extends Mapper<Subject> {
      */
     public Subject findBySlug(String slug)
         throws SQLException, NotFoundException {
-        try {
-            return findByProp("slug", slug);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            throw new NotFoundException();
-        }
+        return findByProp("slug", slug);
     }
 
     /**
