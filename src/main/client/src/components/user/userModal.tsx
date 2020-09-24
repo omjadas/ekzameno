@@ -32,7 +32,7 @@ const selectOptions = [
 
 const FormSchema = yup.object().shape({
   name: yup.string().required("Name is a required field."),
-  email: yup.string().email().required("Email is a required field."),
+  email: yup.string().email("Email must be an email.").required("Email is a required field."),
   password: yup.string().required("Password is a required field."),
   confirmPassword: yup.string().test(
     "equal",
