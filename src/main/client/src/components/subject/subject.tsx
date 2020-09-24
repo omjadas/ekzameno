@@ -29,7 +29,7 @@ export const Subject = (): JSX.Element => {
       dispatch(fetchInstructorsForSubject(subjectId));
       dispatch(fetchStudentsForSubject(subjectId));
     }
-  }, [dispatch, subjectID, subjectsStatus]);
+  }, [dispatch, subjectId, subjectsStatus]);
 
   if (subject === undefined) {
     return (
