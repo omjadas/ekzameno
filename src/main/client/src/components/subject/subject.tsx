@@ -18,7 +18,7 @@ export const Subject = (): JSX.Element => {
   const [examModalShow, setExamModalShow] = useState(false);
   const [subjectModalShow, setSubjectModalShow] = useState(false);
   const me = useSelector(selectMe);
-  const subjectID = subject?.id;
+  const subjectId = subject?.id;
 
   useEffect(() => {
     dispatch(fetchSubject(slug));
