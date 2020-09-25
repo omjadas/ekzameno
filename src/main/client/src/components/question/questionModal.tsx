@@ -16,7 +16,7 @@ export interface QuestionModalProps {
 
 interface FormValues {
   question: string,
-  description: string,
+  marks: number,
   type: {
     label: string,
     value: QuestionType,
@@ -33,6 +33,7 @@ const selectOptions = [
 const FormSchema = yup.object().shape({
   question: yup.string().required(),
   description: yup.string(),
+  marks: yup.number().min(1).required(),
   type: yup.object().shape({
     label: yup.string(),
     value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
@@ -60,6 +61,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
       examId: props.examId,
       question: {
         question: values.question,
+        marks: values.marks,
         type: values.type.value,
         answers: values.answers.map((a, i) => ({
           answer: a,
@@ -84,7 +86,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
       <Formik
         initialValues={{
           question: "",
-          description: "",
+          marks: 1,
           type: { label: "Multiple Choice", value: "MULTIPLE_CHOICE" },
           answers: [""],
           correct: 1,
@@ -108,9 +110,10 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
                   label="Question"
                   name="question" />
                 <FormikControl
-                  as="textarea"
-                  label="Description"
-                  name="description" />
+                  min="1"
+                  type="number"
+                  label="Marks"
+                  name="marks" />
                 <FormGroup>
                   <Form.Label>Type</Form.Label>
                   <Select

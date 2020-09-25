@@ -8,16 +8,20 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 
 import com.ekzameno.ekzameno.dtos.CreateAnswerDTO;
+import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.models.Answer;
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
  * Service to handle questions.
  */
 public class QuestionService {
+    private QuestionMapper questionMapper = new QuestionMapper();
+
     /**
      * Create a question for a given exam.
      *
@@ -42,7 +46,8 @@ public class QuestionService {
                 q = new MultipleChoiceQuestion(question, marks, examId);
 
                 for (CreateAnswerDTO a : answers) {
-                    new Answer(a.answer, a.correct, q.getId());
+                    Answer answer = new Answer(a.answer, a.correct, q.getId());
+                    ((MultipleChoiceQuestion) q).getAnswers().add(answer);
                 }
 
             } else if (type.toUpperCase().equals(ShortAnswerQuestion.TYPE)) {
@@ -51,10 +56,20 @@ public class QuestionService {
                 throw new BadRequestException();
             }
 
+            UnitOfWork.getCurrent().commit();
             return q;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
+    }
+
+    public List<Question> getQuestionsForExam(UUID examId) {
+        try {
+			return questionMapper.findAllForExam(examId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+            throw new InternalServerErrorException();
+		}
     }
 }

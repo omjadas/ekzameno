@@ -72,6 +72,10 @@ public abstract class Question extends Model {
         return marks;
     }
 
+    public String getType() {
+        return type;
+    }
+
     /**
      * Retrieve submissions for the Question.
      *

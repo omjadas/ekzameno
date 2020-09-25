@@ -1,5 +1,6 @@
 package com.ekzameno.ekzameno.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
@@ -128,5 +129,20 @@ public class ExamController {
             dto.type,
             dto.answers
         );
+    }
+
+    /**
+     * Retrieve questions for a given exam.
+     *
+     * @param examId ID of the exam to retrieve questions for
+     * @return questions for the specified exam
+     */
+    @Path("/{examId}/questions")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Question> createQuestion(
+        @PathParam("examId") String examId
+    ) {
+        return questionService.getQuestionsForExam(UUID.fromString(examId));
     }
 }

@@ -7,6 +7,7 @@ export type QuestionType = "MULTIPLE_CHOICE" | "SHORT_ANSWER";
 export interface Question {
   question: string,
   type: QuestionType,
+  marks: number,
   answers: string[],
 }
 
