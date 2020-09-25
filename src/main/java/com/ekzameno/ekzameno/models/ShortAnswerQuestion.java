@@ -22,7 +22,7 @@ public class ShortAnswerQuestion extends Question {
         int marks,
         UUID examId
     ) {
-        super(id, question, marks, examId);
+        super(id, question, marks, examId, TYPE);
     }
 
     /**
@@ -33,6 +33,6 @@ public class ShortAnswerQuestion extends Question {
      * @param examId   ID of the related exam
      */
     public ShortAnswerQuestion(String question, int marks, UUID examId) {
-        super(question, marks, examId);
+        super(question, marks, examId, TYPE);
     }
 }
