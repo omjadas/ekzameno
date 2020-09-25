@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.exceptions.InternalServerErrorException;
-import com.ekzameno.ekzameno.exceptions.NotFoundException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.mappers.EnrolmentMapper;
 import com.ekzameno.ekzameno.mappers.InstructorSubjectMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;

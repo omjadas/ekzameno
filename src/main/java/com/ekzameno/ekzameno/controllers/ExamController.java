@@ -5,6 +5,8 @@ import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -13,8 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateExamDTO;
-import com.ekzameno.ekzameno.exceptions.InternalServerErrorException;
-import com.ekzameno.ekzameno.exceptions.NotFoundException;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.services.ExamService;

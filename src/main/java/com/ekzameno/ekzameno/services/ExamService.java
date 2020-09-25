@@ -6,8 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.exceptions.InternalServerErrorException;
-import com.ekzameno.ekzameno.exceptions.NotFoundException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
