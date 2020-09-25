@@ -2,9 +2,12 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/too
 import { State, Status } from "../state";
 import { RootState } from "../store";
 
+export type QuestionType = "MULTIPLE_CHOICE" | "SHORT_ANSWER";
+
 export interface Question {
-  name: string,
-  type: "MULTI_CHOICE" | "SHORT_ANSWER",
+  question: string,
+  type: QuestionType,
+  answers: string[],
 }
 
 export interface QuestionState extends Question {

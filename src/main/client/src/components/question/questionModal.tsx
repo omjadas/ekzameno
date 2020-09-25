@@ -3,11 +3,14 @@ import { FormikControl } from "formik-react-bootstrap";
 import React, { useState } from "react";
 import { Button, Form, FormGroup, Modal } from "react-bootstrap";
 import Select from "react-select";
-import yup from "yup";
+import * as yup from "yup";
+import { addQuestion, QuestionType } from "../../redux/slices/questionsSlice";
+import { useAppDispatch } from "../../redux/store";
 
 export interface QuestionModalProps {
   show: boolean,
   onHide: () => any,
+  examId: string,
 }
 
 interface FormValues {
@@ -15,7 +18,7 @@ interface FormValues {
   description: string,
   type: {
     label: string,
-    value: "MULTIPLE_CHOICE" | "SHORT_ANSWER",
+    value: QuestionType,
   },
   answers: string[],
 }
@@ -32,19 +35,31 @@ const FormSchema = yup.object().shape({
     label: yup.string(),
     value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
   }),
-  answers: yup.array().of(yup.string()),
+  answers: yup.array().of(yup.string().required()),
 });
 
 export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
   const [answers, setAnswers] = useState(1);
+  const dispatch = useAppDispatch();
 
-  const handleSubmit = (values: FormValues): void => {
-
+  const onSubmit = (values: FormValues): void => {
+    dispatch(addQuestion({
+      examId: props.examId,
+      question: {
+        question: values.question,
+        type: values.type.value,
+        answers: values.answers,
+      },
+    }))
+      .then(props.onHide)
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
-      <Modal.Header>
+      <Modal.Header closeButton>
         <Modal.Title>
           Create Question
         </Modal.Title>
@@ -57,7 +72,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
           answers: [],
         }}
         validationSchema={FormSchema}
-        onSubmit={handleSubmit}>
+        onSubmit={onSubmit}>
         {
           ({
             handleSubmit,
@@ -90,26 +105,29 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
                   <Form.Control.Feedback className={touched.type && errors.type && "d-block"} type="invalid">
                     {errors.type}
                   </Form.Control.Feedback>
-                  {
-                    values.type.value === "MULTIPLE_CHOICE" &&
-                      [...Array(answers).keys()].map(i => (
-                        <FormikControl
-                          key={i}
-                          type="text"
-                          label={`Answer ${i}`}
-                          name={`answers[${i}]`} />
-                      ))
-                  }
                 </FormGroup>
+                {
+                  values.type.value === "MULTIPLE_CHOICE" &&
+                    [...Array(answers).keys()].map(i => (
+                      <FormikControl
+                        key={i}
+                        type="text"
+                        label={`Answer ${i + 1}`}
+                        name={`answers[${i}]`} />
+                    ))
+                }
               </Modal.Body>
-              {
-                values.type.value === "MULTIPLE_CHOICE" &&
-                  <Modal.Footer>
-                    <Button variant="primary" onClick={() => setAnswers(answers + 1)}>
+              <Modal.Footer>
+                {
+                  values.type.value === "MULTIPLE_CHOICE" &&
+                    <Button className="mr-auto" variant="primary" onClick={() => setAnswers(answers + 1)}>
                       Add Answer
                     </Button>
-                  </Modal.Footer>
-              }
+                }
+                <Button type="submit" variant="success" disabled={isSubmitting}>
+                  Create Question
+                </Button>
+              </Modal.Footer>
             </Form>
           )
         }

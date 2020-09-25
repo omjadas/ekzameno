@@ -6,6 +6,7 @@ import { deleteExam, fetchExam, selectExamBySlug, updateExam } from "../../redux
 import { selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
+import { QuestionModal } from "../question/questionModal";
 import styles from "../subject/subject.module.scss";
 
 export const Exam = (): JSX.Element => {
@@ -13,6 +14,7 @@ export const Exam = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const exam = useSelector(selectExamBySlug(slug));
   const [examModalShow, setExamModalShow] = useState(false);
+  const [questionModalShow, setQuestionModalShow] = useState(false);
   const history = useHistory();
   const me = useSelector(selectMe);
 
@@ -80,19 +82,23 @@ export const Exam = (): JSX.Element => {
         {
           me?.type === "INSTRUCTOR" &&
           <>
-            <Button onClick={() => setExamModalShow(true)}>
+            <Button className="mr-2" onClick={() => setExamModalShow(true)}>
               Edit Exam
-            </Button>{" "}
-            <Button onClick={onClick}>
+            </Button>
+            <Button className="mr-2" onClick={onClick}>
               Delete Exam
-            </Button>{" "}
+            </Button>
             {
               startTime > currentTime &&
-                <Button onClick={publishNow}>
-                  Publish Exam
-                </Button>
+                <>
+                  <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
+                    Add Question
+                  </Button>
+                  <Button className="mr-2" onClick={publishNow}>
+                    Publish Exam
+                  </Button>
+                </>
             }
-            {" "}
             {
               finishTime > currentTime &&
               startTime < currentTime &&
@@ -111,7 +117,11 @@ export const Exam = (): JSX.Element => {
         name={exam.name}
         description={exam.description}
         startTime={exam.startTime}
-        finishTime={exam.finishTime}/>
+        finishTime={exam.finishTime} />
+      <QuestionModal
+        show={questionModalShow}
+        onHide={() => setQuestionModalShow(false)}
+        examId={exam.id} />
     </Container>
   );
 };
