@@ -31,14 +31,13 @@ const selectOptions = [
 ];
 
 const FormSchema = yup.object().shape({
-  question: yup.string().required(),
-  description: yup.string(),
-  marks: yup.number().min(1).required(),
+  question: yup.string().required("Question is a required field."),
+  marks: yup.number().min(1, "Marks must be greater than 1.").required("Marks is a required field."),
   type: yup.object().shape({
     label: yup.string(),
     value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
-  }),
-  answers: yup.array().of(yup.string().required()),
+  }).required("Type is a required field."),
+  answers: yup.array().of(yup.string().required("Answer is a required field")),
   correct: yup.number().test(
     "lessThanAnswers",
     "Correct Answer must be less than the number of answers",
