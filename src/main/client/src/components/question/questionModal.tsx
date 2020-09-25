@@ -38,6 +38,17 @@ const FormSchema = yup.object().shape({
     value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
   }),
   answers: yup.array().of(yup.string().required()),
+  correct: yup.number().test(
+    "lessThanAnswers",
+    "Correct Answer must be less than the number of answers",
+    function(correct) {
+      if (typeof correct === "number") {
+        return correct <= this.resolve(yup.ref("answers")).length && correct >= 1;
+      }
+
+      return true;
+    }
+  ),
 });
 
 export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
