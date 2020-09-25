@@ -10,6 +10,13 @@ export interface Question {
   answers: string[],
 }
 
+export interface CreateQuestion extends Omit<Question, "answers"> {
+  answers: {
+    answer: string,
+    correct: boolean,
+  }[],
+}
+
 export interface QuestionState extends Question {
   id: string,
   examId: string,
@@ -36,7 +43,7 @@ export const fetchQuestions = createAsyncThunk(
 
 export const addQuestion = createAsyncThunk(
   "questions/addQuestion",
-  async ({ examId, question }: { examId: string, question: Question }) => {
+  async ({ examId, question }: { examId: string, question: CreateQuestion }) => {
     const res = await fetch(`/api/exams/${examId}/questions`, {
       method: "post",
       body: JSON.stringify(question),

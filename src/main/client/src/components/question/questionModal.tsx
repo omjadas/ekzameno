@@ -22,6 +22,7 @@ interface FormValues {
     value: QuestionType,
   },
   answers: string[],
+  correct: number,
 }
 
 const selectOptions = [
@@ -49,7 +50,10 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
       question: {
         question: values.question,
         type: values.type.value,
-        answers: values.answers,
+        answers: values.answers.map((a, i) => ({
+          answer: a,
+          correct: i + 1 === values.correct,
+        })),
       },
     }))
       .then(unwrapResult)
@@ -72,6 +76,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
           description: "",
           type: { label: "Multiple Choice", value: "MULTIPLE_CHOICE" },
           answers: [""],
+          correct: 1,
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}>
@@ -110,13 +115,21 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
                 </FormGroup>
                 {
                   values.type.value === "MULTIPLE_CHOICE" &&
-                    [...Array(answers).keys()].map(i => (
+                    <>
                       <FormikControl
-                        key={i}
-                        type="text"
-                        label={`Answer ${i + 1}`}
-                        name={`answers[${i}]`} />
-                    ))
+                        type="number"
+                        label="Correct Answer"
+                        name="correct" />
+                      {
+                        [...Array(answers).keys()].map(i => (
+                          <FormikControl
+                            key={i}
+                            type="text"
+                            label={`Answer ${i + 1}`}
+                            name={`answers[${i}]`} />
+                        ))
+                      }
+                    </>
                 }
               </Modal.Body>
               <Modal.Footer>
