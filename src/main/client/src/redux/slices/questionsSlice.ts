@@ -12,7 +12,7 @@ export interface Question {
 }
 
 export interface CreateQuestion extends Omit<Question, "options"> {
-  options: {
+  answers: {
     answer: string,
     correct: boolean,
   }[],
