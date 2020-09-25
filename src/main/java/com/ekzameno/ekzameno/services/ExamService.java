@@ -13,7 +13,7 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
- * Service to handle authentication.
+ * Service to handle exams.
  */
 public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
