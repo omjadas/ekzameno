@@ -51,9 +51,6 @@ public class SubjectService {
         try (DBConnection connection = DBConnection.getInstance()) {
             return subjectMapper.findBySlug(slug);
         } catch (SQLException e) {
-            if ("23503".equals(e.getSQLState())) {
-                throw new NotFoundException();
-            }
             throw new InternalServerErrorException();
         }
     }

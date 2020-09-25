@@ -32,9 +32,6 @@ public class ExamService {
         try (DBConnection connection = DBConnection.getInstance()) {
             return examMapper.findBySlug(slug);
         } catch (SQLException e) {
-            if ("23503".equals(e.getSQLState())) {
-                throw new NotFoundException();
-            }
             throw new InternalServerErrorException();
         }
     }
