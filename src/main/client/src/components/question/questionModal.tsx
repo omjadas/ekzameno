@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useState } from "react";
@@ -29,7 +30,7 @@ const selectOptions = [
 ];
 
 const FormSchema = yup.object().shape({
-  name: yup.string().required(),
+  question: yup.string().required(),
   description: yup.string(),
   type: yup.object().shape({
     label: yup.string(),
@@ -51,6 +52,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
         answers: values.answers,
       },
     }))
+      .then(unwrapResult)
       .then(props.onHide)
       .catch(e => {
         console.error(e);
@@ -69,7 +71,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
           question: "",
           description: "",
           type: { label: "Multiple Choice", value: "MULTIPLE_CHOICE" },
-          answers: [],
+          answers: [""],
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}>
