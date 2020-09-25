@@ -51,7 +51,7 @@ public class AnswerMapper extends Mapper<Answer> {
     @Override
     public void insert(Answer answer) throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, answer, question_id) VALUES (?,?,?)";
+            " (id, answer, correct, question_id) VALUES (?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -60,7 +60,8 @@ public class AnswerMapper extends Mapper<Answer> {
         ) {
             statement.setObject(1, answer.getId());
             statement.setString(2, answer.getAnswer());
-            statement.setObject(3, answer.getQuestionId());
+            statement.setBoolean(3, answer.isCorrect());
+            statement.setObject(4, answer.getQuestionId());
             statement.executeUpdate();
         }
     }

@@ -4,12 +4,14 @@ import java.util.UUID;
 
 import com.ekzameno.ekzameno.proxies.AnswerProxyList;
 import com.ekzameno.ekzameno.proxies.ProxyList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * MultipleChoiceQuestion for an Exam.
  */
 public class MultipleChoiceQuestion extends Question {
     public static final String TYPE = "MULTIPLE_CHOICE";
+    @JsonIgnore
     private ProxyList<Answer> answers;
 
     /**
@@ -26,7 +28,7 @@ public class MultipleChoiceQuestion extends Question {
         int marks,
         UUID examId
     ) {
-        super(id, question, marks, examId);
+        super(id, question, marks, examId, TYPE);
         this.answers = new AnswerProxyList(id);
     }
 
@@ -38,7 +40,7 @@ public class MultipleChoiceQuestion extends Question {
      * @param examId   ID of the related exam
      */
     public MultipleChoiceQuestion(String question, int marks, UUID examId) {
-        super(question, marks, examId);
+        super(question, marks, examId, TYPE);
         this.answers = new AnswerProxyList(getId());
     }
 

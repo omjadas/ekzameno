@@ -5,11 +5,13 @@ import storage from "redux-persist/lib/storage";
 import examsReducer from "./slices/examsSlice";
 import subjectsReducer from "./slices/subjectsSlice";
 import usersReducer from "./slices/usersSlice";
+import questionsReducer from "./slices/questionsSlice";
 
 const reducers = combineReducers({
   users: usersReducer,
   exams: examsReducer,
   subjects: subjectsReducer,
+  questions: questionsReducer,
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

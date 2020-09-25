@@ -15,10 +15,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public abstract class Question extends Model {
     private String question;
     private int marks;
+    @JsonIgnore
     private ProxyList<QuestionSubmission> questionSubmissions;
     private UUID examId;
     @JsonIgnore
     private Exam exam = null;
+    private final String type;
 
     /**
      * Create a Question with an ID.
@@ -27,12 +29,20 @@ public abstract class Question extends Model {
      * @param question question of the Question
      * @param marks    number of marks allocated to the Question
      * @param examId   ID of the related exam
+     * @param type     type of the question
      */
-    public Question(UUID id, String question, int marks, UUID examId) {
+    public Question(
+        UUID id,
+        String question,
+        int marks,
+        UUID examId,
+        String type
+    ) {
         super(id);
         this.question = question;
         this.marks = marks;
         this.examId = examId;
+        this.type = type;
         this.questionSubmissions = new QuestionSubmissionQuestionProxyList(id);
     }
 
@@ -42,11 +52,13 @@ public abstract class Question extends Model {
      * @param question question of the Question
      * @param marks    number of marks allocated to the Question
      * @param examId   ID of the related exam
+     * @param type     type of the question
      */
-    public Question(String question, int marks, UUID examId) {
+    public Question(String question, int marks, UUID examId, String type) {
         this.question = question;
         this.marks = marks;
         this.examId = examId;
+        this.type = type;
         this.questionSubmissions = new QuestionSubmissionQuestionProxyList(
             getId()
         );
@@ -58,6 +70,10 @@ public abstract class Question extends Model {
 
     public int getMarks() {
         return marks;
+    }
+
+    public String getType() {
+        return type;
     }
 
     /**
