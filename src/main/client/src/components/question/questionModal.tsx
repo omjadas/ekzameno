@@ -37,12 +37,23 @@ const FormSchema = yup.object().shape({
     label: yup.string(),
     value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
   }).required("Type is a required field."),
-  options: yup.array().of(yup.string().required("Option is a required field.")),
+  options: yup.array().of(yup.string().test(
+    "requiredOption",
+    "Option is a required field.",
+    function(option) {
+      console.error(option);
+      if (this.resolve(yup.ref("type")).value === "MULTIPLE_CHOICE") {
+        return option !== "" && option !== undefined;
+      }
+
+      return true;
+    }
+  )),
   correct: yup.number().test(
     "lessThanOptions",
     "Correct Option must be less than the number of options.",
     function(correct) {
-      if (typeof correct === "number") {
+      if (typeof correct === "number" && this.resolve(yup.ref("type")).value === "MULTIPLE_CHOICE") {
         return correct <= this.resolve(yup.ref("options")).length && correct >= 1;
       }
 
@@ -62,7 +73,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
         question: values.question,
         marks: values.marks,
         type: values.type.value,
-        options: values.options.map((a, i) => ({
+        answers: values.options.map((a, i) => ({
           answer: a,
           correct: i + 1 === values.correct,
         })),
