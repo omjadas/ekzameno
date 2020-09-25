@@ -27,14 +27,14 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     dispatch(fetchQuestions(props.examId));
   }, [props.examId, dispatch]);
 
-  // const onClick = (): void => {
-  //   dispatch(deleteQuestion({
-  //     questionId: question.id,
-  //   }))
-  //     .catch(e => {
-  //       console.error(e);
-  //     });
-  // };
+  const onClick = (id: string): void => {
+    dispatch(deleteQuestion({
+      questionId: id,
+    }))
+      .catch(e => {
+        console.error(e);
+      });
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -54,7 +54,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                     <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
                       Edit
                     </Button>
-                    <Button className="mr-2">
+                    <Button className="mr-2" onClick={() => onClick(question.id)}>
                       Delete
                     </Button>
                   </>

@@ -75,7 +75,7 @@ export const updateQuestion = createAsyncThunk(
 export const deleteQuestion = createAsyncThunk(
   "questions/deleteQuestion",
   async ({ questionId }: { questionId: string }) => {
-    await fetch(`/api/exams/${questionId}`, {
+    await fetch(`/api/questions/${questionId}`, {
       method: "delete",
       headers: {
         "content-type": "application/json",
