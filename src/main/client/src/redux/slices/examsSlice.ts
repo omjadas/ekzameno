@@ -40,6 +40,16 @@ export const fetchExams = createAsyncThunk(
   }
 );
 
+export const fetchExam = createAsyncThunk("exams/fetchExam", async (slug: string) => {
+  const res = await fetch(`/api/exams/${slug}`, {
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  return res.json() as Promise<ExamState>;
+});
+
 export const addExam = createAsyncThunk(
   "exams/addExam",
   async ({ subjectId, exam }: { subjectId: string, exam: Exam }) => {
@@ -101,6 +111,10 @@ export const examsSlice = createSlice({
     builder.addCase(fetchExams.rejected, (state, action) => {
       state.status = "error";
       state.error = action.error.message;
+    });
+    builder.addCase(fetchExam.fulfilled, (state, action) => {
+      examsAdapter.upsertOne(state, action.payload);
+      state.slugs[action.payload.slug] = action.payload.id;
     });
     builder.addCase(addExam.fulfilled, (state, action) => {
       examsAdapter.addOne(state, action.payload);

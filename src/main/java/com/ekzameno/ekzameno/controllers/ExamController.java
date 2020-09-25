@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -28,6 +31,30 @@ import com.ekzameno.ekzameno.services.QuestionService;
 public class ExamController {
     private ExamService examService = new ExamService();
     private QuestionService questionService = new QuestionService();
+
+    /**
+     * Fetches an exam for a given slug.
+     *
+     * @param slug exam's slug
+     * @return exam
+     */
+    @Path("/{slug}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getExam(@PathParam("slug") String slug) {
+        try {
+            Exam exam = examService.getExam(slug);
+            return Response.ok().entity(exam).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (InternalServerErrorException e) {
+            return Response
+                .status(
+                    Response.Status.INTERNAL_SERVER_ERROR
+                )
+                .build();
+        }
+    }
 
     /**
      * Update an exam.

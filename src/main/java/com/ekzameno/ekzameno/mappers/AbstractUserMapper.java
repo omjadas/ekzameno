@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.shared.DBConnection;
 
@@ -22,8 +24,14 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
      * @return the user with the specified email address
      * @throws SQLException if unable to retrieve the user
      */
-    public User findByEmail(String email) throws SQLException {
-        return findByProp("email", email);
+    public User findByEmail(String email)
+        throws SQLException, NotFoundException {
+        try {
+            return findByProp("email", email);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            throw new NotFoundException();
+        }
     }
 
     @Override

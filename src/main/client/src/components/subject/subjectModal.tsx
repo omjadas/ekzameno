@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
@@ -6,7 +7,7 @@ import { Button, Form, FormGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { addSubject } from "../../redux/slices/subjectsSlice";
+import { addSubject, updateSubject } from "../../redux/slices/subjectsSlice";
 import { fetchUsers, selectInstructors, selectMe, selectStudents, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 
@@ -16,31 +17,31 @@ export interface SubjectModalProps {
 }
 
 interface UpdateSubjectProps extends SubjectModalProps {
+  id: string,
   name: string,
-  slug: string,
+  description: string,
   instructors: string[],
   students: string[],
-  description: string,
 }
 
 interface FormValues {
   name: string,
+  description: string,
   instructors: { label: string, value: string }[],
   students: { label: string, value: string }[],
-  description: string,
 }
 
 const FormSchema = yup.object().shape({
-  name: yup.string().required(),
+  name: yup.string().required("Name is a required field."),
   description: yup.string(),
   instructors: yup.array().of(yup.object().shape({
     label: yup.string(),
     value: yup.string(),
-  })).min(1).required(),
+  })).min(1, "At least one instructor must be assigned to the subject.").required(),
   students: yup.array().of(yup.object().shape({
     label: yup.string(),
     value: yup.string(),
-  })).min(1).required(),
+  })).min(1, "At least one student must be assigned to the subject.").required(),
 });
 
 export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
@@ -57,34 +58,77 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
   }, [dispatch, usersStatus, me]);
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(addSubject({
-      name: values.name,
-      description: values.description,
-      instructors: values.instructors.map(i => i.value),
-      students: values.students.map(s => s.value),
-    }))
-      .then(unwrapResult)
-      .then(() => {
-        props.onHide();
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    if ("id" in props) {
+      const deletedInstructors = props.instructors.filter(i => !values.instructors.map(i => i.value).includes(i));
+      const newInstructors = values.instructors.map(i => i.value).filter(i => !props.instructors.includes(i));
+      const deletedStudents = props.students.filter(s => !values.students.map(s => s.value).includes(s));
+      const newStudents = values.students.map(s => s.value).filter(s => !props.students.includes(s));
+
+      dispatch(updateSubject({
+        id: props.id,
+        deletedInstructors,
+        newInstructors,
+        deletedStudents,
+        newStudents,
+        subject: {
+          name: values.name,
+          description: values.description,
+        },
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      dispatch(addSubject({
+        name: values.name,
+        description: values.description,
+        instructors: values.instructors.map(i => i.value),
+        students: values.students.map(s => s.value),
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    }
   };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          Create Subject
+          {
+            "id" in props ?
+              "Update Subject"
+              :
+              "Create Subject"
+          }
         </Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{
-          name: (props as any).name ?? "",
-          description: (props as any).description ?? "",
-          instructors: (props as any).instructors ?? [],
-          students: (props as any).students ?? [],
+          name: (props as UpdateSubjectProps).name ?? "",
+          description: (props as UpdateSubjectProps).description ?? "",
+          instructors: (props as UpdateSubjectProps).instructors?.map(i => {
+            const instructor = instructors.find(i2 => i2.id === i);
+            return {
+              label: instructor!.name,
+              value: instructor!.id,
+            };
+          }) ?? [],
+          students: (props as UpdateSubjectProps).students?.map(s => {
+            const student = students.find(s2 => s2.id === s);
+            return {
+              label: student!.name,
+              value: student!.id,
+            };
+          }) ?? [],
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}
@@ -116,7 +160,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
                     options={instructors.map(i => ({ label: i.name, value: i.id }))}
                     name="instructors"
                     value={values.instructors as any}
-                    onChange={option => setFieldValue("instructors", option)}
+                    onChange={option => setFieldValue("instructors", option ?? [])}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />
                   <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
@@ -130,7 +174,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
                     options={students.map(s => ({ label: s.name, value: s.id }))}
                     name="students"
                     value={values.students as any}
-                    onChange={option => setFieldValue("students", option)}
+                    onChange={option => setFieldValue("students", option ?? [])}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />
                   <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
@@ -140,7 +184,12 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
-                  Create Subject
+                  {
+                    "id" in props ?
+                      "Update Subject"
+                      :
+                      "Create Subject"
+                  }
                 </Button>
               </Modal.Footer>
             </Form>

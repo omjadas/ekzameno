@@ -23,6 +23,7 @@ interface UpdateExamModalProps extends ExamModalProps {
   finishTime: string,
   description: string,
 }
+
 interface FormValues {
   name: string,
   description: string,
@@ -31,9 +32,9 @@ interface FormValues {
 }
 
 const FormSchema = yup.object().shape({
-  name: yup.string().required(),
-  startTime: yup.date().required(),
-  finishTime: yup.date().min(yup.ref("startTime")).required(),
+  name: yup.string().required("Name is a required field."),
+  startTime: yup.date().required("Start time is a required field."),
+  finishTime: yup.date().min(yup.ref("startTime"), "Finish time must be greater than Start time").required("End time is a required field."),
   description: yup.string(),
 });
 

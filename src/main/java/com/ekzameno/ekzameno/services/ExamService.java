@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
@@ -17,6 +20,21 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  */
 public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
+
+    /**
+     * Fetches an exam for a given slug.
+     *
+     * @param slug exam's slug
+     * @return exam
+     */
+    public Exam getExam(String slug)
+        throws NotFoundException, InternalServerErrorException {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return examMapper.findBySlug(slug);
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+    }
 
     /**
      * Retrieve all Exams.
