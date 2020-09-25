@@ -3,9 +3,12 @@ package com.ekzameno.ekzameno.services;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
 import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
+import com.ekzameno.ekzameno.mappers.InstructorMapper;
+import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.mappers.UserMapper;
 import com.ekzameno.ekzameno.models.Administrator;
 import com.ekzameno.ekzameno.models.Instructor;
@@ -21,6 +24,8 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
  */
 public class UserService {
     private final UserMapper userMapper = new UserMapper();
+    private final InstructorMapper instructorMapper = new InstructorMapper();
+    private final StudentMapper studentMapper = new StudentMapper();
 
     /**
      * Retrieve all users.
@@ -80,6 +85,36 @@ public class UserService {
 
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Fetches all instructors for a given subject.
+     *
+     * @param subjectId subject's id
+     * @return list of instructors
+     */
+    public List<Instructor> getInstructorsForSubject(UUID subjectId) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return instructorMapper.findAllForSubject(subjectId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Fetches all students for a given subject.
+     *
+     * @param subjectId subject's id
+     * @return list of students
+     */
+    public List<Student> getStudentsForSubject(UUID subjectId) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            return studentMapper.findAllForSubject(subjectId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }

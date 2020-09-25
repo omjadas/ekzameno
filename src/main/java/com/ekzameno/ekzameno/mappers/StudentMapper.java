@@ -25,9 +25,9 @@ public class StudentMapper extends AbstractUserMapper<Student> {
      */
     public List<Student> findAllForSubject(UUID id) throws SQLException {
         String query = "SELECT users.* FROM users " +
-            "JOIN instructor_subjects " +
-            "ON users.id = instructor_subjects.user_id " +
-            "WHERE instructor_subjects.subject_id = ?";
+            "JOIN enrolments " +
+            "ON users.id = enrolments.user_id " +
+            "WHERE enrolments.subject_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 

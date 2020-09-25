@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.Model;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
@@ -35,7 +38,7 @@ public abstract class Mapper<T extends Model> {
                 .getDeclaredConstructor()
                 .newInstance();
         } catch (Exception e) {
-            return null;
+            throw new InternalServerErrorException();
         }
     }
 
@@ -46,7 +49,7 @@ public abstract class Mapper<T extends Model> {
      * @return model with the given ID
      * @throws SQLException if unable to retrieve the model
      */
-    public T findById(UUID id) throws SQLException {
+    public T findById(UUID id) throws SQLException, NotFoundException {
         IdentityMap identityMap = IdentityMap.getInstance();
         T obj = (T) identityMap.get(id);
 
@@ -57,7 +60,8 @@ public abstract class Mapper<T extends Model> {
         return findByProp("id", id);
     }
 
-    protected T findByProp(String prop, Object value) throws SQLException {
+    protected T findByProp(String prop, Object value)
+        throws SQLException, NotFoundException {
         String query = "SELECT * FROM " + getTableName() +
             " WHERE " + prop + " = ?";
         Connection connection = DBConnection.getInstance().getConnection();
@@ -67,10 +71,13 @@ public abstract class Mapper<T extends Model> {
         ) {
             statement.setObject(1, value);
             try (ResultSet rs = statement.executeQuery();) {
-                rs.next();
-                T obj = load(rs);
-                IdentityMap.getInstance().put(obj.getId(), obj);
-                return obj;
+                if (rs.next()) {
+                    T obj = load(rs);
+                    IdentityMap.getInstance().put(obj.getId(), obj);
+                    return obj;
+                } else {
+                    throw new NotFoundException();
+                }
             }
         }
     }
