@@ -64,12 +64,18 @@ public class QuestionService {
         }
     }
 
+    /**
+     * Retrieve questions for a given exam.
+     *
+     * @param examId ID of the exam to retrieve questions for
+     * @return questions for the given exam
+     */
     public List<Question> getQuestionsForExam(UUID examId) {
         try {
-			return questionMapper.findAllForExam(examId);
-		} catch (SQLException e) {
-			e.printStackTrace();
+            return questionMapper.findAllForExam(examId);
+        } catch (SQLException e) {
+            e.printStackTrace();
             throw new InternalServerErrorException();
-		}
+        }
     }
 }
