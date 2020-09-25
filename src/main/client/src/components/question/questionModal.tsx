@@ -21,7 +21,7 @@ interface FormValues {
     label: string,
     value: QuestionType,
   },
-  answers: string[],
+  options: string[],
   correct: number,
 }
 
@@ -37,13 +37,13 @@ const FormSchema = yup.object().shape({
     label: yup.string(),
     value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
   }).required("Type is a required field."),
-  answers: yup.array().of(yup.string().required("Answer is a required field")),
+  options: yup.array().of(yup.string().required("Option is a required field.")),
   correct: yup.number().test(
-    "lessThanAnswers",
-    "Correct Answer must be less than the number of answers",
+    "lessThanOptions",
+    "Correct Option must be less than the number of options.",
     function(correct) {
       if (typeof correct === "number") {
-        return correct <= this.resolve(yup.ref("answers")).length && correct >= 1;
+        return correct <= this.resolve(yup.ref("options")).length && correct >= 1;
       }
 
       return true;
@@ -52,7 +52,7 @@ const FormSchema = yup.object().shape({
 });
 
 export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
-  const [answers, setAnswers] = useState(1);
+  const [options, setOptions] = useState(0);
   const dispatch = useAppDispatch();
 
   const onSubmit = (values: FormValues): void => {
@@ -62,7 +62,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
         question: values.question,
         marks: values.marks,
         type: values.type.value,
-        answers: values.answers.map((a, i) => ({
+        options: values.options.map((a, i) => ({
           answer: a,
           correct: i + 1 === values.correct,
         })),
@@ -87,7 +87,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
           question: "",
           marks: 1,
           type: { label: "Multiple Choice", value: "MULTIPLE_CHOICE" },
-          answers: [""],
+          options: [],
           correct: 1,
         }}
         validationSchema={FormSchema}
@@ -131,15 +131,15 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
                     <>
                       <FormikControl
                         type="number"
-                        label="Correct Answer"
+                        label="Correct Option"
                         name="correct" />
                       {
-                        [...Array(answers).keys()].map(i => (
+                        [...Array(options).keys()].map(i => (
                           <FormikControl
                             key={i}
                             type="text"
-                            label={`Answer ${i + 1}`}
-                            name={`answers[${i}]`} />
+                            label={`Option ${i + 1}`}
+                            name={`options[${i}]`} />
                         ))
                       }
                     </>
@@ -148,8 +148,8 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
               <Modal.Footer>
                 {
                   values.type.value === "MULTIPLE_CHOICE" &&
-                    <Button className="mr-auto" variant="primary" onClick={() => setAnswers(answers + 1)}>
-                      Add Answer
+                    <Button className="mr-auto" variant="primary" onClick={() => setOptions(options + 1)}>
+                      Add Option
                     </Button>
                 }
                 <Button type="submit" variant="success" disabled={isSubmitting}>

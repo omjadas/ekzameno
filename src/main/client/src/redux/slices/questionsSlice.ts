@@ -8,11 +8,11 @@ export interface Question {
   question: string,
   type: QuestionType,
   marks: number,
-  answers: string[],
+  options: string[],
 }
 
-export interface CreateQuestion extends Omit<Question, "answers"> {
-  answers: {
+export interface CreateQuestion extends Omit<Question, "options"> {
+  options: {
     answer: string,
     correct: boolean,
   }[],
