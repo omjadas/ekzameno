@@ -65,6 +65,53 @@ public class QuestionService {
     }
 
     /**
+     * Update a question for a given exam.
+     *
+     * @param questionId   ID of the question
+     * @param question text of the question
+     * @param marks    number of marks allocated to the question
+     * @param type     type of the question
+     * @param answers  answers for the question
+     * @return created Question
+     */
+    public Question updateQuestion(
+        String question,
+        int marks,
+        String type,
+        List<CreateAnswerDTO> answers,
+        UUID questionId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            Question questionReturn = questionMapper.findById(questionId);
+            questionReturn.setQuestion(question);
+            //questionReturn.setO
+            questionReturn.setMarks(marks);
+            UnitOfWork.getCurrent().commit();
+            return questionReturn;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Delete a question.
+     *
+     * @param questionId id of the question
+     */
+    public void deleteQuestion(
+        UUID questionId
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            Question question = questionMapper.findById(questionId);
+            UnitOfWork.getCurrent().registerDeleted(question);
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * Retrieve questions for a given exam.
      *
      * @param examId ID of the exam to retrieve questions for

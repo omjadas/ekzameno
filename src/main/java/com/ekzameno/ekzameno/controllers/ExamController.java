@@ -91,7 +91,7 @@ public class ExamController {
     /**
      * Delete an exam.
      *
-     * @param examId Id of th exam
+     * @param examId Id of the exam
      * @return Response to the client
      */
     @Path("/{examId}")

@@ -5,15 +5,29 @@ import React, { useState } from "react";
 import { Button, Form, FormGroup, Modal } from "react-bootstrap";
 import Select from "react-select";
 import * as yup from "yup";
-import { addQuestion, QuestionType } from "../../redux/slices/questionsSlice";
+import { addQuestion, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface QuestionModalProps {
   show: boolean,
   onHide: () => any,
-  examId: string,
 }
 
+interface CreateQuestionModalProps extends QuestionModalProps {
+  examId: string,
+}
+interface UpdateQuestionModalProps extends QuestionModalProps {
+  id: string,
+  question: string,
+  marks: number,
+  type: QuestionType,
+  // type: {
+  //   label: string,
+  //   value: QuestionType,
+  // },
+  options: string[],
+  correct: number,
+}
 interface FormValues {
   question: string,
   marks: number,
@@ -62,35 +76,59 @@ const FormSchema = yup.object().shape({
   ),
 });
 
-export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
+export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionModalProps): JSX.Element => {
   const [options, setOptions] = useState(0);
   const dispatch = useAppDispatch();
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(addQuestion({
-      examId: props.examId,
-      question: {
-        question: values.question,
-        marks: values.marks,
-        type: values.type.value,
-        answers: values.options.map((a, i) => ({
-          answer: a,
-          correct: i + 1 === values.correct,
-        })),
-      },
-    }))
-      .then(unwrapResult)
-      .then(props.onHide)
-      .catch(e => {
-        console.error(e);
-      });
+    if ("id" in props) {
+      dispatch(updateQuestion({
+        id: props.id,
+        question: {
+          question: values.question,
+          marks: values.marks,
+          type: values.type.value,
+          options: values.options.map(s => s),
+        },
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      dispatch(addQuestion({
+        examId: props.examId,
+        question: {
+          question: values.question,
+          marks: values.marks,
+          type: values.type.value,
+          answers: values.options.map((a, i) => ({
+            answer: a,
+            correct: i + 1 === values.correct,
+          })),
+        },
+      }))
+        .then(unwrapResult)
+        .then(props.onHide)
+        .catch(e => {
+          console.error(e);
+        });
+    }
   };
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          Create Question
+          {
+            "id" in props ?
+              "Update Question"
+              :
+              "Create Question"
+          }
         </Modal.Title>
       </Modal.Header>
       <Formik
@@ -164,7 +202,12 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
                     </Button>
                 }
                 <Button type="submit" variant="success" disabled={isSubmitting}>
-                  Create Question
+                  {
+                    "id" in props ?
+                      "Update Question"
+                      :
+                      "Create Question"
+                  }
                 </Button>
               </Modal.Footer>
             </Form>
