@@ -87,10 +87,10 @@ public class SubjectController {
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (InternalServerErrorException e) {
-            return Response.status(
-                Response
-                .Status
-                .INTERNAL_SERVER_ERROR)
+            return Response
+                .status(
+                	Response.Status.INTERNAL_SERVER_ERROR
+                )
                 .build();
         }
     }
@@ -242,10 +242,10 @@ public class SubjectController {
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (InternalServerErrorException e) {
-            return Response.status(
-                Response
-                .Status
-                .INTERNAL_SERVER_ERROR)
+            return Response
+                .status(
+                    Response.Status.INTERNAL_SERVER_ERROR
+                )
                 .build();
         }
     }
@@ -274,10 +274,10 @@ public class SubjectController {
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } catch (InternalServerErrorException e) {
-            return Response.status(
-                Response
-                .Status
-                .INTERNAL_SERVER_ERROR)
+            return Response
+                .status(
+                    Response.Status.INTERNAL_SERVER_ERROR
+                )
                 .build();
         }
     }
