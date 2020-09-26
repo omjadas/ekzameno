@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <jersey.version>2.31</jersey.version>
+        <jersey.version>2.32</jersey.version>
     </properties>
 
     <dependencyManagement>
