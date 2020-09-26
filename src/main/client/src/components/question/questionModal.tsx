@@ -30,41 +30,45 @@ const selectOptions = [
   { value: "SHORT_ANSWER", label: "Short Answer" },
 ];
 
-const FormSchema = yup.object().shape({
-  question: yup.string().required("Question is a required field."),
-  marks: yup.number().min(1, "Marks must be greater than 1.").required("Marks is a required field."),
-  type: yup.object().shape({
-    label: yup.string(),
-    value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
-  }).required("Type is a required field."),
-  options: yup.array().of(yup.string().test(
-    "requiredOption",
-    "Option is a required field.",
-    function(option) {
-      console.error(option);
-      if (this.resolve(yup.ref("type")).value === "MULTIPLE_CHOICE") {
-        return option !== "" && option !== undefined;
-      }
+const FormSchema = yup.lazy((obj: any) => {
+  const common = {
+    question: yup.string().required("Question is a required field."),
+    marks: yup.number().min(1, "Marks must be greater than 1.").required("Marks is a required field."),
+    type: yup.object().shape({
+      label: yup.string(),
+      value: yup.string().oneOf(["MULTIPLE_CHOICE", "SHORT_ANSWER"]),
+    }).required("Type is a required field."),
+  };
 
-      return true;
-    }
-  )),
-  correct: yup.number().test(
-    "lessThanOptions",
-    "Correct Option must be less than the number of options.",
-    function(correct) {
-      if (typeof correct === "number" && this.resolve(yup.ref("type")).value === "MULTIPLE_CHOICE") {
-        return correct <= this.resolve(yup.ref("options")).length && correct >= 1;
-      }
+  if (obj.type.value === "MULTIPLE_CHOICE") {
+    return yup.object().shape({
+      ...common,
+      options: yup.array().of(yup.string().required("Option is a required field.")).min(1, " ").required(""),
+      correct: yup.number().test(
+        "lessThanOptions",
+        "Correct Option must be less than the number of options.",
+        (correct) => {
+          if (typeof correct === "number") {
+            return correct <= obj.options.length && correct >= 1;
+          }
 
-      return true;
-    }
-  ),
+          return false;
+        }
+      ).required(),
+    });
+  }
+
+  return yup.object().shape(common);
 });
 
 export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
   const [options, setOptions] = useState(0);
   const dispatch = useAppDispatch();
+
+  const onHide = (): void => {
+    props.onHide();
+    setOptions(0);
+  };
 
   const onSubmit = (values: FormValues): void => {
     dispatch(addQuestion({
@@ -80,14 +84,14 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
       },
     }))
       .then(unwrapResult)
-      .then(props.onHide)
+      .then(onHide)
       .catch(e => {
         console.error(e);
       });
   };
 
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal show={props.show} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           Create Question
