@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
 import { fetchQuestions, selectAllQuestions, deleteQuestion } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
-import { RootState, useAppDispatch } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
 import { QuestionModal } from "./questionModal";
 import styles from "./questions.module.scss";
 
