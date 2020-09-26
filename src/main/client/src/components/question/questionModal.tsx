@@ -20,6 +20,7 @@ interface UpdateQuestionModalProps extends QuestionModalProps {
   id: string,
   question: string,
   marks: number,
+  // please do the correction (I have given it straight forward)
   type: QuestionType,
   // type: {
   //   label: string,
@@ -92,7 +93,8 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
           question: values.question,
           marks: values.marks,
           type: values.type.value,
-          options: values.options.map(s => s),
+          // please do the correction
+          options: values.options.map( i => i),
         },
       }))
         .then(unwrapResult)

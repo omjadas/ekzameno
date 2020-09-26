@@ -84,7 +84,7 @@ public class QuestionService {
         try (DBConnection connection = DBConnection.getInstance()) {
             Question questionReturn = questionMapper.findById(questionId);
             questionReturn.setQuestion(question);
-            //questionReturn.setO
+            //setters are missing in Questions.java
             questionReturn.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return questionReturn;
