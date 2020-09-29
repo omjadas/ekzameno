@@ -222,7 +222,7 @@ public class SubjectService {
             return subject;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw new InternalServerErrorException();
         }
     }
 }

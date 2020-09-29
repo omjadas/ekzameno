@@ -40,23 +40,15 @@ public class QuestionController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateQuestion(
+    public Question updateQuestion(
         @PathParam("questionId") String questionId,
         CreateQuestionDTO dto
     ) {
-        Question question = questionService.updateQuestion(
+        return questionService.updateQuestion(
             dto.question,
             dto.marks,
-            dto.type,
             UUID.fromString(questionId)
         );
-        if (question != null) {
-            return Response.ok().entity(question).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
     }
 
     /**

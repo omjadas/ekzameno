@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateUserDTO;
-import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
 import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.User;
@@ -64,8 +63,6 @@ public class UserController {
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
                 .build();
             }
-        } catch (UnknownUserTypeException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (UserAlreadyExistsException e) {
             return Response.status(Response.Status.CONFLICT).build();
         }

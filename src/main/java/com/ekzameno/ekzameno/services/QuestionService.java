@@ -70,13 +70,11 @@ public class QuestionService {
      * @param questionId ID of the question
      * @param question   text of the question
      * @param marks      number of marks allocated to the question
-     * @param type       type of the question
      * @return created Question
      */
     public Question updateQuestion(
         String question,
         int marks,
-        String type,
         UUID questionId
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
@@ -87,7 +85,7 @@ public class QuestionService {
             return questionReturn;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw new InternalServerErrorException();
         }
     }
 
@@ -105,6 +103,7 @@ public class QuestionService {
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 

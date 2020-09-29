@@ -55,24 +55,17 @@ public class ExamController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateExam(
+    public Exam updateExam(
         @PathParam("examId") String examId,
         CreateExamDTO dto
     ) {
-        Exam exam = examService.updateExam(
+        return examService.updateExam(
             dto.name,
             dto.description,
             dto.startTime,
             dto.finishTime,
             UUID.fromString(examId)
         );
-        if (exam != null) {
-            return Response.ok().entity(exam).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
     }
 
     /**

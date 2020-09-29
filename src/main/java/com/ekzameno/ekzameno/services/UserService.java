@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.InternalServerErrorException;
+
 import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.mappers.InstructorMapper;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
@@ -49,7 +51,6 @@ public class UserService {
      * @param password password of the user to register
      * @param type type of the user to register
      * @return the new user
-     * @throws UnknownUserTypeException if the user type is unknown
      * @throws UserAlreadyExistsException if the user already exists
      */
     public User registerUser(
@@ -57,7 +58,7 @@ public class UserService {
         String email,
         String password,
         String type
-    ) throws UnknownUserTypeException, UserAlreadyExistsException {
+    ) throws UserAlreadyExistsException {
         String passwordHash = BCrypt.withDefaults().hashToString(
             12,
             password.toCharArray()
@@ -73,7 +74,7 @@ public class UserService {
             } else if (type.toLowerCase().equals("administrator")) {
                 user = new Administrator(email, name, passwordHash);
             } else {
-                throw new UnknownUserTypeException();
+                throw new BadRequestException();
             }
 
             UnitOfWork.getCurrent().commit();
@@ -84,7 +85,7 @@ public class UserService {
             }
 
             e.printStackTrace();
-            return null;
+            throw new InternalServerErrorException();
         }
     }
 

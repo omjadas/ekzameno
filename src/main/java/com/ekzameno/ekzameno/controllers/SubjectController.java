@@ -91,21 +91,13 @@ public class SubjectController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createSubject(CreateSubjectDTO dto) {
-        Subject subject = subjectService.createSubject(
+    public Subject createSubject(CreateSubjectDTO dto) {
+        return subjectService.createSubject(
             dto.name,
             dto.description,
             dto.instructors,
-            dto.students);
-
-        if (subject != null) {
-            return Response.ok().entity(subject).build();
-        } else {
-            return Response.status(Response
-            .Status
-            .INTERNAL_SERVER_ERROR)
-            .build();
-        }
+            dto.students
+        );
     }
 
     /**
@@ -142,23 +134,17 @@ public class SubjectController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createExam(
+    public Exam createExam(
         @PathParam("subjectId") String subjectId,
         CreateExamDTO dto
     ) {
-        Exam exam = examService.createExam(
+        return examService.createExam(
             dto.name,
             dto.description,
             dto.startTime,
             dto.finishTime,
-            UUID.fromString(subjectId));
-        if (exam != null) {
-            return Response.ok().entity(exam).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
+            UUID.fromString(subjectId)
+        );
     }
 
     /**
@@ -172,22 +158,15 @@ public class SubjectController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateSubject(
+    public Subject updateSubject(
         @PathParam("subjectId") String subjectId,
         CreateSubjectDTO dto
     ) {
-        Subject subject = subjectService.updateSubject(
+        return subjectService.updateSubject(
             dto.name,
             dto.description,
             UUID.fromString(subjectId)
         );
-        if (subject != null) {
-            return Response.ok().entity(subject).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
     }
 
     /**
