@@ -1,8 +1,10 @@
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { Button, Form, FormGroup, Modal } from "react-bootstrap";
+import { Button, Form, FormGroup, InputGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
@@ -119,7 +121,7 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
   const onHide = (): void => {
     props.onHide();
     if (!("id" in props)) {
-      setNumOptions(0);
+      setNumOptions(1);
     }
   };
 
@@ -218,6 +220,7 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
             isSubmitting,
             values,
             handleBlur,
+            handleChange,
             setFieldValue,
             errors,
             touched,
@@ -255,11 +258,43 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
                         name="correctOption" />
                       {
                         [...Array(numOptions).keys()].map(i => (
-                          <FormikControl
-                            key={i}
-                            type="text"
-                            label={`Option ${i + 1}`}
-                            name={`options[${i}]`} />
+                          <Form.Group key={i}>
+                            <Form.Label>
+                              {`Option ${i + 1}`}
+                            </Form.Label>
+                            <InputGroup>
+                              <Form.Control
+                                type="text"
+                                name={`options[${i}]`}
+                                value={values.options[i]}
+                                onBlur={handleBlur}
+                                isInvalid={
+                                  !!(touched.options
+                                    && (touched.options as unknown as boolean[])[i]
+                                    && errors.options
+                                    && errors.options[i])
+                                }
+                                onChange={handleChange} />
+                              <InputGroup.Append>
+                                <Button variant="outline-danger">
+                                  <FontAwesomeIcon icon={faTrash} />
+                                </Button>
+                              </InputGroup.Append>
+                              <Form.Control.Feedback
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                                // @ts-ignore
+                                className={
+                                  touched.options
+                                    && (touched.options as unknown as boolean[])[i]
+                                    && errors.options
+                                    && errors.options[i]
+                                    && "d-block"
+                                }
+                                type="invalid">
+                                {errors.options !== undefined && errors.options[i]}
+                              </Form.Control.Feedback>
+                            </InputGroup>
+                          </Form.Group>
                         ))
                       }
                     </>
