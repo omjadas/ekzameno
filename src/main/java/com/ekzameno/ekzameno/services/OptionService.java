@@ -39,6 +39,14 @@ public class OptionService {
         }
     }
 
+    /**
+     * Update the given option.
+     *
+     * @param optionId ID of the option to update
+     * @param answer   new answer for the option
+     * @param correct  whether the option is correct
+     * @return updated option
+     */
     public Option updateOption(
         UUID optionId,
         String answer,
@@ -55,6 +63,11 @@ public class OptionService {
         }
     }
 
+    /**
+     * Delete the given option.
+     *
+     * @param optionId ID of the option to update
+     */
     public void deleteOption(UUID optionId) {
         try (DBConnection connection = DBConnection.getInstance()) {
             optionMapper.deleteById(optionId);
@@ -64,6 +77,12 @@ public class OptionService {
         }
     }
 
+    /**
+     * Get options for a given question.
+     *
+     * @param questionId ID of the question to retrieve options for
+     * @return options
+     */
     public List<Option> getOptionsForQuestion(UUID questionId) {
         try (DBConnection connection = DBConnection.getInstance()) {
             return optionMapper.findAllForQuestion(questionId);

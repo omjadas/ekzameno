@@ -22,6 +22,13 @@ import com.ekzameno.ekzameno.services.OptionService;
 public class OptionController {
     private final OptionService optionService = new OptionService();
 
+    /**
+     * Update the given option.
+     *
+     * @param optionId ID of the option to update
+     * @param dto option DTO
+     * @return updated option
+     */
     @Path("/{optionId}")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,6 +44,12 @@ public class OptionController {
         );
     }
 
+    /**
+     * Delete the given option.
+     *
+     * @param optionId ID of the option to delete
+     * @return response to the client
+     */
     @Path("/{optionId}")
     @DELETE
     public Response deleteOption(@PathParam("optionId") String optionId) {

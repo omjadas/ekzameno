@@ -82,40 +82,40 @@ export const Exam = (): JSX.Element => {
         <p>{exam.description}</p>
         {
           me?.type === "INSTRUCTOR" &&
-          <>
-            <Button className="mr-2" onClick={() => setExamModalShow(true)}>
-              Edit Exam
-            </Button>
-            <Button className="mr-2" onClick={onClick}>
-              Delete Exam
-            </Button>
-            {
-              startTime > currentTime &&
-                <>
-                  <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
-                    Add Question
+            <>
+              <Button className="mr-2" onClick={() => setExamModalShow(true)}>
+                Edit Exam
+              </Button>
+              <Button className="mr-2" onClick={onClick}>
+                Delete Exam
+              </Button>
+              {
+                startTime > currentTime &&
+                  <>
+                    <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
+                      Add Question
+                    </Button>
+                    <Button className="mr-2" onClick={publishNow}>
+                      Publish Exam
+                    </Button>
+                  </>
+              }
+              {
+                finishTime > currentTime &&
+                startTime < currentTime &&
+                  <Button onClick={closeNow}>
+                    Close Exam
                   </Button>
-                  <Button className="mr-2" onClick={publishNow}>
-                    Publish Exam
-                  </Button>
-                </>
-            }
-            {
-              finishTime > currentTime &&
-              startTime < currentTime &&
-                <Button onClick={closeNow}>
-                  Close Exam
-                </Button>
-            }
-          </>
+              }
+            </>
         }
         {
           me?.type === "STUDENT" &&
-          <>
-            <Button className="mr-2">
-              Answer Exam
-            </Button>
-          </>
+            <>
+              <Button className="mr-2">
+                Answer Exam
+              </Button>
+            </>
         }
       </Jumbotron>
       <ExamModal
