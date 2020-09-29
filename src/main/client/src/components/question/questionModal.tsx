@@ -61,21 +61,24 @@ const FormSchema = yup.lazy((obj: any) => {
   if (obj.type.value === "MULTIPLE_CHOICE") {
     return yup.object().shape({
       ...common,
-      options: yup.array().of(yup.string().required("Option is a required field."))
-        .min(1, " ")
-        .test(
-          "unique",
-          "Options must be unique.",
-          options => {
-            if (Array.isArray(options)) {
-              return options.length === new Set(options).size;
-            }
+      options: yup.array().of(
+        yup.string()
+          .test(
+            "unique",
+            "Options must be unique.",
+            option => {
+              if (typeof option === "string") {
+                return (obj.options as string[]).filter(o => o === option).length === 1;
+              }
 
-            return true;
-          }
-        )
+              return true;
+            },
+          )
+          .required("Option is a required field.")
+      )
+        .min(1, " ")
         .required(""),
-      correct: yup.number().test(
+      correctOption: yup.number().test(
         "lessThanOptions",
         "Correct Option must be less than the number of options.",
         (correct) => {
@@ -93,19 +96,31 @@ const FormSchema = yup.lazy((obj: any) => {
 });
 
 export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionModalProps): JSX.Element => {
-  const [numOptions, setNumOptions] = useState(0);
+  const [numOptions, setNumOptions] = useState(1);
   const dispatch = useAppDispatch();
   const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
 
+  const optionIdsLength = (props as UpdateQuestionModalProps).optionIds?.length;
+
   useEffect(() => {
-    if ((props as UpdateQuestionModalProps).id !== undefined) {
-      dispatch(fetchOptions((props as UpdateQuestionModalProps).id));
+    if (optionIdsLength !== undefined) {
+      setNumOptions(optionIdsLength);
     }
-  }, [(props as UpdateQuestionModalProps).id]);
+  }, [optionIdsLength]);
+
+  const questionId = (props as UpdateQuestionModalProps).id;
+
+  useEffect(() => {
+    if (questionId !== undefined) {
+      dispatch(fetchOptions(questionId));
+    }
+  }, [questionId, dispatch]);
 
   const onHide = (): void => {
     props.onHide();
-    setNumOptions(0);
+    if (!("id" in props)) {
+      setNumOptions(0);
+    }
   };
 
   const onSubmit = (values: FormValues): void => {
@@ -116,7 +131,7 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
           answer: o,
           correct: values.correctOption === i + 1,
         }))
-        .filter(o => !options.find(o2 => o2.answer !== o.answer));
+        .filter(o => !options.find(o2 => o2.answer === o.answer));
 
       dispatch(updateQuestion({
         id: props.id,

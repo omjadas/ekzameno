@@ -9,8 +9,8 @@ import javax.ws.rs.InternalServerErrorException;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
-import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
+import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -71,7 +71,6 @@ public class QuestionService {
      * @param question   text of the question
      * @param marks      number of marks allocated to the question
      * @param type       type of the question
-     * @param options    options for the question
      * @return created Question
      */
     public Question updateQuestion(

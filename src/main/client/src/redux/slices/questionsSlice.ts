@@ -1,7 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State, Status } from "../state";
 import { RootState } from "../store";
-import { fetchOptions } from "./optionsSlice";
+import { addOption, fetchOptions } from "./optionsSlice";
 
 export type QuestionType = "MULTIPLE_CHOICE" | "SHORT_ANSWER";
 
@@ -112,11 +112,17 @@ export const questionsSlice = createSlice({
       questionsAdapter.upsertOne(state, action.payload);
     });
     builder.addCase(fetchOptions.fulfilled, (state, action) => {
-      if (action.payload.length > 0) {
-        const question = state.entities[action.payload[0].questionId];
-        if (question !== undefined) {
-          question.optionIds = action.payload.map(o => o.id);
-        }
+      const question = state.entities[action.payload[0].questionId];
+
+      if (question !== undefined) {
+        question.optionIds = action.payload.map(o => o.id);
+      }
+    });
+    builder.addCase(addOption.fulfilled, (state, action) => {
+      const question = state.entities[action.payload.questionId];
+
+      if (question !== undefined) {
+        question.optionIds.push(action.payload.id);
       }
     });
   },
