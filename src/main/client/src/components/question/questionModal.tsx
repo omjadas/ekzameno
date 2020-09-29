@@ -236,7 +236,7 @@ export const QuestionModal = (
                     name="type"
                     value={values.type as any}
                     onChange={option => setFieldValue("type", option)}
-                    isDisabled={isSubmitting}
+                    isDisabled={"id" in props || isSubmitting}
                     onBlur={handleBlur} />
                   <Form.Control.Feedback className={touched.type && errors.type && "d-block"} type="invalid">
                     {errors.type}

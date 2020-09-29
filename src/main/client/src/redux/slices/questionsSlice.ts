@@ -124,6 +124,7 @@ export const questionsSlice = createSlice({
       const question = state.entities[action.payload.questionId];
 
       if (question !== undefined) {
+        question.optionIds === undefined && (question.optionIds = []);
         question.optionIds.push(action.payload.id);
       }
     });
