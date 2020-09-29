@@ -112,10 +112,12 @@ export const questionsSlice = createSlice({
       questionsAdapter.upsertOne(state, action.payload);
     });
     builder.addCase(fetchOptions.fulfilled, (state, action) => {
-      const question = state.entities[action.payload[0].questionId];
+      if (action.payload.length > 0) {
+        const question = state.entities[action.payload[0].questionId];
 
-      if (question !== undefined) {
-        question.optionIds = action.payload.map(o => o.id);
+        if (question !== undefined) {
+          question.optionIds = action.payload.map(o => o.id);
+        }
       }
     });
     builder.addCase(addOption.fulfilled, (state, action) => {
