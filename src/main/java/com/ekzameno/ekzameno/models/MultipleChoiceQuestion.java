@@ -2,7 +2,7 @@ package com.ekzameno.ekzameno.models;
 
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.proxies.AnswerProxyList;
+import com.ekzameno.ekzameno.proxies.OptionProxyList;
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class MultipleChoiceQuestion extends Question {
     public static final String TYPE = "MULTIPLE_CHOICE";
     @JsonIgnore
-    private ProxyList<Answer> answers;
+    private ProxyList<Option> options;
 
     /**
      * Create a MultipleChoiceQuestion with an ID.
@@ -29,7 +29,7 @@ public class MultipleChoiceQuestion extends Question {
         UUID examId
     ) {
         super(id, question, marks, examId, TYPE);
-        this.answers = new AnswerProxyList(id);
+        this.options = new OptionProxyList(id);
     }
 
     /**
@@ -41,15 +41,15 @@ public class MultipleChoiceQuestion extends Question {
      */
     public MultipleChoiceQuestion(String question, int marks, UUID examId) {
         super(question, marks, examId, TYPE);
-        this.answers = new AnswerProxyList(getId());
+        this.options = new OptionProxyList(getId());
     }
 
     /**
-     * Retrieve the possible answers for the MultipleChoiceQuestion.
+     * Retrieve the possible options for the MultipleChoiceQuestion.
      *
-     * @return possible answers for the MultipleChoiceQuestion
+     * @return possible options for the MultipleChoiceQuestion
      */
-    public ProxyList<Answer> getAnswers() {
-        return answers;
+    public ProxyList<Option> getOptions() {
+        return options;
     }
 }

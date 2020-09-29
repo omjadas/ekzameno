@@ -35,7 +35,7 @@ entity questions {
     * exam_id : UUID <<FK>>
 }
 
-entity answers {
+entity options {
     * id : UUID <<generated>>
     --
     * answer : TEXT
@@ -79,7 +79,7 @@ users ||--o{ exam_submissions
 exams ||--o{ exam_submissions
 exam_submissions ||--o{ question_submissions
 questions ||--o{ question_submissions
-questions ||--o{ answers
+questions ||--o{ options
 
 users ||--o{ instructor_subjects
 users ||--o{ enrolments

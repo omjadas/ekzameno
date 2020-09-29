@@ -9,7 +9,7 @@ import javax.ws.rs.InternalServerErrorException;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
-import com.ekzameno.ekzameno.models.Answer;
+import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
@@ -29,7 +29,7 @@ public class QuestionService {
      * @param question text of the question
      * @param marks    number of marks allocated to the question
      * @param type     type of the question
-     * @param answers  answers for the question
+     * @param options  options for the question
      * @return created Question
      */
     public Question createQuestion(
@@ -37,7 +37,7 @@ public class QuestionService {
         String question,
         int marks,
         String type,
-        List<CreateOptionDTO> answers
+        List<CreateOptionDTO> options
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             Question q;
@@ -45,9 +45,9 @@ public class QuestionService {
             if (type.toUpperCase().equals(MultipleChoiceQuestion.TYPE)) {
                 q = new MultipleChoiceQuestion(question, marks, examId);
 
-                for (CreateOptionDTO a : answers) {
-                    Answer answer = new Answer(a.answer, a.correct, q.getId());
-                    ((MultipleChoiceQuestion) q).getAnswers().add(answer);
+                for (CreateOptionDTO a : options) {
+                    Option option = new Option(a.answer, a.correct, q.getId());
+                    ((MultipleChoiceQuestion) q).getOptions().add(option);
                 }
 
             } else if (type.toUpperCase().equals(ShortAnswerQuestion.TYPE)) {
@@ -67,24 +67,22 @@ public class QuestionService {
     /**
      * Update a question for a given exam.
      *
-     * @param questionId   ID of the question
-     * @param question text of the question
-     * @param marks    number of marks allocated to the question
-     * @param type     type of the question
-     * @param answers  answers for the question
+     * @param questionId ID of the question
+     * @param question   text of the question
+     * @param marks      number of marks allocated to the question
+     * @param type       type of the question
+     * @param options    options for the question
      * @return created Question
      */
     public Question updateQuestion(
         String question,
         int marks,
         String type,
-        List<CreateOptionDTO> answers,
         UUID questionId
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             Question questionReturn = questionMapper.findById(questionId);
             questionReturn.setQuestion(question);
-            //setters are missing in Questions.java
             questionReturn.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return questionReturn;
