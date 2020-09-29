@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
 import { addOption, deleteOption, fetchOptions, selectOptionsByIds } from "../../redux/slices/optionsSlice";
-import { addQuestion, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
+import { addQuestion, questionLabels, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface QuestionModalProps {
@@ -39,11 +39,6 @@ interface FormValues {
   options: string[],
   correctOption: number,
 }
-
-const labels: Record<QuestionType, string> = {
-  MULTIPLE_CHOICE: "Multiple Choice",
-  SHORT_ANSWER: "Short Answer",
-};
 
 const selectOptions: { value: QuestionType, label: string }[] = [
   { value: "MULTIPLE_CHOICE", label: "Multiple Choice" },
@@ -196,7 +191,7 @@ export const QuestionModal = (
           marks: (props as UpdateQuestionModalProps).marks ?? 1,
           type: (props as UpdateQuestionModalProps).type === undefined
             ? { label: "Multiple Choice", value: "MULTIPLE_CHOICE" }
-            : { label: labels[(props as UpdateQuestionModalProps).type], value: (props as UpdateQuestionModalProps).type },
+            : { label: questionLabels[(props as UpdateQuestionModalProps).type], value: (props as UpdateQuestionModalProps).type },
           options: options.length === 0
             ? [""]
             : options.map(o => o.answer),

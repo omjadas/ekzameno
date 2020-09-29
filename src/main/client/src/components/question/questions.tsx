@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
-import { deleteQuestion, fetchQuestions, selectQuestionsByIds } from "../../redux/slices/questionsSlice";
+import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsByIds } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { QuestionModal } from "./questionModal";
@@ -42,9 +42,10 @@ export const Questions = (props: QuestionProps): JSX.Element => {
             <Card key={question.id}>
               <Card.Header>{question.question}</Card.Header>
               <Card.Body>
-                <Card.Title>Marks: {question.marks}</Card.Title>
                 <Card.Text>
-                  Question Type: {question.type}
+                  Marks: {question.marks}
+                  <br />
+                  Type: {questionLabels[question.type]}
                 </Card.Text>
                 {
                   me?.type === "INSTRUCTOR" &&

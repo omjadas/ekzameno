@@ -5,6 +5,11 @@ import { addOption, fetchOptions } from "./optionsSlice";
 
 export type QuestionType = "MULTIPLE_CHOICE" | "SHORT_ANSWER";
 
+export const questionLabels: Record<QuestionType, string> = {
+  MULTIPLE_CHOICE: "Multiple Choice",
+  SHORT_ANSWER: "Short Answer",
+};
+
 export interface Question {
   question: string,
   type: QuestionType,
