@@ -1,9 +1,9 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { Formik } from "formik";
+import { FieldArray, Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Form, FormGroup, InputGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
@@ -78,7 +78,7 @@ const FormSchema = yup.lazy((obj: any) => {
           )
           .required("Option is a required field.")
       )
-        .min(1, " ")
+        .min(1)
         .required(""),
       correctOption: yup.number().test(
         "lessThanOptions",
@@ -97,18 +97,11 @@ const FormSchema = yup.lazy((obj: any) => {
   return yup.object().shape(common);
 });
 
-export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionModalProps): JSX.Element => {
-  const [numOptions, setNumOptions] = useState(1);
+export const QuestionModal = (
+  props: UpdateQuestionModalProps | CreateQuestionModalProps
+): JSX.Element => {
   const dispatch = useAppDispatch();
   const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
-
-  const optionIdsLength = (props as UpdateQuestionModalProps).optionIds?.length;
-
-  useEffect(() => {
-    if (optionIdsLength !== undefined) {
-      setNumOptions(optionIdsLength);
-    }
-  }, [optionIdsLength]);
 
   const questionId = (props as UpdateQuestionModalProps).id;
 
@@ -120,9 +113,6 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
 
   const onHide = (): void => {
     props.onHide();
-    if (!("id" in props)) {
-      setNumOptions(1);
-    }
   };
 
   const onSubmit = (values: FormValues): void => {
@@ -207,7 +197,9 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
           type: (props as UpdateQuestionModalProps).type === undefined
             ? { label: "Multiple Choice", value: "MULTIPLE_CHOICE" }
             : { label: labels[(props as UpdateQuestionModalProps).type], value: (props as UpdateQuestionModalProps).type },
-          options: options.map(o => o.answer),
+          options: options.length === 0
+            ? [""]
+            : options.map(o => o.answer),
           correctOption: options.findIndex(o => o.correct === true) !== -1
             ? options.findIndex(o => o.correct === true) + 1
             : 1,
@@ -222,6 +214,7 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
             handleBlur,
             handleChange,
             setFieldValue,
+            setValues,
             errors,
             touched,
           }) => (
@@ -256,54 +249,70 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
                         type="number"
                         label="Correct Option"
                         name="correctOption" />
-                      {
-                        [...Array(numOptions).keys()].map(i => (
-                          <Form.Group key={i}>
-                            <Form.Label>
-                              {`Option ${i + 1}`}
-                            </Form.Label>
-                            <InputGroup>
-                              <Form.Control
-                                type="text"
-                                name={`options[${i}]`}
-                                value={values.options[i]}
-                                onBlur={handleBlur}
-                                isInvalid={
-                                  !!(touched.options
-                                    && (touched.options as unknown as boolean[])[i]
-                                    && errors.options
-                                    && errors.options[i])
-                                }
-                                onChange={handleChange} />
-                              <InputGroup.Append>
-                                <Button variant="outline-danger">
-                                  <FontAwesomeIcon icon={faTrash} />
-                                </Button>
-                              </InputGroup.Append>
-                              <Form.Control.Feedback
-                                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                                // @ts-ignore
-                                className={
-                                  touched.options
-                                    && (touched.options as unknown as boolean[])[i]
-                                    && errors.options
-                                    && errors.options[i]
-                                    && "d-block"
-                                }
-                                type="invalid">
-                                {errors.options !== undefined && errors.options[i]}
-                              </Form.Control.Feedback>
-                            </InputGroup>
-                          </Form.Group>
-                        ))
-                      }
+                      <FieldArray
+                        name="options">
+                        {
+                          arrayHelpers => (
+                            <>
+                              {
+                                values.options.map((option, i) => (
+                                  <Form.Group key={i}>
+                                    <Form.Label>
+                                      {`Option ${i + 1}`}
+                                    </Form.Label>
+                                    <InputGroup>
+                                      <Form.Control
+                                        type="text"
+                                        name={`options[${i}]`}
+                                        value={values.options[i]}
+                                        onBlur={handleBlur}
+                                        isInvalid={
+                                          !!(
+                                            touched.options
+                                              && (touched.options as unknown as boolean[])[i]
+                                              && errors.options
+                                              && errors.options[i]
+                                          )
+                                        }
+                                        onChange={handleChange} />
+                                      <InputGroup.Append>
+                                        <Button
+                                          variant="outline-danger"
+                                          onClick={() => arrayHelpers.remove(i)}>
+                                          <FontAwesomeIcon icon={faTrash} />
+                                        </Button>
+                                      </InputGroup.Append>
+                                      <Form.Control.Feedback
+                                        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                                        // @ts-ignore
+                                        className={
+                                          touched.options
+                                            && (touched.options as unknown as boolean[])[i]
+                                            && errors.options
+                                            && errors.options[i]
+                                            && "d-block"
+                                        }
+                                        type="invalid">
+                                        {errors.options !== undefined && errors.options[i]}
+                                      </Form.Control.Feedback>
+                                    </InputGroup>
+                                  </Form.Group>
+                                ))
+                              }
+                            </>
+                          )
+                        }
+                      </FieldArray>
                     </>
                 }
               </Modal.Body>
               <Modal.Footer>
                 {
                   values.type.value === "MULTIPLE_CHOICE" &&
-                    <Button className="mr-auto" variant="primary" onClick={() => setNumOptions(numOptions + 1)}>
+                    <Button className="mr-auto" variant="primary" onClick={() => {
+                      values.options.push("");
+                      setValues(values);
+                    }}>
                       Add Option
                     </Button>
                 }
