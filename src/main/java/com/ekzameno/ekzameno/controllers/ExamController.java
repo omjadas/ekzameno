@@ -6,8 +6,6 @@ import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -87,9 +85,7 @@ public class ExamController {
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteExam(
-        @PathParam("examId") String examId
-    ) {
+    public Response deleteExam(@PathParam("examId") String examId) {
         examService.deleteExam(UUID.fromString(examId));
         return Response
             .status(Response.Status.NO_CONTENT)
@@ -129,9 +125,7 @@ public class ExamController {
     @Path("/{examId}/questions")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Question> createQuestion(
-        @PathParam("examId") String examId
-    ) {
+    public List<Question> getQuestions(@PathParam("examId") String examId) {
         return questionService.getQuestionsForExam(UUID.fromString(examId));
     }
 }

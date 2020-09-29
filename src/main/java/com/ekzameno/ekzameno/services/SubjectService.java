@@ -140,7 +140,7 @@ public class SubjectService {
                 instructorId,
                 subjectId
             );
-            connection.getConnection().commit();
+            UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -161,7 +161,7 @@ public class SubjectService {
                 studentId,
                 subjectId
             );
-            connection.getConnection().commit();
+            UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }

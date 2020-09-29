@@ -113,7 +113,7 @@ public abstract class Mapper<T extends Model> {
     /**
      * Insert the given model.
      *
-     * @param obj model to insert.
+     * @param obj model to insert
      * @throws SQLException if unable to insert the model
      */
     public abstract void insert(T obj) throws SQLException;
@@ -129,10 +129,20 @@ public abstract class Mapper<T extends Model> {
     /**
      * Delete the given model.
      *
-     * @param obj model to delete.
+     * @param obj model to delete
      * @throws SQLException if unable to delete the model
      */
     public void delete(T obj) throws SQLException {
+        deleteById(obj.getId());
+    }
+
+    /**
+     * Delete the model matching the given ID.
+     *
+     * @param id id of the model to delete
+     * @throws SQLException if unable to delete the model
+     */
+    public void deleteById(UUID id) throws SQLException {
         String query = "DELETE FROM " + getTableName() + " WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
@@ -140,9 +150,9 @@ public abstract class Mapper<T extends Model> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, obj.getId());
+            statement.setObject(1, id);
             statement.executeUpdate();
-            IdentityMap.getInstance().remove(obj.getId());
+            IdentityMap.getInstance().remove(id);
         }
     }
 
