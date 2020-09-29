@@ -33,7 +33,7 @@ public class QuestionController {
      * Update a question.
      *
      * @param questionId Id of th exam
-     * @param dto Question DTO
+     * @param dto        Question DTO
      * @return Response to the client
      */
     @Path("/{questionId}")
@@ -78,6 +78,12 @@ public class QuestionController {
             .build();
     }
 
+    /**
+     * Fetch options for a given question.
+     *
+     * @param questionId ID of the question to fetch options for
+     * @return options associated with the given question
+     */
     @Path("/{questionId}/options")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -85,6 +91,13 @@ public class QuestionController {
         return optionService.getOptionsForQuestion(UUID.fromString(questionId));
     }
 
+    /**
+     * Create an option for a given question.
+     *
+     * @param questionId ID of the question to create the option for
+     * @param dto        option DTO
+     * @return created option
+     */
     @Path("/{questionId}/options")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
