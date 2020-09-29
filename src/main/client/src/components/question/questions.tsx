@@ -18,7 +18,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     state => selectExamById(state, props.examId)
   );
   const questions = useSelector(selectQuestionsByIds(exam?.questionIds ?? []));
-  const [questionModalShow, setQuestionModalShow] = useState(false);
+  const [questionModalShow, setQuestionModalShow] = useState<string | null>(null);
   const me = useSelector(selectMe);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                 {
                   me?.type === "INSTRUCTOR" &&
                     <>
-                      <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
+                      <Button className="mr-2" onClick={() => setQuestionModalShow(question.id)}>
                         Edit
                       </Button>
                       <Button className="mr-2" onClick={() => onClick(question.id)}>
@@ -58,8 +58,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                     </>
                 }
                 <QuestionModal
-                  show={questionModalShow}
-                  onHide={() => setQuestionModalShow(false)}
+                  show={questionModalShow === question.id}
+                  onHide={() => setQuestionModalShow(null)}
                   id={question.id}
                   question={question.question}
                   marks={question.marks}
