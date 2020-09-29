@@ -64,8 +64,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                   question={question.question}
                   marks={question.marks}
                   type={question.type}
-                  options={question.options}
-                  correctOption={question.correctOption} />
+                  optionIds={question.optionIds} />
               </Card.Body>
             </Card>
           );

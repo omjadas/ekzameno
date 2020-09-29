@@ -1,10 +1,12 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup, Modal } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
+import { fetchOptions, selectOptionsByIds } from "../../redux/slices/optionsSlice";
 import { addQuestion, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
@@ -22,8 +24,7 @@ interface UpdateQuestionModalProps extends QuestionModalProps {
   question: string,
   marks: number,
   type: QuestionType,
-  options: string[],
-  correctOption: number,
+  optionIds: string[],
 }
 
 interface FormValues {
@@ -79,12 +80,19 @@ const FormSchema = yup.lazy((obj: any) => {
 });
 
 export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionModalProps): JSX.Element => {
-  const [options, setOptions] = useState(0);
+  const [numOptions, setNumOptions] = useState(0);
   const dispatch = useAppDispatch();
+  const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
+
+  useEffect(() => {
+    if ((props as UpdateQuestionModalProps).id !== undefined) {
+      dispatch(fetchOptions((props as UpdateQuestionModalProps).id));
+    }
+  }, [(props as UpdateQuestionModalProps).id]);
 
   const onHide = (): void => {
     props.onHide();
-    setOptions(0);
+    setNumOptions(0);
   };
 
   const onSubmit = (values: FormValues): void => {
@@ -143,8 +151,10 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
           type: (props as UpdateQuestionModalProps).type === undefined
             ? { label: "Multiple Choice", value: "MULTIPLE_CHOICE" }
             : { label: labels[(props as UpdateQuestionModalProps).type], value: (props as UpdateQuestionModalProps).type },
-          options: (props as UpdateQuestionModalProps).options ?? [],
-          correctOption: (props as UpdateQuestionModalProps).correctOption ?? 1,
+          options: options.map(o => o.answer),
+          correctOption: options.findIndex(o => o.correct === true) !== -1
+            ? options.findIndex(o => o.correct === true) + 1
+            : 1,
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}>
@@ -190,7 +200,7 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
                         label="Correct Option"
                         name="correctOption" />
                       {
-                        [...Array(options).keys()].map(i => (
+                        [...Array(numOptions).keys()].map(i => (
                           <FormikControl
                             key={i}
                             type="text"
@@ -204,7 +214,7 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
               <Modal.Footer>
                 {
                   values.type.value === "MULTIPLE_CHOICE" &&
-                    <Button className="mr-auto" variant="primary" onClick={() => setOptions(options + 1)}>
+                    <Button className="mr-auto" variant="primary" onClick={() => setNumOptions(numOptions + 1)}>
                       Add Option
                     </Button>
                 }
