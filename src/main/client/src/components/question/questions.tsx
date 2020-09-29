@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { fetchQuestions, selectAllQuestions, deleteQuestion } from "../../redux/slices/questionsSlice";
+import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
+import { deleteQuestion, fetchQuestions, selectQuestionsByIds } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
-import { useAppDispatch } from "../../redux/store";
+import { RootState, useAppDispatch } from "../../redux/store";
 import { QuestionModal } from "./questionModal";
 import styles from "./questions.module.scss";
 
@@ -13,11 +14,10 @@ interface QuestionProps {
 
 export const Questions = (props: QuestionProps): JSX.Element => {
   const dispatch = useAppDispatch();
-  // const exam = useSelector<RootState, ExamState | undefined>(
-  //   state => selectExamById(state, props.examId)
-  // );
-  // const questions = useSelector(selectQuestionsByIds(exam?.questionIds ?? []));
-  const questions = useSelector(selectAllQuestions);
+  const exam = useSelector<RootState, ExamState | undefined>(
+    state => selectExamById(state, props.examId)
+  );
+  const questions = useSelector(selectQuestionsByIds(exam?.questionIds ?? []));
   const [questionModalShow, setQuestionModalShow] = useState(false);
   const me = useSelector(selectMe);
 
@@ -48,14 +48,14 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                 </Card.Text>
                 {
                   me?.type === "INSTRUCTOR" &&
-                  <>
-                    <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
-                      Edit
-                    </Button>
-                    <Button className="mr-2" onClick={() => onClick(question.id)}>
-                      Delete
-                    </Button>
-                  </>
+                    <>
+                      <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
+                        Edit
+                      </Button>
+                      <Button className="mr-2" onClick={() => onClick(question.id)}>
+                        Delete
+                      </Button>
+                    </>
                 }
                 <QuestionModal
                   show={questionModalShow}
@@ -64,10 +64,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                   question={question.question}
                   marks={question.marks}
                   type={question.type}
-                  //Not a correct type
                   options={question.options}
-                  //pasing value to be checked
-                  correct={2}/>
+                  correctOption={question.correctOption} />
               </Card.Body>
             </Card>
           );

@@ -127,7 +127,7 @@ public class ExamController {
             dto.question,
             dto.marks,
             dto.type,
-            dto.answers
+            dto.options
         );
     }
 

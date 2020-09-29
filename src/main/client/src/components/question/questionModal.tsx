@@ -16,19 +16,16 @@ export interface QuestionModalProps {
 interface CreateQuestionModalProps extends QuestionModalProps {
   examId: string,
 }
+
 interface UpdateQuestionModalProps extends QuestionModalProps {
   id: string,
   question: string,
   marks: number,
-  // please do the correction (I have given it straight forward)
   type: QuestionType,
-  // type: {
-  //   label: string,
-  //   value: QuestionType,
-  // },
   options: string[],
-  correct: number,
+  correctOption: number,
 }
+
 interface FormValues {
   question: string,
   marks: number,
@@ -37,10 +34,15 @@ interface FormValues {
     value: QuestionType,
   },
   options: string[],
-  correct: number,
+  correctOption: number,
 }
 
-const selectOptions = [
+const labels: Record<QuestionType, string> = {
+  MULTIPLE_CHOICE: "Multiple Choice",
+  SHORT_ANSWER: "Short Answer",
+};
+
+const selectOptions: { value: QuestionType, label: string }[] = [
   { value: "MULTIPLE_CHOICE", label: "Multiple Choice" },
   { value: "SHORT_ANSWER", label: "Short Answer" },
 ];
@@ -93,8 +95,6 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
           question: values.question,
           marks: values.marks,
           type: values.type.value,
-          // please do the correction
-          options: values.options.map( i => i),
         },
       }))
         .then(unwrapResult)
@@ -111,9 +111,9 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
           question: values.question,
           marks: values.marks,
           type: values.type.value,
-          answers: values.options.map((a, i) => ({
+          options: values.options.map((a, i) => ({
             answer: a,
-            correct: i + 1 === values.correct,
+            correct: i + 1 === values.correctOption,
           })),
         },
       }))
@@ -130,20 +130,21 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
       <Modal.Header closeButton>
         <Modal.Title>
           {
-            "id" in props ?
-              "Update Question"
-              :
-              "Create Question"
+            "id" in props
+              ? "Update Question"
+              : "Create Question"
           }
         </Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{
-          question: "",
-          marks: 1,
-          type: { label: "Multiple Choice", value: "MULTIPLE_CHOICE" },
-          options: [],
-          correct: 1,
+          question: (props as UpdateQuestionModalProps).question ?? "",
+          marks: (props as UpdateQuestionModalProps).marks ?? 1,
+          type: (props as UpdateQuestionModalProps).type === undefined
+            ? { label: "Multiple Choice", value: "MULTIPLE_CHOICE" }
+            : { label: labels[(props as UpdateQuestionModalProps).type], value: (props as UpdateQuestionModalProps).type },
+          options: (props as UpdateQuestionModalProps).options ?? [],
+          correctOption: (props as UpdateQuestionModalProps).correctOption ?? 1,
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}>
@@ -187,7 +188,7 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
                       <FormikControl
                         type="number"
                         label="Correct Option"
-                        name="correct" />
+                        name="correctOption" />
                       {
                         [...Array(options).keys()].map(i => (
                           <FormikControl
@@ -209,10 +210,9 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
                 }
                 <Button type="submit" variant="success" disabled={isSubmitting}>
                   {
-                    "id" in props ?
-                      "Update Question"
-                      :
-                      "Create Question"
+                    "id" in props
+                      ? "Update Question"
+                      : "Create Question"
                   }
                 </Button>
               </Modal.Footer>

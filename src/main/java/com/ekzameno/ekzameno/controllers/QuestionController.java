@@ -41,7 +41,7 @@ public class QuestionController {
             dto.question,
             dto.marks,
             dto.type,
-            dto.answers,
+            dto.options,
             UUID.fromString(questionId)
         );
         if (question != null) {

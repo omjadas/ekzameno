@@ -7,7 +7,7 @@ import java.util.UUID;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 
-import com.ekzameno.ekzameno.dtos.CreateAnswerDTO;
+import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.models.Answer;
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
@@ -37,7 +37,7 @@ public class QuestionService {
         String question,
         int marks,
         String type,
-        List<CreateAnswerDTO> answers
+        List<CreateOptionDTO> answers
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             Question q;
@@ -45,7 +45,7 @@ public class QuestionService {
             if (type.toUpperCase().equals(MultipleChoiceQuestion.TYPE)) {
                 q = new MultipleChoiceQuestion(question, marks, examId);
 
-                for (CreateAnswerDTO a : answers) {
+                for (CreateOptionDTO a : answers) {
                     Answer answer = new Answer(a.answer, a.correct, q.getId());
                     ((MultipleChoiceQuestion) q).getAnswers().add(answer);
                 }
@@ -78,7 +78,7 @@ public class QuestionService {
         String question,
         int marks,
         String type,
-        List<CreateAnswerDTO> answers,
+        List<CreateOptionDTO> answers,
         UUID questionId
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {

@@ -8,11 +8,10 @@ export interface Question {
   question: string,
   type: QuestionType,
   marks: number,
-  options: string[],
 }
 
-export interface CreateQuestion extends Omit<Question, "options"> {
-  answers: {
+export interface CreateQuestion extends Question {
+  options: {
     answer: string,
     correct: boolean,
   }[],
@@ -21,6 +20,8 @@ export interface CreateQuestion extends Omit<Question, "options"> {
 export interface QuestionState extends Question {
   id: string,
   examId: string,
+  options: string[],
+  correctOption: number,
 }
 
 const questionsAdapter = createEntityAdapter<QuestionState>();
