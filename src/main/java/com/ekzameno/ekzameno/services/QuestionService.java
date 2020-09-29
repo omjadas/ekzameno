@@ -86,8 +86,8 @@ public class QuestionService {
             questionReturn.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return questionReturn;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -104,8 +104,8 @@ public class QuestionService {
             Question question = questionMapper.findById(questionId);
             UnitOfWork.getCurrent().registerDeleted(question);
             UnitOfWork.getCurrent().commit();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

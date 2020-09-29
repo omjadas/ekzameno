@@ -88,9 +88,9 @@ public class ExamService {
             Exam exam = new Exam(name, description, dateRange, subjectId);
             UnitOfWork.getCurrent().commit();
             return exam;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -119,9 +119,9 @@ public class ExamService {
             exam.setFinishTime(finishTime);
             UnitOfWork.getCurrent().commit();
             return exam;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -137,8 +137,9 @@ public class ExamService {
             Exam exam = examMapper.findById(examId);
             UnitOfWork.getCurrent().registerDeleted(exam);
             UnitOfWork.getCurrent().commit();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 }

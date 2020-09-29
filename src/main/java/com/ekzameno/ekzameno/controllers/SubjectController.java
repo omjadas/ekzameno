@@ -6,8 +6,6 @@ import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -80,19 +78,8 @@ public class SubjectController {
     @Path("/{slug}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSubject(@PathParam("slug") String slug) {
-        try {
-            Subject subject = subjectService.getSubject(slug);
-            return Response.ok().entity(subject).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+    public Subject getSubject(@PathParam("slug") String slug) {
+        return subjectService.getSubject(slug);
     }
 
     /**
@@ -232,22 +219,12 @@ public class SubjectController {
         @PathParam("subjectId") String subjectId,
         @PathParam("instructorId") String instructorId
     ) {
-        try {
-            subjectService.addInstructorToSubject(
-                UUID.fromString(subjectId),
-                UUID.fromString(instructorId)
-            );
+        subjectService.addInstructorToSubject(
+            UUID.fromString(subjectId),
+            UUID.fromString(instructorId)
+        );
 
-            return Response.status(Response.Status.CREATED).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+        return Response.status(Response.Status.CREATED).build();
     }
 
     /**
@@ -264,26 +241,16 @@ public class SubjectController {
         @PathParam("subjectId") String subjectId,
         @PathParam("studentId") String studentId
     ) {
-        try {
-            subjectService.addStudentToSubject(
-                UUID.fromString(subjectId),
-                UUID.fromString(studentId)
-            );
+        subjectService.addStudentToSubject(
+            UUID.fromString(subjectId),
+            UUID.fromString(studentId)
+        );
 
-            return Response.status(Response.Status.CREATED).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+        return Response.status(Response.Status.CREATED).build();
     }
 
     /**
-     * Delete given instrucotr from given subject.
+     * Delete given instructor from given subject.
      *
      * @param subjectId subject's id
      * @param instructorId instructor's id

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -11,8 +12,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
+import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.Question;
+import com.ekzameno.ekzameno.services.OptionService;
 import com.ekzameno.ekzameno.services.QuestionService;
 
 /**
@@ -21,6 +25,7 @@ import com.ekzameno.ekzameno.services.QuestionService;
 @Path("/questions")
 public class QuestionController {
     private QuestionService questionService = new QuestionService();
+    private OptionService optionService = new OptionService();
 
     /**
      * Update a question.
@@ -41,7 +46,6 @@ public class QuestionController {
             dto.question,
             dto.marks,
             dto.type,
-            dto.options,
             UUID.fromString(questionId)
         );
         if (question != null) {
@@ -70,5 +74,20 @@ public class QuestionController {
         return Response
             .status(Response.Status.NO_CONTENT)
             .build();
+    }
+
+    @Path("/{questionId}/options")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Option createOption(
+        @PathParam("questionId") String questionId,
+        CreateOptionDTO dto
+    ) {
+        return optionService.createOption(
+            dto.answer,
+            dto.correct,
+            UUID.fromString(questionId)
+        );
     }
 }

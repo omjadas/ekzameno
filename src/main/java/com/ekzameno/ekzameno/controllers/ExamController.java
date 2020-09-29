@@ -42,19 +42,8 @@ public class ExamController {
     @Path("/{slug}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getExam(@PathParam("slug") String slug) {
-        try {
-            Exam exam = examService.getExam(slug);
-            return Response.ok().entity(exam).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+    public Exam getExam(@PathParam("slug") String slug) {
+        return examService.getExam(slug);
     }
 
     /**
