@@ -13,6 +13,14 @@ import com.ekzameno.ekzameno.shared.DBConnection;
  * Service for managing options.
  */
 public class OptionService {
+    /**
+     * Create an option for a given question.
+     *
+     * @param answer     answer for the option
+     * @param correct    whether the option is correct
+     * @param questionId ID of the question to create the option in
+     * @return created option
+     */
     public Option createOption(
         String answer,
         boolean correct,
