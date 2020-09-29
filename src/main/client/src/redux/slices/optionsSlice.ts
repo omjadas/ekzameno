@@ -63,7 +63,7 @@ export const updateOption = createAsyncThunk(
 
 export const deleteOption = createAsyncThunk(
   "options/deleteOption",
-  async ({ optionId }: { optionId: string }) => {
+  async (optionId: string) => {
     await fetch(`/api/options/${optionId}`, {
       method: "delete",
       headers: {

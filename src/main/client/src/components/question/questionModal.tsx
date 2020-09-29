@@ -6,7 +6,7 @@ import { Button, Form, FormGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { fetchOptions, selectOptionsByIds } from "../../redux/slices/optionsSlice";
+import { addOption, deleteOption, fetchOptions, selectOptionsByIds } from "../../redux/slices/optionsSlice";
 import { addQuestion, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
@@ -61,7 +61,20 @@ const FormSchema = yup.lazy((obj: any) => {
   if (obj.type.value === "MULTIPLE_CHOICE") {
     return yup.object().shape({
       ...common,
-      options: yup.array().of(yup.string().required("Option is a required field.")).min(1, " ").required(""),
+      options: yup.array().of(yup.string().required("Option is a required field."))
+        .min(1, " ")
+        .test(
+          "unique",
+          "Options must be unique.",
+          options => {
+            if (Array.isArray(options)) {
+              return options.length === new Set(options).size;
+            }
+
+            return true;
+          }
+        )
+        .required(""),
       correct: yup.number().test(
         "lessThanOptions",
         "Correct Option must be less than the number of options.",
@@ -97,6 +110,14 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
+      const deletedOptions = options.filter(o => !values.options.includes(o.answer));
+      const newOptions = values.options
+        .map((o, i) => ({
+          answer: o,
+          correct: values.correctOption === i + 1,
+        }))
+        .filter(o => !options.find(o2 => o2.answer !== o.answer));
+
       dispatch(updateQuestion({
         id: props.id,
         question: {
@@ -106,6 +127,24 @@ export const QuestionModal = (props: UpdateQuestionModalProps | CreateQuestionMo
         },
       }))
         .then(unwrapResult)
+        .then(() => {
+          const deletedPromises = deletedOptions.map(o => {
+            return dispatch(deleteOption(o.id)).then(unwrapResult);
+          });
+          const newPromises = newOptions.map(o => {
+            return dispatch(addOption({
+              questionId: props.id,
+              option: {
+                answer: o.answer,
+                correct: o.correct,
+              },
+            }))
+              .then(unwrapResult);
+          });
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          return Promise.all([...deletedPromises, ...newPromises]);
+        })
         .then(() => {
           props.onHide();
         })
