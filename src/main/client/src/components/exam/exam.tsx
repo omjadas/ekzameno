@@ -9,6 +9,7 @@ import { ExamModal } from "../exam/examModal";
 import { Questions } from "../question/questions";
 import { QuestionModal } from "../question/questionModal";
 import styles from "../subject/subject.module.scss";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 export const Exam = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
@@ -31,6 +32,7 @@ export const Exam = (): JSX.Element => {
 
   const onClick = (): void => {
     dispatch(deleteExam(exam.id))
+      .then(unwrapResult)
       .then(() => {
         history.goBack();
       })
