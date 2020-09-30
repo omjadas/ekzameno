@@ -12,15 +12,13 @@ activate A
 
 deactivate A
 
--> A: update(subject)
+-> A: registerDirty(subject)
 activate A
 
 deactivate A
 
  -> A: commit()
 activate A
-
-deactivate A
 
 A -> B: DELETE FROM exams WHERE id = examId
 activate B
@@ -32,4 +30,5 @@ activate B
 
 deactivate B
 
+deactivate A
 @enduml
