@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { FieldArray, Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useEffect } from "react";
-import { Button, Form, FormGroup, InputGroup, Modal } from "react-bootstrap";
+import React from "react";
+import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { addOption, deleteOption, fetchOptions, selectOptionsByIds, updateOption } from "../../redux/slices/optionsSlice";
+import { addOption, deleteOption, selectOptionsByIds, updateOption } from "../../redux/slices/optionsSlice";
 import { addQuestion, questionLabels, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
@@ -103,14 +103,6 @@ export const QuestionModal = (
 ): JSX.Element => {
   const dispatch = useAppDispatch();
   const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
-
-  const questionId = (props as UpdateQuestionModalProps).id;
-
-  useEffect(() => {
-    if (questionId !== undefined) {
-      dispatch(fetchOptions(questionId));
-    }
-  }, [questionId, dispatch]);
 
   const onHide = (): void => {
     props.onHide();
@@ -241,7 +233,7 @@ export const QuestionModal = (
                   type="number"
                   label="Marks"
                   name="marks" />
-                <FormGroup>
+                <Form.Group>
                   <Form.Label>Type</Form.Label>
                   <Select
                     options={selectOptions}
@@ -253,7 +245,7 @@ export const QuestionModal = (
                   <Form.Control.Feedback className={touched.type && errors.type && "d-block"} type="invalid">
                     {errors.type}
                   </Form.Control.Feedback>
-                </FormGroup>
+                </Form.Group>
                 {
                   values.type.value === "MULTIPLE_CHOICE" &&
                     <>
@@ -276,6 +268,7 @@ export const QuestionModal = (
                                     name={`options[${i}].answer`}
                                     value={values.options[i]?.answer}
                                     onBlur={handleBlur}
+                                    disabled={isSubmitting}
                                     isInvalid={
                                       !!(
                                         touched.options
@@ -288,7 +281,8 @@ export const QuestionModal = (
                                   <InputGroup.Append>
                                     <Button
                                       variant="outline-danger"
-                                      onClick={() => arrayHelpers.remove(i)}>
+                                      onClick={() => arrayHelpers.remove(i)}
+                                      disabled={isSubmitting}>
                                       <FontAwesomeIcon icon={faTrash} />
                                     </Button>
                                   </InputGroup.Append>

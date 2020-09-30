@@ -17,10 +17,9 @@ export interface ExamState extends Exam {
   questionIds: string[],
 }
 
-export interface Answer{
-  studentId: string,
-  marks: number,
-  //answers: string,
+export interface Answer {
+  questionId: string,
+  answer: string,
 }
 
 interface ExamsState extends State {

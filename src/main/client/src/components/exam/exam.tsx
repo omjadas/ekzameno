@@ -109,14 +109,6 @@ export const Exam = (): JSX.Element => {
               }
             </>
         }
-        {
-          me?.type === "STUDENT" &&
-            <>
-              <Button className="mr-2">
-                Answer Exam
-              </Button>
-            </>
-        }
       </Jumbotron>
       <ExamModal
         show={examModalShow}
