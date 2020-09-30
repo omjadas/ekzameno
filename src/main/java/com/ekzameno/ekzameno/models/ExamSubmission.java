@@ -8,12 +8,14 @@ import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.QuestionSubmissionExamSubmissionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Submission for an Exam.
  */
 public class ExamSubmission extends Model {
     private int marks;
+    @JsonIgnore
     private ProxyList<QuestionSubmission> questionSubmissions;
     private UUID studentId;
     private UUID examId;

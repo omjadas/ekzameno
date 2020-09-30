@@ -134,7 +134,7 @@ public class ExamController {
      * @param securityContext Security context for the request
      * @return Response to the client
      */
-    @Path("/{examId}/submission")
+    @Path("/{examId}/submissions")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -145,7 +145,8 @@ public class ExamController {
     ) {
         return examService.createSubmission(
             UUID.fromString(examId),
-            UUID.fromString(securityContext.getUserPrincipal().getName())
+            UUID.fromString(securityContext.getUserPrincipal().getName()),
+            dto.answers
         );
     }
 }

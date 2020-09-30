@@ -53,7 +53,11 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
 
   useEffect(() => {
     if (usersStatus === "idle" && me !== undefined) {
-      dispatch(fetchUsers());
+      dispatch(fetchUsers())
+        .then(unwrapResult)
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, [dispatch, usersStatus, me]);
 

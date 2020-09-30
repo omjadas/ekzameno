@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import { Button, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { Answer, ExamState, selectExamById } from "../../redux/slices/examsSlice";
+import { Answer, ExamState, selectExamById, submitExam } from "../../redux/slices/examsSlice";
 import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice";
 import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsByIds } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
@@ -24,10 +25,10 @@ interface FormValues {
 const FormSchema = yup.object().shape({
   answers: yup.array().of(
     yup.object().shape({
-      questionId: yup.string().uuid().required(),
+      questionId: yup.string().required(),
       answer: yup.string(),
     })
-  ),
+  ).required(),
 });
 
 export const Questions = (props: QuestionProps): JSX.Element => {
@@ -44,12 +45,20 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     .map(q => q.id);
 
   useEffect(() => {
-    dispatch(fetchQuestions(props.examId));
+    dispatch(fetchQuestions(props.examId))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
   }, [props.examId, dispatch]);
 
   useEffect(() => {
     multipleChoiceQuestionIds.forEach(qid => {
-      dispatch(fetchOptions(qid));
+      dispatch(fetchOptions(qid))
+        .then(unwrapResult)
+        .catch(e => {
+          console.error(e);
+        });
     });
   }, [dispatch, multipleChoiceQuestionIds.join("")]);
 
@@ -57,12 +66,21 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     dispatch(deleteQuestion({
       questionId: id,
     }))
+      .then(unwrapResult)
       .catch(e => {
         console.error(e);
       });
   };
 
   const onSubmit = (values: FormValues): void => {
+    dispatch(submitExam({
+      examId: props.examId,
+      answers: values.answers,
+    }))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   return (

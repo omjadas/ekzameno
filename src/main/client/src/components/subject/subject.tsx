@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -21,13 +22,25 @@ export const Subject = (): JSX.Element => {
   const subjectId = subject?.id;
 
   useEffect(() => {
-    dispatch(fetchSubject(slug));
+    dispatch(fetchSubject(slug))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
   }, [dispatch, slug]);
 
   useEffect(() => {
     if (subjectId !== undefined) {
-      dispatch(fetchInstructorsForSubject(subjectId));
-      dispatch(fetchStudentsForSubject(subjectId));
+      dispatch(fetchInstructorsForSubject(subjectId))
+        .then(unwrapResult)
+        .catch(e => {
+          console.error(e);
+        });
+      dispatch(fetchStudentsForSubject(subjectId))
+        .then(unwrapResult)
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, [dispatch, subjectId, subjectsStatus]);
 

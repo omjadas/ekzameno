@@ -30,9 +30,7 @@ export const Exam = (): JSX.Element => {
   }
 
   const onClick = (): void => {
-    dispatch(deleteExam({
-      examId: exam.id,
-    }))
+    dispatch(deleteExam(exam.id))
       .then(() => {
         history.goBack();
       })
