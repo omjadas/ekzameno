@@ -2,6 +2,8 @@ package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
 
+import javax.ws.rs.InternalServerErrorException;
+
 import com.ekzameno.ekzameno.mappers.UserMapper;
 import com.ekzameno.ekzameno.models.User;
 
@@ -30,7 +32,7 @@ public class AuthService {
             return authenticated ? user : null;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw new InternalServerErrorException();
         }
     }
 }

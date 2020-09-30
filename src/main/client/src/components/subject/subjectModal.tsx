@@ -104,10 +104,9 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
       <Modal.Header closeButton>
         <Modal.Title>
           {
-            "id" in props ?
-              "Update Subject"
-              :
-              "Create Subject"
+            "id" in props
+              ? "Update Subject"
+              : "Create Subject"
           }
         </Modal.Title>
       </Modal.Header>
@@ -185,10 +184,9 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
                   {
-                    "id" in props ?
-                      "Update Subject"
-                      :
-                      "Create Subject"
+                    "id" in props
+                      ? "Update Subject"
+                      : "Create Subject"
                   }
                 </Button>
               </Modal.Footer>

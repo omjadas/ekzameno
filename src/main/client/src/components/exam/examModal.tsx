@@ -82,10 +82,9 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
       <Modal.Header closeButton>
         <Modal.Title>
           {
-            "id" in props ?
-              "Update Exam"
-              :
-              "Create Exam"
+            "id" in props
+              ? "Update Exam"
+              : "Create Exam"
           }
         </Modal.Title>
       </Modal.Header>
@@ -126,10 +125,9 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>
                   {
-                    "id" in props ?
-                      "Update Exam"
-                      :
-                      "Create Exam"
+                    "id" in props
+                      ? "Update Exam"
+                      : "Create Exam"
                   }
                 </Button>
               </Modal.Footer>

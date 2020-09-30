@@ -6,8 +6,6 @@ import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -80,19 +78,8 @@ public class SubjectController {
     @Path("/{slug}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSubject(@PathParam("slug") String slug) {
-        try {
-            Subject subject = subjectService.getSubject(slug);
-            return Response.ok().entity(subject).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+    public Subject getSubject(@PathParam("slug") String slug) {
+        return subjectService.getSubject(slug);
     }
 
     /**
@@ -104,21 +91,13 @@ public class SubjectController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createSubject(CreateSubjectDTO dto) {
-        Subject subject = subjectService.createSubject(
+    public Subject createSubject(CreateSubjectDTO dto) {
+        return subjectService.createSubject(
             dto.name,
             dto.description,
             dto.instructors,
-            dto.students);
-
-        if (subject != null) {
-            return Response.ok().entity(subject).build();
-        } else {
-            return Response.status(Response
-            .Status
-            .INTERNAL_SERVER_ERROR)
-            .build();
-        }
+            dto.students
+        );
     }
 
     /**
@@ -155,23 +134,17 @@ public class SubjectController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createExam(
+    public Exam createExam(
         @PathParam("subjectId") String subjectId,
         CreateExamDTO dto
     ) {
-        Exam exam = examService.createExam(
+        return examService.createExam(
             dto.name,
             dto.description,
             dto.startTime,
             dto.finishTime,
-            UUID.fromString(subjectId));
-        if (exam != null) {
-            return Response.ok().entity(exam).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
+            UUID.fromString(subjectId)
+        );
     }
 
     /**
@@ -185,22 +158,15 @@ public class SubjectController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateSubject(
+    public Subject updateSubject(
         @PathParam("subjectId") String subjectId,
         CreateSubjectDTO dto
     ) {
-        Subject subject = subjectService.updateSubject(
+        return subjectService.updateSubject(
             dto.name,
             dto.description,
             UUID.fromString(subjectId)
         );
-        if (subject != null) {
-            return Response.ok().entity(subject).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
     }
 
     /**
@@ -232,22 +198,12 @@ public class SubjectController {
         @PathParam("subjectId") String subjectId,
         @PathParam("instructorId") String instructorId
     ) {
-        try {
-            subjectService.addInstructorToSubject(
-                UUID.fromString(subjectId),
-                UUID.fromString(instructorId)
-            );
+        subjectService.addInstructorToSubject(
+            UUID.fromString(subjectId),
+            UUID.fromString(instructorId)
+        );
 
-            return Response.status(Response.Status.CREATED).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+        return Response.status(Response.Status.CREATED).build();
     }
 
     /**
@@ -264,26 +220,16 @@ public class SubjectController {
         @PathParam("subjectId") String subjectId,
         @PathParam("studentId") String studentId
     ) {
-        try {
-            subjectService.addStudentToSubject(
-                UUID.fromString(subjectId),
-                UUID.fromString(studentId)
-            );
+        subjectService.addStudentToSubject(
+            UUID.fromString(subjectId),
+            UUID.fromString(studentId)
+        );
 
-            return Response.status(Response.Status.CREATED).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+        return Response.status(Response.Status.CREATED).build();
     }
 
     /**
-     * Delete given instrucotr from given subject.
+     * Delete given instructor from given subject.
      *
      * @param subjectId subject's id
      * @param instructorId instructor's id

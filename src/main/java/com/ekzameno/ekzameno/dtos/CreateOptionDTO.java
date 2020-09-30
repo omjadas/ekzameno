@@ -1,9 +1,9 @@
 package com.ekzameno.ekzameno.dtos;
 
 /**
- * DTO for creating answers.
+ * DTO for creating options.
  */
-public class CreateAnswerDTO {
+public class CreateOptionDTO {
     public String answer;
     public boolean correct;
 }

@@ -8,24 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.ekzameno.ekzameno.models.Answer;
+import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
- * Data Mapper for Answers.
+ * Data Mapper for Options.
  */
-public class AnswerMapper extends Mapper<Answer> {
-    private static final String tableName = "answers";
+public class OptionMapper extends Mapper<Option> {
+    private static final String tableName = "options";
 
     /**
-     * Retrieve all answers for a given question ID.
+     * Retrieve all options for a given question ID.
      *
-     * @param id ID of the question to retrieve answers for
-     * @return answers for the given question
-     * @throws SQLException if unable to retrieve the answers
+     * @param id ID of the question to retrieve options for
+     * @return options for the given question
+     * @throws SQLException if unable to retrieve the options
      */
-    public List<Answer> findAllForQuestion(UUID id) throws SQLException {
+    public List<Option> findAllForQuestion(UUID id) throws SQLException {
         String query = "SELECT * FROM " + tableName + " WHERE question_id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
@@ -33,23 +33,23 @@ public class AnswerMapper extends Mapper<Answer> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            List<Answer> answers = new ArrayList<>();
+            List<Option> options = new ArrayList<>();
 
             statement.setObject(1, id);
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                Answer answer = load(rs);
-                IdentityMap.getInstance().put(answer.getId(), answer);
-                answers.add(answer);
+                Option option = load(rs);
+                IdentityMap.getInstance().put(option.getId(), option);
+                options.add(option);
             }
 
-            return answers;
+            return options;
         }
     }
 
     @Override
-    public void insert(Answer answer) throws SQLException {
+    public void insert(Option option) throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, answer, correct, question_id) VALUES (?,?,?,?)";
 
@@ -58,16 +58,16 @@ public class AnswerMapper extends Mapper<Answer> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, answer.getId());
-            statement.setString(2, answer.getAnswer());
-            statement.setBoolean(3, answer.isCorrect());
-            statement.setObject(4, answer.getQuestionId());
+            statement.setObject(1, option.getId());
+            statement.setString(2, option.getAnswer());
+            statement.setBoolean(3, option.isCorrect());
+            statement.setObject(4, option.getQuestionId());
             statement.executeUpdate();
         }
     }
 
     @Override
-    public void update(Answer answer) throws SQLException {
+    public void update(Option option) throws SQLException {
         String query = "UPDATE " + tableName +
             " SET answer = ?, correct = ?, question_id = ? WHERE id = ?";
 
@@ -76,21 +76,21 @@ public class AnswerMapper extends Mapper<Answer> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setString(1, answer.getAnswer());
-            statement.setBoolean(2, answer.isCorrect());
-            statement.setObject(3, answer.getQuestionId());
-            statement.setObject(4, answer.getId());
+            statement.setString(1, option.getAnswer());
+            statement.setBoolean(2, option.isCorrect());
+            statement.setObject(3, option.getQuestionId());
+            statement.setObject(4, option.getId());
             statement.executeUpdate();
         }
     }
 
     @Override
-    protected Answer load(ResultSet rs) throws SQLException {
+    protected Option load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         String answer = rs.getString("answer");
         boolean correct = rs.getBoolean("correct");
         UUID questionId = rs.getObject("question_id", java.util.UUID.class);
-        return new Answer(id, answer, correct, questionId);
+        return new Option(id, answer, correct, questionId);
     }
 
     @Override

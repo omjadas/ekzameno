@@ -1,18 +1,23 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State, Status } from "../state";
 import { RootState } from "../store";
+import { addOption, fetchOptions } from "./optionsSlice";
 
 export type QuestionType = "MULTIPLE_CHOICE" | "SHORT_ANSWER";
+
+export const questionLabels: Record<QuestionType, string> = {
+  MULTIPLE_CHOICE: "Multiple Choice",
+  SHORT_ANSWER: "Short Answer",
+};
 
 export interface Question {
   question: string,
   type: QuestionType,
   marks: number,
-  options: string[],
 }
 
-export interface CreateQuestion extends Omit<Question, "options"> {
-  answers: {
+export interface CreateQuestion extends Question {
+  options: {
     answer: string,
     correct: boolean,
   }[],
@@ -21,6 +26,7 @@ export interface CreateQuestion extends Omit<Question, "options"> {
 export interface QuestionState extends Question {
   id: string,
   examId: string,
+  optionIds: string[],
 }
 
 const questionsAdapter = createEntityAdapter<QuestionState>();
@@ -75,7 +81,7 @@ export const updateQuestion = createAsyncThunk(
 export const deleteQuestion = createAsyncThunk(
   "questions/deleteQuestion",
   async ({ questionId }: { questionId: string }) => {
-    await fetch(`/api/exams/${questionId}`, {
+    await fetch(`/api/questions/${questionId}`, {
       method: "delete",
       headers: {
         "content-type": "application/json",
@@ -109,6 +115,23 @@ export const questionsSlice = createSlice({
     });
     builder.addCase(updateQuestion.fulfilled, (state, action) => {
       questionsAdapter.upsertOne(state, action.payload);
+    });
+    builder.addCase(fetchOptions.fulfilled, (state, action) => {
+      if (action.payload.length > 0) {
+        const question = state.entities[action.payload[0].questionId];
+
+        if (question !== undefined) {
+          question.optionIds = action.payload.map(o => o.id);
+        }
+      }
+    });
+    builder.addCase(addOption.fulfilled, (state, action) => {
+      const question = state.entities[action.payload.questionId];
+
+      if (question !== undefined) {
+        question.optionIds === undefined && (question.optionIds = []);
+        question.optionIds.push(action.payload.id);
+      }
     });
   },
 });

@@ -93,8 +93,7 @@ public class SubjectService {
      * @throws NotFoundException not found exception
      * @throws InternalServerErrorException internal error exception
      */
-    public void addInstructorToSubject(UUID subjectId, UUID instructorId)
-        throws NotFoundException, InternalServerErrorException {
+    public void addInstructorToSubject(UUID subjectId, UUID instructorId) {
         try (DBConnection connection = DBConnection.getInstance()) {
             new InstructorSubject(instructorId, subjectId);
             UnitOfWork.getCurrent().commit();
@@ -114,8 +113,7 @@ public class SubjectService {
      * @throws NotFoundException not found exception
      * @throws InternalServerErrorException internal error exception
      */
-    public void addStudentToSubject(UUID subjectId, UUID studentId)
-        throws NotFoundException, InternalServerErrorException {
+    public void addStudentToSubject(UUID subjectId, UUID studentId) {
         try (DBConnection connection = DBConnection.getInstance()) {
             new Enrolment(studentId, subjectId);
             UnitOfWork.getCurrent().commit();
@@ -142,7 +140,7 @@ public class SubjectService {
                 instructorId,
                 subjectId
             );
-            connection.getConnection().commit();
+            UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -163,7 +161,7 @@ public class SubjectService {
                 studentId,
                 subjectId
             );
-            connection.getConnection().commit();
+            UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -197,9 +195,9 @@ public class SubjectService {
 
             UnitOfWork.getCurrent().commit();
             return subject;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -224,7 +222,7 @@ public class SubjectService {
             return subject;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw new InternalServerErrorException();
         }
     }
 }

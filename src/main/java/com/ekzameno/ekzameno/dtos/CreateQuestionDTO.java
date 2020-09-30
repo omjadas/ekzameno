@@ -9,5 +9,5 @@ public class CreateQuestionDTO {
     public String question;
     public String type;
     public int marks;
-    public List<CreateAnswerDTO> answers;
+    public List<CreateOptionDTO> options;
 }

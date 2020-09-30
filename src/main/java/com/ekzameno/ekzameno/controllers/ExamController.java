@@ -6,8 +6,6 @@ import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.InternalServerErrorException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -42,19 +40,8 @@ public class ExamController {
     @Path("/{slug}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getExam(@PathParam("slug") String slug) {
-        try {
-            Exam exam = examService.getExam(slug);
-            return Response.ok().entity(exam).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (InternalServerErrorException e) {
-            return Response
-                .status(
-                    Response.Status.INTERNAL_SERVER_ERROR
-                )
-                .build();
-        }
+    public Exam getExam(@PathParam("slug") String slug) {
+        return examService.getExam(slug);
     }
 
     /**
@@ -68,39 +55,30 @@ public class ExamController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateExam(
+    public Exam updateExam(
         @PathParam("examId") String examId,
         CreateExamDTO dto
     ) {
-        Exam exam = examService.updateExam(
+        return examService.updateExam(
             dto.name,
             dto.description,
             dto.startTime,
             dto.finishTime,
             UUID.fromString(examId)
         );
-        if (exam != null) {
-            return Response.ok().entity(exam).build();
-        } else {
-            return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .build();
-        }
     }
 
     /**
      * Delete an exam.
      *
-     * @param examId Id of th exam
+     * @param examId Id of the exam
      * @return Response to the client
      */
     @Path("/{examId}")
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteExam(
-        @PathParam("examId") String examId
-    ) {
+    public Response deleteExam(@PathParam("examId") String examId) {
         examService.deleteExam(UUID.fromString(examId));
         return Response
             .status(Response.Status.NO_CONTENT)
@@ -127,7 +105,7 @@ public class ExamController {
             dto.question,
             dto.marks,
             dto.type,
-            dto.answers
+            dto.options
         );
     }
 
@@ -140,9 +118,7 @@ public class ExamController {
     @Path("/{examId}/questions")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Question> createQuestion(
-        @PathParam("examId") String examId
-    ) {
+    public List<Question> getQuestions(@PathParam("examId") String examId) {
         return questionService.getQuestionsForExam(UUID.fromString(examId));
     }
 }

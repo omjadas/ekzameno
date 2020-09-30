@@ -1,17 +1,32 @@
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { Formik } from "formik";
+import { FieldArray, Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useState } from "react";
-import { Button, Form, FormGroup, Modal } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Button, Form, FormGroup, InputGroup, Modal } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { addQuestion, QuestionType } from "../../redux/slices/questionsSlice";
+import { addOption, deleteOption, fetchOptions, selectOptionsByIds, updateOption } from "../../redux/slices/optionsSlice";
+import { addQuestion, questionLabels, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface QuestionModalProps {
   show: boolean,
   onHide: () => any,
+}
+
+interface CreateQuestionModalProps extends QuestionModalProps {
   examId: string,
+}
+
+interface UpdateQuestionModalProps extends QuestionModalProps {
+  id: string,
+  question: string,
+  marks: number,
+  type: QuestionType,
+  optionIds: string[],
 }
 
 interface FormValues {
@@ -21,11 +36,14 @@ interface FormValues {
     label: string,
     value: QuestionType,
   },
-  options: string[],
-  correct: number,
+  options: {
+    id?: string,
+    answer: string,
+  }[],
+  correctOption: number,
 }
 
-const selectOptions = [
+const selectOptions: { value: QuestionType, label: string }[] = [
   { value: "MULTIPLE_CHOICE", label: "Multiple Choice" },
   { value: "SHORT_ANSWER", label: "Short Answer" },
 ];
@@ -43,8 +61,27 @@ const FormSchema = yup.lazy((obj: any) => {
   if (obj.type.value === "MULTIPLE_CHOICE") {
     return yup.object().shape({
       ...common,
-      options: yup.array().of(yup.string().required("Option is a required field.")).min(1, " ").required(""),
-      correct: yup.number().test(
+      options: yup.array().of(
+        yup.object().shape({
+          id: yup.string(),
+          answer: yup.string()
+            .test(
+              "unique",
+              "Options must be unique.",
+              answer => {
+                if (typeof answer === "string") {
+                  return (obj.options as { answer: string }[]).filter(o => o.answer === answer).length === 1;
+                }
+
+                return true;
+              }
+            )
+            .required("Option is a required field."),
+        })
+      )
+        .min(1)
+        .required(""),
+      correctOption: yup.number().test(
         "lessThanOptions",
         "Correct Option must be less than the number of options.",
         (correct) => {
@@ -52,58 +89,132 @@ const FormSchema = yup.lazy((obj: any) => {
             return correct <= obj.options.length && correct >= 1;
           }
 
-          return false;
+          return true;
         }
-      ).required(),
+      ).required("Correct Option is a required field."),
     });
   }
 
   return yup.object().shape(common);
 });
 
-export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
-  const [options, setOptions] = useState(0);
+export const QuestionModal = (
+  props: UpdateQuestionModalProps | CreateQuestionModalProps
+): JSX.Element => {
   const dispatch = useAppDispatch();
+  const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
+
+  const questionId = (props as UpdateQuestionModalProps).id;
+
+  useEffect(() => {
+    if (questionId !== undefined) {
+      dispatch(fetchOptions(questionId));
+    }
+  }, [questionId, dispatch]);
 
   const onHide = (): void => {
     props.onHide();
-    setOptions(0);
   };
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(addQuestion({
-      examId: props.examId,
-      question: {
-        question: values.question,
-        marks: values.marks,
-        type: values.type.value,
-        answers: values.options.map((a, i) => ({
-          answer: a,
-          correct: i + 1 === values.correct,
-        })),
-      },
-    }))
-      .then(unwrapResult)
-      .then(onHide)
-      .catch(e => {
-        console.error(e);
-      });
+    if ("id" in props) {
+      const deletedOptions = options.filter(o => !values.options.map(o => o.id).includes(o.id));
+
+      dispatch(updateQuestion({
+        id: props.id,
+        question: {
+          question: values.question,
+          marks: values.marks,
+          type: values.type.value,
+        },
+      }))
+        .then(unwrapResult)
+        .then(() => {
+          const newPromises: Promise<any>[] = [];
+          const updatedPromises: Promise<any>[] = [];
+          values.options.forEach((option, i) => {
+            if (option.id === undefined) {
+              newPromises.push(
+                dispatch(addOption({
+                  questionId: props.id,
+                  option: {
+                    answer: option.answer,
+                    correct: values.correctOption === i + 1,
+                  },
+                }))
+                  .then(unwrapResult)
+              );
+            } else {
+              updatedPromises.push(
+                dispatch(updateOption({
+                  id: option.id,
+                  option: {
+                    answer: option.answer,
+                    correct: values.correctOption === i + 1,
+                  },
+                }))
+                  .then(unwrapResult)
+              );
+            }
+          });
+
+          const deletedPromises: Promise<any>[] = deletedOptions.map(o => {
+            return dispatch(deleteOption(o.id)).then(unwrapResult);
+          });
+
+          return Promise.all([...deletedPromises, ...newPromises, ...updatedPromises]);
+        })
+        .then(() => {
+          props.onHide();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      dispatch(addQuestion({
+        examId: props.examId,
+        question: {
+          question: values.question,
+          marks: values.marks,
+          type: values.type.value,
+          options: values.options.map((o, i) => ({
+            answer: o.answer,
+            correct: i + 1 === values.correctOption,
+          })),
+        },
+      }))
+        .then(unwrapResult)
+        .then(props.onHide)
+        .catch(e => {
+          console.error(e);
+        });
+    }
   };
 
   return (
     <Modal show={props.show} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          Create Question
+          {
+            "id" in props
+              ? "Update Question"
+              : "Create Question"
+          }
         </Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{
-          question: "",
-          marks: 1,
-          type: { label: "Multiple Choice", value: "MULTIPLE_CHOICE" },
-          options: [],
-          correct: 1,
+          question: (props as UpdateQuestionModalProps).question ?? "",
+          marks: (props as UpdateQuestionModalProps).marks ?? 1,
+          type: (props as UpdateQuestionModalProps).type === undefined
+            ? { label: "Multiple Choice", value: "MULTIPLE_CHOICE" }
+            : { label: questionLabels[(props as UpdateQuestionModalProps).type], value: (props as UpdateQuestionModalProps).type },
+          options: options.length === 0
+            ? [{ answer: "" }]
+            : options,
+          correctOption: options.findIndex(o => o.correct === true) !== -1
+            ? options.findIndex(o => o.correct === true) + 1
+            : 1,
         }}
         validationSchema={FormSchema}
         onSubmit={onSubmit}>
@@ -113,7 +224,9 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
             isSubmitting,
             values,
             handleBlur,
+            handleChange,
             setFieldValue,
+            setValues,
             errors,
             touched,
           }) => (
@@ -135,7 +248,7 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
                     name="type"
                     value={values.type as any}
                     onChange={option => setFieldValue("type", option)}
-                    isDisabled={isSubmitting}
+                    isDisabled={"id" in props || isSubmitting}
                     onBlur={handleBlur} />
                   <Form.Control.Feedback className={touched.type && errors.type && "d-block"} type="invalid">
                     {errors.type}
@@ -147,28 +260,76 @@ export const QuestionModal = (props: QuestionModalProps): JSX.Element => {
                       <FormikControl
                         type="number"
                         label="Correct Option"
-                        name="correct" />
-                      {
-                        [...Array(options).keys()].map(i => (
-                          <FormikControl
-                            key={i}
-                            type="text"
-                            label={`Option ${i + 1}`}
-                            name={`options[${i}]`} />
-                        ))
-                      }
+                        name="correctOption" />
+                      <FieldArray
+                        name="options">
+                        {
+                          arrayHelpers => (
+                            values.options.map((option, i) => (
+                              <Form.Group key={i}>
+                                <Form.Label>
+                                  {`Option ${i + 1}`}
+                                </Form.Label>
+                                <InputGroup>
+                                  <Form.Control
+                                    type="text"
+                                    name={`options[${i}].answer`}
+                                    value={values.options[i]?.answer}
+                                    onBlur={handleBlur}
+                                    isInvalid={
+                                      !!(
+                                        touched.options
+                                          && (touched.options as unknown as boolean[])[i]
+                                          && errors.options
+                                          && errors.options[i]
+                                      )
+                                    }
+                                    onChange={handleChange} />
+                                  <InputGroup.Append>
+                                    <Button
+                                      variant="outline-danger"
+                                      onClick={() => arrayHelpers.remove(i)}>
+                                      <FontAwesomeIcon icon={faTrash} />
+                                    </Button>
+                                  </InputGroup.Append>
+                                  <Form.Control.Feedback
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                                    // @ts-ignore
+                                    className={
+                                      touched.options
+                                        && (touched.options as unknown as boolean[])[i]
+                                        && errors.options
+                                        && errors.options[i]
+                                        && "d-block"
+                                    }
+                                    type="invalid">
+                                    {errors.options !== undefined && (errors.options[i] as { answer: string })?.answer}
+                                  </Form.Control.Feedback>
+                                </InputGroup>
+                              </Form.Group>
+                            ))
+                          )
+                        }
+                      </FieldArray>
                     </>
                 }
               </Modal.Body>
               <Modal.Footer>
                 {
                   values.type.value === "MULTIPLE_CHOICE" &&
-                    <Button className="mr-auto" variant="primary" onClick={() => setOptions(options + 1)}>
+                    <Button className="mr-auto" variant="primary" onClick={() => {
+                      values.options.push({ answer: "" });
+                      setValues(values);
+                    }}>
                       Add Option
                     </Button>
                 }
                 <Button type="submit" variant="success" disabled={isSubmitting}>
-                  Create Question
+                  {
+                    "id" in props
+                      ? "Update Question"
+                      : "Create Question"
+                  }
                 </Button>
               </Modal.Footer>
             </Form>

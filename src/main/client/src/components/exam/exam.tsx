@@ -6,6 +6,7 @@ import { deleteExam, fetchExam, selectExamBySlug, updateExam } from "../../redux
 import { selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
+import { Questions } from "../question/questions";
 import { QuestionModal } from "../question/questionModal";
 import styles from "../subject/subject.module.scss";
 
@@ -81,34 +82,41 @@ export const Exam = (): JSX.Element => {
         <p>{exam.description}</p>
         {
           me?.type === "INSTRUCTOR" &&
-          <>
-            <Button className="mr-2" onClick={() => setExamModalShow(true)}>
-              Edit Exam
-            </Button>
-            <Button className="mr-2" onClick={onClick}>
-              Delete Exam
-            </Button>
-            {
-              startTime > currentTime &&
-                <>
-                  <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
-                    Add Question
+            <>
+              <Button className="mr-2" onClick={() => setExamModalShow(true)}>
+                Edit Exam
+              </Button>
+              <Button className="mr-2" onClick={onClick}>
+                Delete Exam
+              </Button>
+              {
+                startTime > currentTime &&
+                  <>
+                    <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
+                      Add Question
+                    </Button>
+                    <Button className="mr-2" onClick={publishNow}>
+                      Publish Exam
+                    </Button>
+                  </>
+              }
+              {
+                finishTime > currentTime &&
+                startTime < currentTime &&
+                  <Button onClick={closeNow}>
+                    Close Exam
                   </Button>
-                  <Button className="mr-2" onClick={publishNow}>
-                    Publish Exam
-                  </Button>
-                </>
-            }
-            {
-              finishTime > currentTime &&
-              startTime < currentTime &&
-                <Button onClick={closeNow}>
-                  Close Exam
-                </Button>
-            }
-          </>
+              }
+            </>
         }
-        {" "}
+        {
+          me?.type === "STUDENT" &&
+            <>
+              <Button className="mr-2">
+                Answer Exam
+              </Button>
+            </>
+        }
       </Jumbotron>
       <ExamModal
         show={examModalShow}
@@ -122,6 +130,7 @@ export const Exam = (): JSX.Element => {
         show={questionModalShow}
         onHide={() => setQuestionModalShow(false)}
         examId={exam.id} />
+      <Questions examId={exam.id}></Questions>
     </Container>
   );
 };

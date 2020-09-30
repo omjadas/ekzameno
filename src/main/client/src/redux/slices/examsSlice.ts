@@ -1,6 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State, Status } from "../state";
 import { RootState } from "../store";
+import { addQuestion, fetchQuestions } from "./questionsSlice";
 
 export interface Exam {
   name: string,
@@ -125,6 +126,23 @@ export const examsSlice = createSlice({
     });
     builder.addCase(updateExam.fulfilled, (state, action) => {
       examsAdapter.upsertOne(state, action.payload);
+    });
+    builder.addCase(fetchQuestions.fulfilled, (state, action) => {
+      if (action.payload.length > 0) {
+        const exam = state.entities[action.payload[0].examId];
+
+        if (exam !== undefined) {
+          exam.questionIds = action.payload.map(q => q.id);
+        }
+      }
+    });
+    builder.addCase(addQuestion.fulfilled, (state, action) => {
+      const exam = state.entities[action.payload.examId];
+
+      if (exam !== undefined) {
+        exam.questionIds === undefined && (exam.questionIds = []);
+        exam.questionIds.push(action.payload.id);
+      }
     });
   },
 });

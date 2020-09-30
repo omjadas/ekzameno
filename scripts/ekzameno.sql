@@ -31,7 +31,7 @@ CREATE TABLE questions (
     exam_id uuid NOT NULL REFERENCES exams ON DELETE CASCADE
 );
 
-CREATE TABLE answers (
+CREATE TABLE options (
     id uuid PRIMARY KEY,
     answer text NOT NULL,
     correct boolean NOT NULL,

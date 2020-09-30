@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * Answer for a MultipleChoiceQuestion.
  */
-public class Answer extends Model {
+public class Option extends Model {
     private String answer;
     private boolean correct;
     private UUID questionId;
@@ -26,7 +26,7 @@ public class Answer extends Model {
      *                   question
      * @param questionId ID of the related question
      */
-    public Answer(UUID id, String answer, boolean correct, UUID questionId) {
+    public Option(UUID id, String answer, boolean correct, UUID questionId) {
         super(id);
         this.answer = answer;
         this.correct = correct;
@@ -41,7 +41,7 @@ public class Answer extends Model {
      *                   question
      * @param questionId ID of the related question
      */
-    public Answer(String answer, boolean correct, UUID questionId) {
+    public Option(String answer, boolean correct, UUID questionId) {
         this.answer = answer;
         this.correct = correct;
         this.questionId = questionId;

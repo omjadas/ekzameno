@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.ekzameno.ekzameno.exceptions.UnknownUserTypeException;
 import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.models.User;
@@ -121,9 +120,6 @@ public class Seeds {
                 new Date(new Date().getTime() + 604800000),
                 sda.getId()
             );
-        } catch (UnknownUserTypeException e) {
-            // this should only occur if the above user types are modified
-            e.printStackTrace();
         } catch (UserAlreadyExistsException e) {
             System.out.println("Users already exist");
         }
