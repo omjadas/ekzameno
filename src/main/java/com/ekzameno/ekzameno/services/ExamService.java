@@ -102,7 +102,7 @@ public class ExamService {
      * @param description description of the exam
      * @param startTime   publish date of the exam
      * @param finishTime  close date of the exam
-     * @param examId id of the exam
+     * @param examId      id of the exam
      * @return a new exam
      */
     public Exam updateExam(
@@ -145,26 +145,27 @@ public class ExamService {
     }
 
     /**
-     * Create an exam submission for a given exam.
+     * Create a submission for a given exam.
      *
-     * @param examId id of the Exam
+     * @param examId    id of the Exam
      * @param studentId id of the question
-     * @param marks marks for the question
-     * @return a new exam
+     * @return a new exam submission
      */
-    public ExamSubmission createExamSubmission(
+    public ExamSubmission createSubmission(
         UUID examId,
-        UUID studentId,
-        int marks
+        UUID studentId
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
-            ExamSubmission examSubmission = new ExamSubmission(marks,
-                studentId, examId);
+            ExamSubmission examSubmission = new ExamSubmission(
+                0,
+                studentId,
+                examId
+            );
             UnitOfWork.getCurrent().commit();
             return examSubmission;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 }
