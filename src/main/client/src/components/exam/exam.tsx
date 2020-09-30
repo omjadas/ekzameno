@@ -21,7 +21,11 @@ export const Exam = (): JSX.Element => {
   const me = useSelector(selectMe);
 
   useEffect(() => {
-    dispatch(fetchExam(slug));
+    dispatch(fetchExam(slug))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
   }, [dispatch, slug]);
 
   if (exam === undefined) {
@@ -55,6 +59,7 @@ export const Exam = (): JSX.Element => {
         finishTime: exam.finishTime,
       },
     }))
+      .then(unwrapResult)
       .catch(e => {
         console.error(e);
       });
@@ -70,6 +75,7 @@ export const Exam = (): JSX.Element => {
         finishTime: new Date().toISOString(),
       },
     }))
+      .then(unwrapResult)
       .catch(e => {
         console.error(e);
       });
