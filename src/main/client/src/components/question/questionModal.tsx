@@ -8,7 +8,7 @@ import { Button, Form, FormGroup, InputGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { addOption, deleteOption, fetchOptions, selectOptionsByIds } from "../../redux/slices/optionsSlice";
+import { addOption, deleteOption, fetchOptions, selectOptionsByIds, updateOption } from "../../redux/slices/optionsSlice";
 import { addQuestion, questionLabels, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
@@ -36,7 +36,10 @@ interface FormValues {
     label: string,
     value: QuestionType,
   },
-  options: string[],
+  options: {
+    id?: string,
+    answer: string,
+  }[],
   correctOption: number,
 }
 
@@ -59,19 +62,22 @@ const FormSchema = yup.lazy((obj: any) => {
     return yup.object().shape({
       ...common,
       options: yup.array().of(
-        yup.string()
-          .test(
-            "unique",
-            "Options must be unique.",
-            option => {
-              if (typeof option === "string") {
-                return (obj.options as string[]).filter(o => o === option).length === 1;
-              }
+        yup.object().shape({
+          id: yup.string(),
+          answer: yup.string()
+            .test(
+              "unique",
+              "Options must be unique.",
+              answer => {
+                if (typeof answer === "string") {
+                  return (obj.options as { answer: string }[]).filter(o => o.answer === answer).length === 1;
+                }
 
-              return true;
-            },
-          )
-          .required("Option is a required field.")
+                return true;
+              }
+            )
+            .required("Option is a required field."),
+        })
       )
         .min(1)
         .required(""),
@@ -83,9 +89,9 @@ const FormSchema = yup.lazy((obj: any) => {
             return correct <= obj.options.length && correct >= 1;
           }
 
-          return false;
+          return true;
         }
-      ).required(),
+      ).required("Correct Option is a required field."),
     });
   }
 
@@ -112,13 +118,7 @@ export const QuestionModal = (
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
-      const deletedOptions = options.filter(o => !values.options.includes(o.answer));
-      const newOptions = values.options
-        .map((o, i) => ({
-          answer: o,
-          correct: values.correctOption === i + 1,
-        }))
-        .filter(o => !options.find(o2 => o2.answer === o.answer));
+      const deletedOptions = options.filter(o => !values.options.map(o => o.id).includes(o.id));
 
       dispatch(updateQuestion({
         id: props.id,
@@ -130,22 +130,39 @@ export const QuestionModal = (
       }))
         .then(unwrapResult)
         .then(() => {
-          const deletedPromises = deletedOptions.map(o => {
+          const newPromises: Promise<any>[] = [];
+          const updatedPromises: Promise<any>[] = [];
+          values.options.forEach((option, i) => {
+            if (option.id === undefined) {
+              newPromises.push(
+                dispatch(addOption({
+                  questionId: props.id,
+                  option: {
+                    answer: option.answer,
+                    correct: values.correctOption === i + 1,
+                  },
+                }))
+                  .then(unwrapResult)
+              );
+            } else {
+              updatedPromises.push(
+                dispatch(updateOption({
+                  id: option.id,
+                  option: {
+                    answer: option.answer,
+                    correct: values.correctOption === i + 1,
+                  },
+                }))
+                  .then(unwrapResult)
+              );
+            }
+          });
+
+          const deletedPromises: Promise<any>[] = deletedOptions.map(o => {
             return dispatch(deleteOption(o.id)).then(unwrapResult);
           });
-          const newPromises = newOptions.map(o => {
-            return dispatch(addOption({
-              questionId: props.id,
-              option: {
-                answer: o.answer,
-                correct: o.correct,
-              },
-            }))
-              .then(unwrapResult);
-          });
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-          // @ts-ignore
-          return Promise.all([...deletedPromises, ...newPromises]);
+
+          return Promise.all([...deletedPromises, ...newPromises, ...updatedPromises]);
         })
         .then(() => {
           props.onHide();
@@ -160,8 +177,8 @@ export const QuestionModal = (
           question: values.question,
           marks: values.marks,
           type: values.type.value,
-          options: values.options.map((a, i) => ({
-            answer: a,
+          options: values.options.map((o, i) => ({
+            answer: o.answer,
             correct: i + 1 === values.correctOption,
           })),
         },
@@ -193,8 +210,8 @@ export const QuestionModal = (
             ? { label: "Multiple Choice", value: "MULTIPLE_CHOICE" }
             : { label: questionLabels[(props as UpdateQuestionModalProps).type], value: (props as UpdateQuestionModalProps).type },
           options: options.length === 0
-            ? [""]
-            : options.map(o => o.answer),
+            ? [{ answer: "" }]
+            : options,
           correctOption: options.findIndex(o => o.correct === true) !== -1
             ? options.findIndex(o => o.correct === true) + 1
             : 1,
@@ -248,53 +265,49 @@ export const QuestionModal = (
                         name="options">
                         {
                           arrayHelpers => (
-                            <>
-                              {
-                                values.options.map((option, i) => (
-                                  <Form.Group key={i}>
-                                    <Form.Label>
-                                      {`Option ${i + 1}`}
-                                    </Form.Label>
-                                    <InputGroup>
-                                      <Form.Control
-                                        type="text"
-                                        name={`options[${i}]`}
-                                        value={values.options[i]}
-                                        onBlur={handleBlur}
-                                        isInvalid={
-                                          !!(
-                                            touched.options
-                                              && (touched.options as unknown as boolean[])[i]
-                                              && errors.options
-                                              && errors.options[i]
-                                          )
-                                        }
-                                        onChange={handleChange} />
-                                      <InputGroup.Append>
-                                        <Button
-                                          variant="outline-danger"
-                                          onClick={() => arrayHelpers.remove(i)}>
-                                          <FontAwesomeIcon icon={faTrash} />
-                                        </Button>
-                                      </InputGroup.Append>
-                                      <Form.Control.Feedback
-                                        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                                        // @ts-ignore
-                                        className={
-                                          touched.options
-                                            && (touched.options as unknown as boolean[])[i]
-                                            && errors.options
-                                            && errors.options[i]
-                                            && "d-block"
-                                        }
-                                        type="invalid">
-                                        {errors.options !== undefined && errors.options[i]}
-                                      </Form.Control.Feedback>
-                                    </InputGroup>
-                                  </Form.Group>
-                                ))
-                              }
-                            </>
+                            values.options.map((option, i) => (
+                              <Form.Group key={i}>
+                                <Form.Label>
+                                  {`Option ${i + 1}`}
+                                </Form.Label>
+                                <InputGroup>
+                                  <Form.Control
+                                    type="text"
+                                    name={`options[${i}].answer`}
+                                    value={values.options[i]?.answer}
+                                    onBlur={handleBlur}
+                                    isInvalid={
+                                      !!(
+                                        touched.options
+                                          && (touched.options as unknown as boolean[])[i]
+                                          && errors.options
+                                          && errors.options[i]
+                                      )
+                                    }
+                                    onChange={handleChange} />
+                                  <InputGroup.Append>
+                                    <Button
+                                      variant="outline-danger"
+                                      onClick={() => arrayHelpers.remove(i)}>
+                                      <FontAwesomeIcon icon={faTrash} />
+                                    </Button>
+                                  </InputGroup.Append>
+                                  <Form.Control.Feedback
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                                    // @ts-ignore
+                                    className={
+                                      touched.options
+                                        && (touched.options as unknown as boolean[])[i]
+                                        && errors.options
+                                        && errors.options[i]
+                                        && "d-block"
+                                    }
+                                    type="invalid">
+                                    {errors.options !== undefined && (errors.options[i] as { answer: string })?.answer}
+                                  </Form.Control.Feedback>
+                                </InputGroup>
+                              </Form.Group>
+                            ))
                           )
                         }
                       </FieldArray>
@@ -305,7 +318,7 @@ export const QuestionModal = (
                 {
                   values.type.value === "MULTIPLE_CHOICE" &&
                     <Button className="mr-auto" variant="primary" onClick={() => {
-                      values.options.push("");
+                      values.options.push({ answer: "" });
                       setValues(values);
                     }}>
                       Add Option
