@@ -44,6 +44,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     .filter(q => q.type === "MULTIPLE_CHOICE")
     .map(q => q.id);
 
+  const joinedMultipleChoiceQuestionIds = multipleChoiceQuestionIds.join("");
+
   useEffect(() => {
     dispatch(fetchQuestions(props.examId))
       .then(unwrapResult)
@@ -60,7 +62,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
           console.error(e);
         });
     });
-  }, [dispatch, multipleChoiceQuestionIds.join("")]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, joinedMultipleChoiceQuestionIds]);
 
   const onClick = (id: string): void => {
     dispatch(deleteQuestion({
