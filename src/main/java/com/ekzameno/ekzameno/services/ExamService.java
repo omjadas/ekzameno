@@ -9,9 +9,12 @@ import java.util.UUID;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 
+import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
+import com.ekzameno.ekzameno.models.ExamSubmission;
+import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
@@ -101,7 +104,7 @@ public class ExamService {
      * @param description description of the exam
      * @param startTime   publish date of the exam
      * @param finishTime  close date of the exam
-     * @param examId id of the exam
+     * @param examId      id of the exam
      * @return a new exam
      */
     public Exam updateExam(
@@ -137,6 +140,42 @@ public class ExamService {
             Exam exam = examMapper.findById(examId);
             UnitOfWork.getCurrent().registerDeleted(exam);
             UnitOfWork.getCurrent().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Create a submission for a given exam.
+     *
+     * @param examId    id of the Exam
+     * @param studentId id of the question
+     * @param answers   answers
+     * @return a new exam submission
+     */
+    public ExamSubmission createSubmission(
+        UUID examId,
+        UUID studentId,
+        List<CreateQuestionSubmissionDTO> answers
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            ExamSubmission examSubmission = new ExamSubmission(
+                0,
+                studentId,
+                examId
+            );
+
+            for (CreateQuestionSubmissionDTO answer : answers) {
+                new QuestionSubmission(
+                    answer.answer,
+                    UUID.fromString(answer.questionId),
+                    examSubmission.getId()
+                );
+            }
+
+            UnitOfWork.getCurrent().commit();
+            return examSubmission;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();

@@ -11,13 +11,17 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import com.ekzameno.ekzameno.dtos.CreateExamDTO;
+import com.ekzameno.ekzameno.dtos.CreateExamSubmissionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Exam;
+import com.ekzameno.ekzameno.models.ExamSubmission;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.services.ExamService;
 import com.ekzameno.ekzameno.services.QuestionService;
@@ -120,5 +124,29 @@ public class ExamController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Question> getQuestions(@PathParam("examId") String examId) {
         return questionService.getQuestionsForExam(UUID.fromString(examId));
+    }
+
+    /**
+     * Create a submission for a given exam.
+     *
+     * @param examId          ID of the exam to create the question for
+     * @param dto             Question DTO
+     * @param securityContext Security context for the request
+     * @return Response to the client
+     */
+    @Path("/{examId}/submissions")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ExamSubmission submitExam(
+        @PathParam("examId") String examId,
+        @Context SecurityContext securityContext,
+        CreateExamSubmissionDTO dto
+    ) {
+        return examService.createSubmission(
+            UUID.fromString(examId),
+            UUID.fromString(securityContext.getUserPrincipal().getName()),
+            dto.answers
+        );
     }
 }

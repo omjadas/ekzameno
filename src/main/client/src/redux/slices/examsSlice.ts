@@ -17,6 +17,11 @@ export interface ExamState extends Exam {
   questionIds: string[],
 }
 
+export interface Answer {
+  questionId: string,
+  answer: string,
+}
+
 interface ExamsState extends State {
   slugs: Record<string, string>,
 }
@@ -83,7 +88,7 @@ export const updateExam = createAsyncThunk(
 
 export const deleteExam = createAsyncThunk(
   "exams/deleteExam",
-  async ({ examId }: { examId: string }) => {
+  async (examId: string) => {
     await fetch(`/api/exams/${examId}`, {
       method: "delete",
       headers: {
@@ -91,6 +96,19 @@ export const deleteExam = createAsyncThunk(
       },
     });
     return examId;
+  }
+);
+
+export const submitExam = createAsyncThunk(
+  "exams/submitExam",
+  async ({ examId, answers }: { examId: string, answers: Answer[] }) => {
+    await fetch(`/api/exams/${examId}/submissions`, {
+      method: "post",
+      body: JSON.stringify({ answers }),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
   }
 );
 

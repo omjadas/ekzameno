@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
 import { Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -19,7 +20,11 @@ export const Exams = (props: ExamsProps): JSX.Element => {
   const exams = useSelector(selectExamsByIds(subject?.examIds ?? []));
 
   useEffect(() => {
-    dispatch(fetchExams(props.subjectId));
+    dispatch(fetchExams(props.subjectId))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
   }, [props.subjectId, dispatch]);
 
   return (

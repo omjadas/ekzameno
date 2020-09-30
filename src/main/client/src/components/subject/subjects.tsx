@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
 import { Card, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -13,7 +14,11 @@ export const Subjects = (): JSX.Element => {
 
   useEffect(() => {
     if (subjectsStatus === "idle") {
-      dispatch(fetchSubjects());
+      dispatch(fetchSubjects())
+        .then(unwrapResult)
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, [dispatch, subjectsStatus]);
 

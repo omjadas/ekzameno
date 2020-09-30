@@ -2,7 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
-import { Button, Form, FormGroup, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import Select from "react-select";
 import * as yup from "yup";
 import { addUser, UserType } from "../../redux/slices/usersSlice";
@@ -111,7 +111,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
                   type="password"
                   label="Confirm Password"
                   name="confirmPassword" />
-                <FormGroup>
+                <Form.Group>
                   <Form.Label>Type</Form.Label>
                   <Select
                     options={selectOptions}
@@ -123,7 +123,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
                   <Form.Control.Feedback className={touched.type && errors.type && "d-block"} type="invalid">
                     {errors.type}
                   </Form.Control.Feedback>
-                </FormGroup>
+                </Form.Group>
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>

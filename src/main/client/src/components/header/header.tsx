@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useState } from "react";
 import { Button, Container, Dropdown, DropdownButton, Form, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -18,8 +19,12 @@ export const Header = (): JSX.Element => {
 
   const onSignOut = (): void => {
     dispatch(signOut())
+      .then(unwrapResult)
       .then(() => history.push("/"))
-      .then(() => dispatch({ type: "RESET" }));
+      .then(() => dispatch({ type: "RESET" }))
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   return (

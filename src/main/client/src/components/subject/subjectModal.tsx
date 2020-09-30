@@ -3,7 +3,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect } from "react";
-import { Button, Form, FormGroup, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
@@ -53,7 +53,11 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
 
   useEffect(() => {
     if (usersStatus === "idle" && me !== undefined) {
-      dispatch(fetchUsers());
+      dispatch(fetchUsers())
+        .then(unwrapResult)
+        .catch(e => {
+          console.error(e);
+        });
     }
   }, [dispatch, usersStatus, me]);
 
@@ -152,7 +156,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
                   as="textarea"
                   label="Description"
                   name="description" />
-                <FormGroup>
+                <Form.Group>
                   <Form.Label>Instructors</Form.Label>
                   <Select
                     isMulti
@@ -165,8 +169,8 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
                   <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
                     {errors.instructors}
                   </Form.Control.Feedback>
-                </FormGroup>
-                <FormGroup>
+                </Form.Group>
+                <Form.Group>
                   <Form.Label>Students</Form.Label>
                   <Select
                     isMulti
@@ -179,7 +183,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
                   <Form.Control.Feedback className={touched.instructors && errors.instructors && "d-block"} type="invalid">
                     {errors.students}
                   </Form.Control.Feedback>
-                </FormGroup>
+                </Form.Group>
               </Modal.Body>
               <Modal.Footer>
                 <Button type="submit" variant="success" disabled={isSubmitting}>

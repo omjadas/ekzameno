@@ -9,6 +9,7 @@ import { ExamModal } from "../exam/examModal";
 import { Questions } from "../question/questions";
 import { QuestionModal } from "../question/questionModal";
 import styles from "../subject/subject.module.scss";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 export const Exam = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
@@ -20,7 +21,11 @@ export const Exam = (): JSX.Element => {
   const me = useSelector(selectMe);
 
   useEffect(() => {
-    dispatch(fetchExam(slug));
+    dispatch(fetchExam(slug))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
   }, [dispatch, slug]);
 
   if (exam === undefined) {
@@ -30,9 +35,8 @@ export const Exam = (): JSX.Element => {
   }
 
   const onClick = (): void => {
-    dispatch(deleteExam({
-      examId: exam.id,
-    }))
+    dispatch(deleteExam(exam.id))
+      .then(unwrapResult)
       .then(() => {
         history.goBack();
       })
@@ -55,6 +59,7 @@ export const Exam = (): JSX.Element => {
         finishTime: exam.finishTime,
       },
     }))
+      .then(unwrapResult)
       .catch(e => {
         console.error(e);
       });
@@ -70,6 +75,7 @@ export const Exam = (): JSX.Element => {
         finishTime: new Date().toISOString(),
       },
     }))
+      .then(unwrapResult)
       .catch(e => {
         console.error(e);
       });
@@ -107,14 +113,6 @@ export const Exam = (): JSX.Element => {
                     Close Exam
                   </Button>
               }
-            </>
-        }
-        {
-          me?.type === "STUDENT" &&
-            <>
-              <Button className="mr-2">
-                Answer Exam
-              </Button>
             </>
         }
       </Jumbotron>
