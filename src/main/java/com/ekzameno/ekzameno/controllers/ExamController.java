@@ -16,8 +16,10 @@ import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateExamDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
+import com.ekzameno.ekzameno.dtos.CreateSubmissionDTO;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Exam;
+import com.ekzameno.ekzameno.models.ExamSubmission;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.services.ExamService;
 import com.ekzameno.ekzameno.services.QuestionService;
@@ -120,5 +122,27 @@ public class ExamController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Question> getQuestions(@PathParam("examId") String examId) {
         return questionService.getQuestionsForExam(UUID.fromString(examId));
+    }
+    
+    /**
+     * Create a ExamSubmissiom for a given exam.
+     *
+     * @param examId ID of the exam to create the question for
+     * @param dto Question DTO
+     * @return Response to the client
+     */
+    @Path("/{examId}/submit")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ExamSubmission submitExam(
+        @PathParam("examId") String examId,
+        CreateSubmissionDTO dto
+    ) {
+        return examService.createExamSubmission(
+            UUID.fromString(examId),
+            UUID.fromString(dto.studentId),
+            dto.marks
+        );
     }
 }

@@ -17,6 +17,12 @@ export interface ExamState extends Exam {
   questionIds: string[],
 }
 
+export interface Answer{
+  studentId: string,
+  marks: number,
+  //answers: string,
+}
+
 interface ExamsState extends State {
   slugs: Record<string, string>,
 }

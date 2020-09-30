@@ -12,6 +12,7 @@ import javax.ws.rs.NotFoundException;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
+import com.ekzameno.ekzameno.models.ExamSubmission;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
@@ -140,6 +141,30 @@ public class ExamService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Create an exam submission for a given exam.
+     *
+     * @param examId id of the Exam
+     * @param studentId id of the question
+     * @param marks marks for the question
+     * @return a new exam
+     */
+    public ExamSubmission createExamSubmission(
+        UUID examId,
+        UUID studentId,
+        int marks
+    ) {
+        try (DBConnection connection = DBConnection.getInstance()) {
+            ExamSubmission examSubmission = new ExamSubmission(marks,
+                studentId, examId);
+            UnitOfWork.getCurrent().commit();
+            return examSubmission;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 }
