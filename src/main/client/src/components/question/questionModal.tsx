@@ -65,7 +65,6 @@ const FormSchema = yup.lazy((obj: any) => {
         yup.object().shape({
           id: yup.string(),
           answer: yup.string()
-            .required()
             .test(
               "unique",
               "Options must be unique.",
@@ -76,10 +75,10 @@ const FormSchema = yup.lazy((obj: any) => {
 
                 return true;
               }
-            ),
+            )
+            .required("Option is a required field."),
         })
       )
-        .required("Option is a required field.")
         .min(1)
         .required(""),
       correctOption: yup.number().test(
@@ -90,9 +89,9 @@ const FormSchema = yup.lazy((obj: any) => {
             return correct <= obj.options.length && correct >= 1;
           }
 
-          return false;
+          return true;
         }
-      ).required(),
+      ).required("Correct Option is a required field."),
     });
   }
 
@@ -266,53 +265,49 @@ export const QuestionModal = (
                         name="options">
                         {
                           arrayHelpers => (
-                            <>
-                              {
-                                values.options.map((option, i) => (
-                                  <Form.Group key={i}>
-                                    <Form.Label>
-                                      {`Option ${i + 1}`}
-                                    </Form.Label>
-                                    <InputGroup>
-                                      <Form.Control
-                                        type="text"
-                                        name={`options[${i}].answer`}
-                                        value={values.options[i]?.answer}
-                                        onBlur={handleBlur}
-                                        isInvalid={
-                                          !!(
-                                            touched.options
-                                              && (touched.options as unknown as boolean[])[i]
-                                              && errors.options
-                                              && errors.options[i]
-                                          )
-                                        }
-                                        onChange={handleChange} />
-                                      <InputGroup.Append>
-                                        <Button
-                                          variant="outline-danger"
-                                          onClick={() => arrayHelpers.remove(i)}>
-                                          <FontAwesomeIcon icon={faTrash} />
-                                        </Button>
-                                      </InputGroup.Append>
-                                      <Form.Control.Feedback
-                                        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                                        // @ts-ignore
-                                        className={
-                                          touched.options
-                                            && (touched.options as unknown as boolean[])[i]
-                                            && errors.options
-                                            && errors.options[i]
-                                            && "d-block"
-                                        }
-                                        type="invalid">
-                                        {errors.options !== undefined && (errors.options[i] as { answer: string })?.answer}
-                                      </Form.Control.Feedback>
-                                    </InputGroup>
-                                  </Form.Group>
-                                ))
-                              }
-                            </>
+                            values.options.map((option, i) => (
+                              <Form.Group key={i}>
+                                <Form.Label>
+                                  {`Option ${i + 1}`}
+                                </Form.Label>
+                                <InputGroup>
+                                  <Form.Control
+                                    type="text"
+                                    name={`options[${i}].answer`}
+                                    value={values.options[i]?.answer}
+                                    onBlur={handleBlur}
+                                    isInvalid={
+                                      !!(
+                                        touched.options
+                                          && (touched.options as unknown as boolean[])[i]
+                                          && errors.options
+                                          && errors.options[i]
+                                      )
+                                    }
+                                    onChange={handleChange} />
+                                  <InputGroup.Append>
+                                    <Button
+                                      variant="outline-danger"
+                                      onClick={() => arrayHelpers.remove(i)}>
+                                      <FontAwesomeIcon icon={faTrash} />
+                                    </Button>
+                                  </InputGroup.Append>
+                                  <Form.Control.Feedback
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                                    // @ts-ignore
+                                    className={
+                                      touched.options
+                                        && (touched.options as unknown as boolean[])[i]
+                                        && errors.options
+                                        && errors.options[i]
+                                        && "d-block"
+                                    }
+                                    type="invalid">
+                                    {errors.options !== undefined && (errors.options[i] as { answer: string })?.answer}
+                                  </Form.Control.Feedback>
+                                </InputGroup>
+                              </Form.Group>
+                            ))
                           )
                         }
                       </FieldArray>

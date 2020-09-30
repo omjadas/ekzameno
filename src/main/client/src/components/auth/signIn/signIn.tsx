@@ -17,8 +17,10 @@ interface FormValues {
 }
 
 const FormSchema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().required(),
+  email: yup.string()
+    .email("Email must be a valid email.")
+    .required("Email is a required field."),
+  password: yup.string().required("Password is a required field."),
 });
 
 export const SignIn = (props: Props): JSX.Element => {
