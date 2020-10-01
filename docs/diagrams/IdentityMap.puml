@@ -4,19 +4,19 @@ skinparam roundcorner 20
 skinparam maxmessagesize 200
 skinparam sequenceParticipant underline
 
-participant "ExamMapper" as A
+participant "SubjectMapper" as A
 database Database as B
 
--> A: findById(examId)
+-> A: findById(subjectId)
 activate A
 
-A -> B: SELECT * FROM exams WHERE exam_id ='examId'
+A -> B: SELECT * FROM subjects WHERE subject_id ='subjectId'
 activate B
 
-B --> A: ResultSet{..DateRange..}
+B --> A: ResultSet
 deactivate B
 
- <-- A : Exam{..startTime,finishTime..}
+ <-- A : Subject
 deactivate A
 
 @enduml

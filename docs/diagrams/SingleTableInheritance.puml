@@ -1,0 +1,21 @@
+@startuml
+
+participant "UserMapper" as A
+database Database as B
+
+-> A: findByEmail(email)
+
+alt userType.Administrator
+
+    A -> B: Authentication Accepted
+
+else userType.Instructor
+
+    B -> A: Authentication Failure
+
+else userType.Student
+
+   B -> A: Authentication Failure
+
+end
+@enduml
