@@ -1,0 +1,28 @@
+@startuml
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 130
+skinparam sequenceParticipant underline
+
+participant "ExamProxyList" as A
+participant "ExamMapper" as B
+database Database as C
+
+-> A: init()
+activate A
+
+A -> B: findAllForSubject(examId)
+activate B
+
+B -> C: SELECT * FROM exams WHERE subject_id ='subjectId'
+activate C
+
+C --> B: ResultSet
+deactivate C
+
+B --> A : List<Exam> 
+deactivate B
+
+deactivate A
+
+@enduml
