@@ -1,0 +1,140 @@
+@startuml
+
+
+User <|-- Administrator
+User <|-- Instructor
+User <|-- Student
+
+
+class User {
+ - String email
+ - String name
+ - String passwordHash
+ - String type
+ + User(String email,String name,String passwordHash,String type)
+ + User(UUID id,String email,String name,String passwordHash,String type)
+ + String getEmail()
+ + String getName()
+ + String getPasswordHash()
+ + String getType()
+ + void setEmail(String email)
+ + void setName(String name)
+ + void setPasswordHash(String passwordHash)
+}
+
+class Administrator {
+ + String TYPE
+ + Administrator(UUID id,String email,String name,String passwordHash)
+ + Administrator(String email,String name,String passwordHash)
+}
+
+class Instructor {
+ + String TYPE
+ - ProxyList<Subject> subjects
+ + Instructor(UUID id, String email, String name, String passwordHash)
+ + Instructor(String email, String name, String passwordHash)
+ + ProxyList<Subject> getSubjects()
+}
+
+class Student {
+ + String TYPE
+ - ProxyList<Subject> subjects
+ - ProxyList<ExamSubmission> examSubmissions
+ + Student(UUID id, String email, String name, String passwordHash)
+ + Student(String email, String name, String passwordHash)
+ + ProxyList<Subject> getSubjects()
+ + ProxyList<ExamSubmission> getExamSubmissions()
+}
+
+class DateRange {
+ - Date fromDate
+ - Date toDate
+ + DateRange(Date fromDate, Date toDate)
+ + Date getFromDate()
+ + Date getToDate()
+ + void setFromDate(Date fromDate)
+ + void setToDate(Date toDate)
+ }
+
+class ProxyList {
+ # UUID id
+ # List<T> models
+ + ProxyList(UUID id)
+ + void add(T obj)
+ + boolean contains(T obj)
+ + T get(int index)
+ + int size()
+ + remove(T obj)
+ }
+
+Model <|-- Enrolment
+
+ class Enrolment {
+ - UUID studentId
+ - UUID subjectId
+ - Student student
+ - Subject subject
+ + Enrolment(UUID id, UUID studentId, UUID subjectId)
+ + Enrolment(UUID studentId, UUID subjectId)
+ + UUID getStudentId()
+ + UUID getSubjectId()
+ + Student getStudent()
+ + Subject getSubject()
+ + void setStudentId(UUID studentId)
+ + void setSubjectId(UUID subjectId)
+ + void setStudent(Student student)
+ + void setSubject(Subject subject)
+ }
+ 
+ class Model {
+ - UUID id
+ + Model()
+ + Model(UUID id)
+ + UUID getId()
+ + int hashCode()
+ + boolean equals(Object obj)
+ }
+ 
+ 
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+ class Enrolment {
+ - 
+ + 
+ }
+ 
+@enduml
