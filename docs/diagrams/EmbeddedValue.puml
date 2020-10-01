@@ -11,7 +11,7 @@ database Database as C
 -> A: init()
 activate A
 
-A -> B: findAllForSubject(subjectId)
+A -> B: findAllForSubject(examId)
 activate B
 
 B -> C: SELECT * FROM exams WHERE subject_id ='subjectId'
