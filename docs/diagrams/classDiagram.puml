@@ -1,70 +1,10 @@
 @startuml
 
 package "Models" #DDDDDD {
+
   User <|-- Administrator
   User <|-- Instructor
   User <|-- Student
-  class User {
-  - String email
-  - String name
-  - String passwordHash
-  - String type
-  + User(String email,String name,String passwordHash,String type)
-  + User(UUID id,String email,String name,String passwordHash,String type)
-  + String getEmail()
-  + String getName()
-  + String getPasswordHash()
-  + String getType()
-  + void setEmail(String email)
-  + void setName(String name)
-  + void setPasswordHash(String passwordHash)
-  }
-
-  class Administrator {
-  + String TYPE
-  + Administrator(UUID id,String email,String name,String passwordHash)
-  + Administrator(String email,String name,String passwordHash)
-  }
-
-  Instructor o-- ProxyList
-
-  class Instructor {
-  + String TYPE
-  - ProxyList<Subject> subjects
-  + Instructor(UUID id, String email, String name, String passwordHash)
-  + Instructor(String email, String name, String passwordHash)
-  + ProxyList<Subject> getSubjects()
-  }
-
-  Student o-- ProxyList
-
-  class Student {
-  + String TYPE
-  + Student(UUID id, String email, String name, String passwordHash)
-  + Student(String email, String name, String passwordHash)
-  }
-
-  class DateRange {
-  - Date fromDate
-  - Date toDate
-  + DateRange(Date fromDate, Date toDate)
-  + Date getFromDate()
-  + Date getToDate()
-  + void setFromDate(Date fromDate)
-  + void setToDate(Date toDate)
-  }
-
-  ProxyList o-- Model
-
-  class ProxyList {
-  # UUID id
-  + ProxyList(UUID id)
-  + void add(T obj)
-  + boolean contains(T obj)
-  + T get(int index)
-  + int size()
-  + remove(T obj)
-  }
 
   Model <|-- Enrolment
   Model <|-- Exam
@@ -75,29 +15,94 @@ package "Models" #DDDDDD {
   Model <|-- ExamSubmission
   Model <|-- Option
 
+  Question <|-- ShortAnswerQuestion
+  Question <|-- MultipleChoiceQuestion
+
+  class User {
+    - String email
+    - String name
+    - String passwordHash
+    - String type
+    + User(String email,String name,String passwordHash,String type)
+    + User(UUID id,String email,String name,String passwordHash,String type)
+    + String getEmail()
+    + String getName()
+    + String getPasswordHash()
+    + String getType()
+    + void setEmail(String email)
+    + void setName(String name)
+    + void setPasswordHash(String passwordHash)
+  }
+
+  class Administrator {
+    + String TYPE
+    + Administrator(UUID id,String email,String name,String passwordHash)
+    + Administrator(String email,String name,String passwordHash)
+  }
+
+  Instructor o-- ProxyList
+
+  class Instructor {
+    + String TYPE
+    - ProxyList<Subject> subjects
+    + Instructor(UUID id, String email, String name, String passwordHash)
+    + Instructor(String email, String name, String passwordHash)
+    + ProxyList<Subject> getSubjects()
+  }
+
+  Student o-- ProxyList
+
+  class Student {
+    + String TYPE
+    + Student(UUID id, String email, String name, String passwordHash)
+    + Student(String email, String name, String passwordHash)
+  }
+
+  class DateRange {
+    - Date fromDate
+    - Date toDate
+    + DateRange(Date fromDate, Date toDate)
+    + Date getFromDate()
+    + Date getToDate()
+    + void setFromDate(Date fromDate)
+    + void setToDate(Date toDate)
+  }
+
+  ProxyList o-- Model
+
+  class ProxyList {
+    # UUID id
+    + ProxyList(UUID id)
+    + void add(T obj)
+    + boolean contains(T obj)
+    + T get(int index)
+    + int size()
+    + remove(T obj)
+  }
+
   class Model {
-  - UUID id
-  + Model()
-  + Model(UUID id)
-  + UUID getId()
-  + int hashCode()
-  + boolean equals(Object obj)
+    - UUID id
+    + Model()
+    + Model(UUID id)
+    + UUID getId()
+    + int hashCode()
+    + boolean equals(Object obj)
   }
 
   Enrolment o-- Student
   Enrolment o-- Subject
 
   class Enrolment {
-  + Enrolment(UUID id, UUID studentId, UUID subjectId)
-  + Enrolment(UUID studentId, UUID subjectId)
-  + UUID getStudentId()
-  + UUID getSubjectId()
-  + Student getStudent()
-  + Subject getSubject()
-  + void setStudentId(UUID studentId)
-  + void setSubjectId(UUID subjectId)
-  + void setStudent(Student student)
-  + void setSubject(Subject subject)
+    + Enrolment(UUID id, UUID studentId, UUID subjectId)
+    + Enrolment(UUID studentId, UUID subjectId)
+    + UUID getStudentId()
+    + UUID getSubjectId()
+    + Student getStudent()
+    + Subject getSubject()
+    + void setStudentId(UUID studentId)
+    + void setSubjectId(UUID subjectId)
+    + void setStudent(Student student)
+    + void setSubject(Subject subject)
   }
 
   Exam o-- ProxyList
@@ -169,9 +174,6 @@ package "Models" #DDDDDD {
     + void setInstructor(Instructor instructor)
     + void setSubject(Subject subject)
   }
-
-  Question <|-- ShortAnswerQuestion
-  Question <|-- MultipleChoiceQuestion
 
   Question o-- ProxyList
 
@@ -254,7 +256,8 @@ package "Models" #DDDDDD {
   }
 
   ExamSubmission o-- ProxyList
-  Exam o-- ExamSubmission
+  ExamSubmission o-- Student
+  ExamSubmission o-- Exam
 
   class ExamSubmission {
     - int marks
@@ -278,7 +281,9 @@ package "Models" #DDDDDD {
     + void setExam(Exam exam)
   }
 }
+
 package "Controllers" #DDDDDD { 
+
   UserController o-- UserService 
   class UserController {
     + List<User> getUsers()
@@ -338,6 +343,7 @@ package "Controllers" #DDDDDD {
 }
 
 package "Services" #DDDDDD {
+
   AuthService o-- UserMapper
   class AuthService {
     +     + User authenticateUser(String email, String password)
@@ -429,6 +435,7 @@ package "Services" #DDDDDD {
 }
 
 package "Mappers" #DDDDDD {
+  
   Mapper <|-- AbstractUserMapper
   Mapper <|-- SubjectMapper
   Mapper <|-- InstructorSubjectMapper
