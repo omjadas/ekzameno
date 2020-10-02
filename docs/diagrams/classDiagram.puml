@@ -1,299 +1,594 @@
 @startuml
 
-
-User <|-- Administrator
-User <|-- Instructor
-User <|-- Student
-
-
-class User {
- - String email
- - String name
- - String passwordHash
- - String type
- + User(String email,String name,String passwordHash,String type)
- + User(UUID id,String email,String name,String passwordHash,String type)
- + String getEmail()
- + String getName()
- + String getPasswordHash()
- + String getType()
- + void setEmail(String email)
- + void setName(String name)
- + void setPasswordHash(String passwordHash)
-}
-
-class Administrator {
- + String TYPE
- + Administrator(UUID id,String email,String name,String passwordHash)
- + Administrator(String email,String name,String passwordHash)
-}
-
-Instructor o-- ProxyList
-
-class Instructor {
- + String TYPE
- - ProxyList<Subject> subjects
- + Instructor(UUID id, String email, String name, String passwordHash)
- + Instructor(String email, String name, String passwordHash)
- + ProxyList<Subject> getSubjects()
-}
-
-Student o-- ProxyList
-
-class Student {
- + String TYPE
- - ProxyList<Subject> subjects
- - ProxyList<ExamSubmission> examSubmissions
- + Student(UUID id, String email, String name, String passwordHash)
- + Student(String email, String name, String passwordHash)
- + ProxyList<Subject> getSubjects()
- + ProxyList<ExamSubmission> getExamSubmissions()
-}
-
-class DateRange {
- - Date fromDate
- - Date toDate
- + DateRange(Date fromDate, Date toDate)
- + Date getFromDate()
- + Date getToDate()
- + void setFromDate(Date fromDate)
- + void setToDate(Date toDate)
- }
-
-ProxyList o-- Model
-
-class ProxyList {
- # UUID id
- # List<T> models
- + ProxyList(UUID id)
- + void add(T obj)
- + boolean contains(T obj)
- + T get(int index)
- + int size()
- + remove(T obj)
- }
-
-Model <|-- Enrolment
-Model <|-- Exam
-Model <|-- Subject
-Model <|-- InstructorSubject
-Model <|-- Question
-Model <|-- QuestionSubmission
-Model <|-- ExamSubmission
-Model <|-- Option
-
-class Model {
- - UUID id
- + Model()
- + Model(UUID id)
- + UUID getId()
- + int hashCode()
- + boolean equals(Object obj)
- }
-
-Enrolment o-- Student
-Enrolment o-- Subject
-
-class Enrolment {
- - UUID studentId
- - UUID subjectId
- - Student student
- - Subject subject
- + Enrolment(UUID id, UUID studentId, UUID subjectId)
- + Enrolment(UUID studentId, UUID subjectId)
- + UUID getStudentId()
- + UUID getSubjectId()
- + Student getStudent()
- + Subject getSubject()
- + void setStudentId(UUID studentId)
- + void setSubjectId(UUID subjectId)
- + void setStudent(Student student)
- + void setSubject(Subject subject)
- }
-
- Exam o-- ProxyList
- Exam o-- DateRange
- Exam o-- Subject
-
- class Exam {
+package "Models" #DDDDDD {
+  User <|-- Administrator
+  User <|-- Instructor
+  User <|-- Student
+  class User {
+  - String email
   - String name
-  - String description
-  - String slug
-  - DateRange dateRange
-  - ProxyList<Question> questions
-  - ProxyList<ExamSubmission> examSubmissions
-  - UUID subjectId
-  - Subject subject
-  + Exam(UUID id,String name,String description,DateRange dateRange,UUID subjectId,String slug)
-  + Exam(String name,String description,DateRange dateRange,UUID subjectId)
-  + String getName()
-  + String getDescription()
-  + String getSlug()
-  + Date getStartTime()
-  + Date getFinishTime()
-  + ProxyList<Question> getQuestions()
-  + ProxyList<ExamSubmission> getExamSubmissions()
-  + void setName(String name)
-  + void setDescription(String description)
-  + void setStartTime(Date startTime)
-  + void setFinishTime(Date finishTime)
-  + UUID getSubjectId()
-  + Subject getSubject()
-  + void setSubjectId(UUID subjectId)
-  + void setSubject(Subject subject) 
- }
-
-Subject o-- ProxyList
-
-class Subject {
-  - String name
-  - String description
-  - String slug
-  - ProxyList<Instructor> instructors
-  - ProxyList<Student> students
-  - ProxyList<Exam> exams
-  + Subject(UUID id, String name, String description, String slug)
-  + Subject(String name, String description)
-  + String getName()
-  + String getSlug()
-  + String getDescription()
-  + ProxyList<Instructor> getInstructors()
-  + ProxyList<Student> getStudents()     
-  + ProxyList<Exam> getExams()
-  + void setName(String name)
-  + void setDescription(String description)
-}
-
-Instructor o-- InstructorSubject
-subject o-- InstructorSubject
-
-class InstructorSubject {
-  - UUID instructorId
-  - UUID subjectId
-  - Instructor instructor
-  - Subject subject
-  + InstructorSubject(UUID id, UUID instructorId, UUID subjectId)
-  + InstructorSubject(UUID instructorId, UUID subjectId)
-  + UUID getInstructorId()
-  + UUID getSubjectId()
-  + Instructor getInstructor()
-  + Subject getSubject()
-  + void setInstructorId(UUID instructorId)
-  + void setSubjectId(UUID subjectId)
-  + void setInstructor(Instructor instructor)
-  + void setSubject(Subject subject)
-}
-
-Question <|-- ShortAnswerQuestion
-Question <|-- MultipleChoiceQuestion
-
-Question o-- ProxyList
-
-class Question {
-  - String question
-  - int marks
-  - ProxyList<QuestionSubmission> questionSubmissions
-  - UUID examId
-  - Exam exam = null
+  - String passwordHash
   - String type
-  + Question(UUID id,String question,int marks,UUID examId,String type)
-  + Question(String question, int marks, UUID examId, String type)
-  + String getQuestion()
-  + int getMarks()
+  + User(String email,String name,String passwordHash,String type)
+  + User(UUID id,String email,String name,String passwordHash,String type)
+  + String getEmail()
+  + String getName()
+  + String getPasswordHash()
   + String getType()
-  + ProxyList<QuestionSubmission> getQuestionSubmissions()
-  + void setQuestion(String question)
-  + void setMarks(int marks)
-  + UUID getExamId()
-  + Exam getExam()
-  + void setExamId(UUID examId)
-  + void setExam(Exam exam)
-}
+  + void setEmail(String email)
+  + void setName(String name)
+  + void setPasswordHash(String passwordHash)
+  }
 
-class ShortAnswerQuestion {
+  class Administrator {
   + String TYPE
-  + ShortAnswerQuestion(UUID id,String question,int marks,UUID examId)
-  + ShortAnswerQuestion(String question, int marks, UUID examId)
-}
+  + Administrator(UUID id,String email,String name,String passwordHash)
+  + Administrator(String email,String name,String passwordHash)
+  }
 
-MultipleChoiceQuestion o-- ProxyList
+  Instructor o-- ProxyList
 
-class MultipleChoiceQuestion {
+  class Instructor {
   + String TYPE
-  - ProxyList<Option> options
-  + MultipleChoiceQuestion(UUID id,String question,int marks,UUID examId)
-  + MultipleChoiceQuestion(String question, int marks, UUID examId)
-  + ProxyList<Option> getOptions()
-}
+  - ProxyList<Subject> subjects
+  + Instructor(UUID id, String email, String name, String passwordHash)
+  + Instructor(String email, String name, String passwordHash)
+  + ProxyList<Subject> getSubjects()
+  }
 
-Question o-- Option
+  Student o-- ProxyList
 
-class Option {
-  - String answer
-  - boolean correct
-  - UUID questionId
-  - Question question
-  + Option(UUID id, String answer, boolean correct, UUID questionId)
-  + Option(String answer, boolean correct, UUID questionId)
-  + String getAnswer()
-  + boolean isCorrect()
-  + void setAnswer(String answer)
-  + void setCorrect(boolean correct)
-  + Question getQuestion()
-  + UUID getQuestionId()
-  + void setQuestion(Question question)
-  + void setQuestionId(UUID questionId)
-}
+  class Student {
+  + String TYPE
+  + Student(UUID id, String email, String name, String passwordHash)
+  + Student(String email, String name, String passwordHash)
+  }
 
-QuestionSubmission o-- Question
-QuestionSubmission o-- ExamSubmission
+  class DateRange {
+  - Date fromDate
+  - Date toDate
+  + DateRange(Date fromDate, Date toDate)
+  + Date getFromDate()
+  + Date getToDate()
+  + void setFromDate(Date fromDate)
+  + void setToDate(Date toDate)
+  }
 
-class QuestionSubmission {
-  + String answer
-  + UUID questionId
-  + UUID examSubmissionId
-  + Question question
-  + ExamSubmission examSubmission
-  + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId)
-  + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId)
-  + String getAnswer()
-  + void setAnswer(String answer)
-  + UUID getQuestionId()
-  + UUID getExamSubmissionId()
-  + Question getQuestion()
-  + ExamSubmission getExamSubmission()
-  + void setQuestionId(UUID questionId)
-  + void setExamSubmissionId(UUID examSubmissionId)
-  + void setQuestion(Question question)
-  + void setExamSubmission(ExamSubmission examSubmission)
-}
+  ProxyList o-- Model
 
-ExamSubmission o-- ProxyList
-Exam o-- ExamSubmission
+  class ProxyList {
+  # UUID id
+  + ProxyList(UUID id)
+  + void add(T obj)
+  + boolean contains(T obj)
+  + T get(int index)
+  + int size()
+  + remove(T obj)
+  }
 
-class ExamSubmission {
-  - int marks
-  - ProxyList<QuestionSubmission> questionSubmissions
-  - UUID studentId
-  - UUID examId
-  - Student student
-  - Exam exam
-  + ExamSubmission(UUID id, int marks, UUID studentId, UUID examId)
-  + ExamSubmission(int marks, UUID studentId, UUID examId)
-  + int getMarks()
-  + ProxyList<QuestionSubmission> getQuestionSubmissions()
-  + void setMarks(int marks)
+  Model <|-- Enrolment
+  Model <|-- Exam
+  Model <|-- Subject
+  Model <|-- InstructorSubject
+  Model <|-- Question
+  Model <|-- QuestionSubmission
+  Model <|-- ExamSubmission
+  Model <|-- Option
+
+  class Model {
+  - UUID id
+  + Model()
+  + Model(UUID id)
+  + UUID getId()
+  + int hashCode()
+  + boolean equals(Object obj)
+  }
+
+  Enrolment o-- Student
+  Enrolment o-- Subject
+
+  class Enrolment {
+  + Enrolment(UUID id, UUID studentId, UUID subjectId)
+  + Enrolment(UUID studentId, UUID subjectId)
   + UUID getStudentId()
-  + UUID getExamId()
+  + UUID getSubjectId()
   + Student getStudent()
-  + Exam getExam()
+  + Subject getSubject()
   + void setStudentId(UUID studentId)
-  + void setExamId(UUID examId)
+  + void setSubjectId(UUID subjectId)
   + void setStudent(Student student)
-  + void setExam(Exam exam)
+  + void setSubject(Subject subject)
+  }
+
+  Exam o-- ProxyList
+  Exam o-- DateRange
+  Exam o-- Subject
+
+  class Exam {
+    - String name
+    - String description
+    - String slug
+    ' - DateRange dateRange
+    ' - ProxyList<Question> questions
+    ' - ProxyList<ExamSubmission> examSubmissions
+    ' - UUID subjectId
+    ' - Subject subject
+    + Exam(UUID id,String name,String description,DateRange dateRange,UUID subjectId,String slug)
+    + Exam(String name,String description,DateRange dateRange,UUID subjectId)
+    + String getName()
+    + String getDescription()
+    + String getSlug()
+    + Date getStartTime()
+    + Date getFinishTime()
+    + ProxyList<Question> getQuestions()
+    + ProxyList<ExamSubmission> getExamSubmissions()
+    + void setName(String name)
+    + void setDescription(String description)
+    + void setStartTime(Date startTime)
+    + void setFinishTime(Date finishTime)
+    + UUID getSubjectId()
+    + Subject getSubject()
+    + void setSubjectId(UUID subjectId)
+    + void setSubject(Subject subject) 
+  }
+
+  Subject o-- ProxyList
+
+  class Subject {
+    - String name
+    - String description
+    - String slug
+    + Subject(UUID id, String name, String description, String slug)
+    + Subject(String name, String description)
+    + String getName()
+    + String getSlug()
+    + String getDescription()
+    + ProxyList<Instructor> getInstructors()
+    + ProxyList<Student> getStudents()     
+    + ProxyList<Exam> getExams()
+    + void setName(String name)
+    + void setDescription(String description)
+  }
+
+  Instructor o-- InstructorSubject
+  Subject o-- InstructorSubject
+
+  class InstructorSubject {
+    - UUID instructorId
+    - UUID subjectId
+    ' - Instructor instructor
+    ' - Subject subject
+    + InstructorSubject(UUID id, UUID instructorId, UUID subjectId)
+    + InstructorSubject(UUID instructorId, UUID subjectId)
+    + UUID getInstructorId()
+    + UUID getSubjectId()
+    + Instructor getInstructor()
+    + Subject getSubject()
+    + void setInstructorId(UUID instructorId)
+    + void setSubjectId(UUID subjectId)
+    + void setInstructor(Instructor instructor)
+    + void setSubject(Subject subject)
+  }
+
+  Question <|-- ShortAnswerQuestion
+  Question <|-- MultipleChoiceQuestion
+
+  Question o-- ProxyList
+
+  class Question {
+    - String question
+    - int marks
+    ' - UUID examId
+    ' - Exam exam = null
+    - String type
+    + Question(UUID id,String question,int marks,UUID examId,String type)
+    + Question(String question, int marks, UUID examId, String type)
+    + String getQuestion()
+    + int getMarks()
+    + String getType()
+    + ProxyList<QuestionSubmission> getQuestionSubmissions()
+    + void setQuestion(String question)
+    + void setMarks(int marks)
+    + UUID getExamId()
+    + Exam getExam()
+    + void setExamId(UUID examId)
+    + void setExam(Exam exam)
+  }
+
+  class ShortAnswerQuestion {
+    ' + String TYPE
+    + ShortAnswerQuestion(UUID id,String question,int marks,UUID examId)
+    + ShortAnswerQuestion(String question, int marks, UUID examId)
+  }
+
+  MultipleChoiceQuestion o-- ProxyList
+
+  class MultipleChoiceQuestion {
+    ' + String TYPE
+    - ProxyList<Option> options
+    + MultipleChoiceQuestion(UUID id,String question,int marks,UUID examId)
+    + MultipleChoiceQuestion(String question, int marks, UUID examId)
+    + ProxyList<Option> getOptions()
+  }
+
+  Question o-- Option
+
+  class Option {
+    - String answer
+    - boolean correct
+    ' - UUID questionId
+    ' - Question question
+    + Option(UUID id, String answer, boolean correct, UUID questionId)
+    + Option(String answer, boolean correct, UUID questionId)
+    + String getAnswer()
+    + boolean isCorrect()
+    + void setAnswer(String answer)
+    + void setCorrect(boolean correct)
+    + Question getQuestion()
+    + UUID getQuestionId()
+    + void setQuestion(Question question)
+    + void setQuestionId(UUID questionId)
+  }
+
+  QuestionSubmission o-- Question
+  QuestionSubmission o-- ExamSubmission
+
+  class QuestionSubmission {
+    + String answer
+    ' + UUID questionId
+    ' + UUID examSubmissionId
+    ' + Question question
+    ' + ExamSubmission examSubmission
+    + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId)
+    + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId)
+    + String getAnswer()
+    + void setAnswer(String answer)
+    + UUID getQuestionId()
+    + UUID getExamSubmissionId()
+    + Question getQuestion()
+    + ExamSubmission getExamSubmission()
+    + void setQuestionId(UUID questionId)
+    + void setExamSubmissionId(UUID examSubmissionId)
+    + void setQuestion(Question question)
+    + void setExamSubmission(ExamSubmission examSubmission)
+  }
+
+  ExamSubmission o-- ProxyList
+  Exam o-- ExamSubmission
+
+  class ExamSubmission {
+    - int marks
+    ' - ProxyList<QuestionSubmission> questionSubmissions
+    ' - UUID studentId
+    ' - UUID examId
+    ' - Student student
+    ' - Exam exam
+    + ExamSubmission(UUID id, int marks, UUID studentId, UUID examId)
+    + ExamSubmission(int marks, UUID studentId, UUID examId)
+    + int getMarks()
+    + ProxyList<QuestionSubmission> getQuestionSubmissions()
+    + void setMarks(int marks)
+    + UUID getStudentId()
+    + UUID getExamId()
+    + Student getStudent()
+    + Exam getExam()
+    + void setStudentId(UUID studentId)
+    + void setExamId(UUID examId)
+    + void setStudent(Student student)
+    + void setExam(Exam exam)
+  }
 }
+package "Controllers" #DDDDDD { 
+  UserController o-- UserService 
+  class UserController {
+    + List<User> getUsers()
+    + Response createUser(CreateUserDTO dto)
+  }
+
+  SubjectController o-- SubjectService
+  SubjectController o-- ExamService 
+  SubjectController o-- UserService 
+  class SubjectController{
+    + List<Subject> getSubjects()
+    + Subject getSubject()
+    + Subject createSubject(CreateSubjectDTO dto)
+    + List<Exam> getExamsForSubject()
+    + Exam createExam(CreateExamDTO dto)
+    + Subject updateSubject(CreateSubjectDTO dto)
+    + List<Instructor> getInstructors()
+    + Response addInstructorToSubject()
+    + Response addStudentToSubject()
+    + Response deleteInstructorFromSubject()
+    + List<Student> getStudents()
+    + Response deleteStudentFromSubject()
+  }
+
+  AuthController o-- AuthService
+  class AuthController {
+    - Key key
+    + Response signIn(SignInUserDTO dto)
+    + Response signOut() 
+  }
+
+  ExamController o-- ExamService 
+  ExamController o-- QuestionService 
+  class ExamController {
+    + Exam getExam()
+    + Exam updateExam(CreateExamDTO dto)
+    + Response deletExam()
+    + Question createQuestion(CreateQuestionDTO dto)
+    + List<Question> getQuestions()
+    + ExamSubmission submitExam(CreateExamSubmissionDTO dto)
+  }
+
+  OptionController o-- optionService
+  class OptionController {
+    + Option updateOption(CreateOptionDTO dto)
+    + Response deleteOption()
+  }
+
+  QuestionController o-- QuestionService
+  QuestionController o-- OptionService
+  class QuestionController {
+    + Question updateQuestion(CreateQuestionDTO dto)
+    + Response deleteExam()
+    + List<Option> getOptions()
+    + Option createOption(CreateOptionDTO dto)
+  }
+}
+
+package "Services" #DDDDDD {
+  AuthService o-- UserMapper
+  class AuthService {
+    +     + User authenticateUser(String email, String password)
+  }
+
+  UserService o-- UserMapper
+  UserService o-- InstructorMapper
+  UserService o-- StudentMapper
+  class UserService {
+    + List<User> getUsers() {String name,
+        String email,
+        String password,
+        String type)
+    + User registerUser(
+    + List<Instructor> getInstructorsForSubject(UUID subjectId)
+    + List<Student> getStudentsForSubject(UUID subjectId)
+  }
+
+  ExamService o-- ExamMapper
+  class ExamService {
+    + Exam getExam(String slug)
+    + List<Exam> getExamsForSubject(UUID subjectId)
+    + List<Exam> getPublishedExamsForSubject(UUID subjectId)
+    + Exam createExam(String name,
+        String description,
+        Date startTime,
+        Date finishTime,
+        UUID subjectId)
+    + Exam updateExam(String name,
+        String description,
+        Date startTime,
+        Date finishTime,
+        UUID examId)
+    + void deleteExam(UUID examId)
+    + ExamSubmission createSubmission(UUID examId,
+        UUID studentId,
+        List<CreateQuestionSubmissionDTO> answers)
+  }
+
+  QuestionService o-- QuestionMapper
+  class QuestionService {
+    + Question createQuestion(UUID examId,
+        String question,
+        int marks,
+        String type,
+        List<CreateOptionDTO> options)
+    + Question updateQuestion(String question,
+        int marks,
+        UUID questionId)
+    + void deleteQuestion(UUID questionId)
+    + List<Question> getQuestionsForExam(UUID examId)
+  }
+
+  SubjectService o-- SubjectMapper
+  SubjectService o-- EnrolmentMapper
+  SubjectService o-- InstructorSubjectMapper
+  class SubjectService {
+    + List<Subject> getSubjects()
+    + Subject getSubject(String slug)
+    + List<Subject> getSubjectsForInstructor(UUID id)
+    + List<Subject> getSubjectsForStudent(UUID id)
+    + void addInstructorToSubject(UUID subjectId, UUID instructorId)
+    + void addStudentToSubject(UUID subjectId, UUID studentId)
+    + void deleteInstructorFromSubject(UUID subjectId,
+        UUID instructorId)
+    + void deleteStudentFromSubject(UUID subjectId,
+        UUID studentId)
+    + Subject createSubject(String name,
+        String description,
+        UUID[] instructors,
+        UUID[] students)
+    + Subject updateSubject(String name,
+        String description,
+        UUID subjectId)
+  }
+
+  OptionService o-- OptionMapper
+  class OptionService {
+    + Option createOption(String answer,
+        boolean correct,
+        UUID questionId)
+    + Option updateOption(UUID optionId,
+        String answer,
+        boolean correct)
+    + void deleteOption(UUID optionId)
+    + List<Option> getOptionsForQuestion(UUID questionId)
+  }
+
+}
+
+package "Mappers" #DDDDDD {
+  Mapper <|-- AbstractUserMapper
+  Mapper <|-- SubjectMapper
+  Mapper <|-- InstructorSubjectMapper
+  Mapper <|-- EnrolmentMapper
+  Mapper <|-- AbstractQuestionMapper
+  Mapper <|-- OptionMapper
+  Mapper <|-- QuestionSubmissionMapper
+  Mapper <|-- ExamSubmissionMapper
+  Mapper <|-- ExamMapper
+
+  AbstractUserMapper <|-- UserMapper
+  AbstractUserMapper <|-- InstructorMapper
+  AbstractUserMapper <|-- StudentMapper
+  AbstractUserMapper <|-- AdministratorMapper
+
+  AbstractQuestionMapper <|-- QuestionMapper
+  AbstractQuestionMapper <|-- ShortAnswerQuestionMapper
+  AbstractQuestionMapper <|-- MultipleChoiceQuestionMapper
+
+  abstract class Mapper {
+    + static <T extends Model> Mapper<T> getMapper(Class<?> klass)
+    + T findById(UUID id)
+    + List<T> findAll()
+    + abstract void insert(T obj)
+    + abstract void update(T obj)
+    + void delete(T obj)
+    + void deleteById(UUID id)
+  }
+
+  abstract class AbstractUserMapper {
+    - String tableName
+    + User findByEmail(String email)
+    + void insert(T user)
+    + void update(T user)
+  }
+
+  class UserMapper {
+    # User load(ResultSet rs)
+    # String getType()
+  }
+  
+  class AdministratorMapper {
+    # Administrator load(ResultSet rs)
+    # String getType()
+  }
+
+  class StudentMapper {
+    + List<Student> findAllForSubject(UUID id)
+    # Student load(ResultSet rs)
+    # String getType()
+  }
+
+  class InstructorMapper {
+    + List<Instructor> findAllForSubject(UUID id)
+    # Instructor load(ResultSet rs)
+    # String getType()
+  }
+
+  class EnrolmentMapper {
+    - String tableName
+    + Enrolment findByRelationIds(UUID studentId,UUID subjectId)
+    + void insert(Enrolment enrolment)
+    + void update(Enrolment enrolment)
+    + void deleteByRelationIds(UUID studentId,UUID subjectId)
+    # Enrolment load(ResultSet rs)
+    # String getTableName()
+  }
+
+  class SubjectMapper {
+    - String tableName
+    + Subject findBySlug(String slug)
+    + List<Subject> findAllForStudent(UUID id)
+    + List<Subject> findAllForInstructor(UUID id)
+    + void insert(Subject subject)
+    + void update(Subject subject)
+    # Subject load(ResultSet rs)
+    # String getTableName()
+  }
+
+  class InstructorSubjectMapper {
+    - String tableName  
+    + InstructorSubject findByRelationIds(UUID instructorId,
+        UUID subjectId)
+    + void insert(InstructorSubject instructorSubject)
+    + void update(InstructorSubject instructorSubject)
+    + void deleteByRelationIds(UUID instructorId,
+        UUID subjectId)
+    # InstructorSubject load(ResultSet rs)
+    # String getTableName()
+  }
+
+  abstract class AbstractQuestionMapper {
+    - String tableName
+    + void insert(T question)
+    + void update(T question)
+    # String getTableName()
+    # String getType()
+  }
+
+  class OptionMapper {
+    - String tableName
+    + List<Option> findAllForQuestion(UUID id)
+    + void insert(Option option)
+    + void update(Option option)
+    # Option load(ResultSet rs) 
+    # String getTableName()
+  }
+
+  class QuestionMapper {
+    + List<Question> findAllForExam(UUID id)
+    # Question load(ResultSet rs)
+    # String getType()
+  }
+
+  class ShortAnswerQuestionMapper {
+    # ShortAnswerQuestion load(ResultSet rs)
+    # String getType()
+  }
+
+  class MultipleChoiceQuestionMapper {
+    # MultipleChoiceQuestion load(ResultSet rs)
+    # String getType()
+  }
+
+  class QuestionSubmissionMapper {
+    - String tableName
+    + QuestionSubmission findByRelationIds(UUID questionId,
+        UUID examSubmissionId)
+    + List<QuestionSubmission> findAllForExamSubmission(UUID id)
+    + List<QuestionSubmission> findAllForQuestion(UUID id)
+    + void insert(QuestionSubmission questionSubmission)
+    + void update(QuestionSubmission questionSubmission)
+    # QuestionSubmission load(ResultSet rs)
+    # String getTableName()
+  }
+
+  class ExamSubmissionMapper {
+    - String tableName
+    + ExamSubmission findByRelationIds(UUID studentId,
+        UUID examId)
+    + List<ExamSubmission> findAllForExam(UUID id)
+    + List<ExamSubmission> findAllForStudent(UUID id)
+    + void insert(ExamSubmission examSubmission)
+    + void update(ExamSubmission examSubmission)
+    # ExamSubmission load(ResultSet rs)
+    # String getTableName()
+  }
+
+  class ExamMapper {
+    - String tableName
+    + Exam findBySlug(String slug)
+    + List<Exam> findAllForSubject(UUID id)
+    + List<Exam> findAllPublishedExams(UUID id)
+    + void insert(Exam exam)
+    + void update(Exam exam)
+    # Exam load(ResultSet rs)
+    # String getTableName()
+  }
+
+}
+
 
 @enduml
-
-
-
