@@ -261,11 +261,8 @@ package "models" #DDDDDD {
 
   class ExamSubmission {
     - int marks
-    ' - ProxyList<QuestionSubmission> questionSubmissions
-    ' - UUID studentId
-    ' - UUID examId
-    ' - Student student
-    ' - Exam exam
+    - UUID studentId
+    - UUID examId
     + ExamSubmission(UUID id, int marks, UUID studentId, UUID examId)
     + ExamSubmission(int marks, UUID studentId, UUID examId)
     + int getMarks()
