@@ -113,11 +113,7 @@ package "models" #DDDDDD {
     - String name
     - String description
     - String slug
-    ' - DateRange dateRange
-    ' - ProxyList<Question> questions
-    ' - ProxyList<ExamSubmission> examSubmissions
-    ' - UUID subjectId
-    ' - Subject subject
+    - UUID subjectId
     + Exam(UUID id,String name,String description,DateRange dateRange,UUID subjectId,String slug)
     + Exam(String name,String description,DateRange dateRange,UUID subjectId)
     + String getName()
@@ -161,8 +157,6 @@ package "models" #DDDDDD {
   class InstructorSubject {
     - UUID instructorId
     - UUID subjectId
-    ' - Instructor instructor
-    ' - Subject subject
     + InstructorSubject(UUID id, UUID instructorId, UUID subjectId)
     + InstructorSubject(UUID instructorId, UUID subjectId)
     + UUID getInstructorId()
@@ -180,8 +174,7 @@ package "models" #DDDDDD {
   class Question {
     - String question
     - int marks
-    ' - UUID examId
-    ' - Exam exam = null
+    - UUID examId
     - String type
     + Question(UUID id,String question,int marks,UUID examId,String type)
     + Question(String question, int marks, UUID examId, String type)
@@ -206,8 +199,7 @@ package "models" #DDDDDD {
   MultipleChoiceQuestion o-- ProxyList
 
   class MultipleChoiceQuestion {
-    ' + String TYPE
-    - ProxyList<Option> options
+    + String TYPE
     + MultipleChoiceQuestion(UUID id,String question,int marks,UUID examId)
     + MultipleChoiceQuestion(String question, int marks, UUID examId)
     + ProxyList<Option> getOptions()
@@ -218,8 +210,7 @@ package "models" #DDDDDD {
   class Option {
     - String answer
     - boolean correct
-    ' - UUID questionId
-    ' - Question question
+    - UUID questionId
     + Option(UUID id, String answer, boolean correct, UUID questionId)
     + Option(String answer, boolean correct, UUID questionId)
     + String getAnswer()
@@ -237,10 +228,8 @@ package "models" #DDDDDD {
 
   class QuestionSubmission {
     + String answer
-    ' + UUID questionId
-    ' + UUID examSubmissionId
-    ' + Question question
-    ' + ExamSubmission examSubmission
+    + UUID questionId
+    + UUID examSubmissionId
     + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId)
     + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId)
     + String getAnswer()
@@ -343,7 +332,7 @@ package "services" #DDDDDD {
 
   AuthService o-- UserMapper
   class AuthService {
-    +     + User authenticateUser(String email, String password)
+    + User authenticateUser(String email, String password)
   }
 
   UserService o-- UserMapper
