@@ -1,6 +1,6 @@
 @startuml
 
-package "Models" #DDDDDD {
+package "models" #DDDDDD {
 
   User <|-- Administrator
   User <|-- Instructor
@@ -282,7 +282,7 @@ package "Models" #DDDDDD {
   }
 }
 
-package "Controllers" #DDDDDD { 
+package "controllers" #DDDDDD { 
 
   UserController o-- UserService 
   class UserController {
@@ -342,7 +342,7 @@ package "Controllers" #DDDDDD {
   }
 }
 
-package "Services" #DDDDDD {
+package "services" #DDDDDD {
 
   AuthService o-- UserMapper
   class AuthService {
@@ -434,8 +434,8 @@ package "Services" #DDDDDD {
 
 }
 
-package "Mappers" #DDDDDD {
-  
+package "mappers" #DDDDDD {
+
   Mapper <|-- AbstractUserMapper
   Mapper <|-- SubjectMapper
   Mapper <|-- InstructorSubjectMapper
@@ -594,8 +594,6 @@ package "Mappers" #DDDDDD {
     # Exam load(ResultSet rs)
     # String getTableName()
   }
-
 }
-
 
 @enduml
