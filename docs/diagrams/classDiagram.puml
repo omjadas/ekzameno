@@ -70,16 +70,6 @@ package "models" #DDDDDD {
 
   ProxyList o-- Model
 
-  class ProxyList {
-    # UUID id
-    + ProxyList(UUID id)
-    + void add(T obj)
-    + boolean contains(T obj)
-    + T get(int index)
-    + int size()
-    + remove(T obj)
-  }
-
   class Model {
     - UUID id
     + Model()
@@ -279,6 +269,90 @@ package "models" #DDDDDD {
     + void setExamId(UUID examId)
     + void setStudent(Student student)
     + void setExam(Exam exam)
+  }
+}
+
+package "proxies" #DDDDDD {
+
+  ProxyList <|-- ExamProxyList
+  ProxyList <|-- ExamSubmissionExamProxyList
+  ProxyList <|-- ExamSubmissionStudentProxyList
+  ProxyList <|-- SubjectStudentProxyList
+  ProxyList <|-- SubjectInstructorProxyList
+  ProxyList <|-- StudentProxyList
+  ProxyList <|-- QuestionSubmissionQuestionProxyList
+  ProxyList <|-- QuestionSubmissionExamSubmissionProxyList
+  ProxyList <|-- QuestionProxyList
+  ProxyList <|-- InstructorProxyList
+  ProxyList <|-- OptionProxyList
+
+  class ProxyList {
+    # UUID id
+    + ProxyList(UUID id)
+    + void add(T obj)
+    + boolean contains(T obj)
+    + T get(int index)
+    + int size()
+    + remove(T obj)
+  }
+
+  class ExamProxyList {
+    + ExamProxyList(UUID subjectId)
+    # void init()
+  }
+
+  class ExamSubmissionExamProxyList{
+    + ExamSubmissionExamProxyList(UUID examId)
+    # void init()
+  }
+
+  class ExamSubmissionStudentProxyList {
+    + ExamSubmissionStudentProxyList(UUID studentId)
+    # void init()
+  }
+
+  class InstructorProxyList {
+    + InstructorProxyList(UUID subjectId)
+    # void init()
+    + void remove(Instructor instructor)
+  }
+
+  class OptionProxyList {
+    + OptionProxyList(UUID questionId)
+    # void init()
+  }
+
+  class QuestionProxyList {
+    + QuestionProxyList(UUID examId)
+    # void init()
+  }
+
+  class QuestionSubmissionExamSubmissionProxyList {
+    + QuestionSubmissionExamSubmissionProxyList(UUID examSubmissionId)
+    # void init()
+  }
+
+  class QuestionSubmissionQuestionProxyList {
+    + QuestionSubmissionQuestionProxyList(UUID questionId)
+    # void init()
+  }
+  
+  class StudentProxyList {
+    + StudentProxyList(UUID subjectId)
+    # void init()
+    + void remove(Student student)
+  }
+
+  class SubjectInstructorProxyList {
+    + SubjectInstructorProxyList(UUID instructorId)
+    # void init()
+    + void remove(Subject subject)
+  }
+
+  class SubjectStudentProxyList {
+    + SubjectStudentProxyList(UUID studentId)
+    # void init()
+    + void remove(Subject subject)
   }
 }
 
