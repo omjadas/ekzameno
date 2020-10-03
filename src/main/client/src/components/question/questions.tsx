@@ -132,7 +132,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       </div>
     );
   } else if (me?.type === "STUDENT" && exam?.submissions !== undefined) {
-    const disabled = exam.submissions.length > 0;
+    const disabled = exam.submissions.length > 0 || new Date(exam.finishTime) < new Date();
     return (
       <Formik
         initialValues={{
