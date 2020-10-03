@@ -1,4 +1,5 @@
-@startuml
+@startuml Data Mapper
+
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 20
 skinparam maxmessagesize 130
@@ -16,6 +17,7 @@ activate Database
 Database --> A: ResultSet
 deactivate Database
 
-<-- A : List<Subjects> 
+<-- A : List<Subjects>
 deactivate Database
+
 @enduml

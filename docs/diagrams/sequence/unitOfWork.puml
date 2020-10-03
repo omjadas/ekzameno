@@ -1,4 +1,5 @@
-@startuml
+@startuml Unit of Work
+
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 20
 skinparam maxmessagesize 180
@@ -23,7 +24,7 @@ activate A
 A -> B: DELETE FROM exams WHERE id = 'examId'
 activate B
 
-deactivate B 
+deactivate B
 
 A -> B:  UPDATE subjects SET name = 'SDA', description = 'something' WHERE id = 'subjectId'
 activate B
@@ -31,4 +32,5 @@ activate B
 deactivate B
 
 deactivate A
+
 @enduml

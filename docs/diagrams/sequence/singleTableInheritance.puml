@@ -1,4 +1,4 @@
-@startuml
+@startuml Single Table Inheritance
 
 participant "UserMapper" as A
 database Database as B
@@ -18,4 +18,5 @@ else userType.Student
    B -> A: Authentication Failure
 
 end
+
 @enduml

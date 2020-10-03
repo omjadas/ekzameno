@@ -1,21 +1,23 @@
-@startuml
+@startuml Embedded Value
+
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 20
-skinparam maxmessagesize 190
+skinparam maxmessagesize 200
 skinparam sequenceParticipant underline
 
 participant "ExamMapper" as A
 database Database as B
 
--> A: createExam(name,description,startTime,finishTime,subjectId)
+-> A: findById(examId)
 activate A
 
-A -> B: INSERT INTO exams id,slug,name,description,start_time,finish_time,subject_id
+A -> B: SELECT * FROM exams WHERE exam_id ='examId'
 activate B
 
+B --> A: ResultSet{..DateRange..}
 deactivate B
 
-<-- A : Exam
+ <-- A : Exam{..startTime,finishTime..}
 deactivate A
 
 @enduml
