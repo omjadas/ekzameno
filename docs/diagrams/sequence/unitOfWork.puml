@@ -1,0 +1,35 @@
+@startuml Unit of Work
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 180
+skinparam sequenceParticipant underline
+
+participant "UnitOfWork" as A
+database Database as B
+
+-> A: registerDeleted(exam)
+activate A
+
+deactivate A
+
+-> A: registerDirty(subject)
+activate A
+
+deactivate A
+
+-> A: commit()
+activate A
+
+A -> B: DELETE FROM exams WHERE id = 'examId'
+activate B
+
+deactivate B
+
+A -> B:  UPDATE subjects SET name = 'SDA', description = 'something' WHERE id = 'subjectId'
+activate B
+
+deactivate B
+deactivate A
+
+@enduml

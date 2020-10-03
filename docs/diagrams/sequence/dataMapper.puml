@@ -1,0 +1,23 @@
+@startuml Data Mapper
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 130
+skinparam sequenceParticipant underline
+
+participant "subjectMapper" as A
+database Database
+
+-> A: findAll
+activate A
+
+A -> Database: SELECT * FROM subjects
+activate Database
+
+Database --> A: ResultSet
+deactivate Database
+
+<-- A : List<Subjects>
+deactivate Database
+
+@enduml

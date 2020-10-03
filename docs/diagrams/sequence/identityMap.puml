@@ -1,0 +1,34 @@
+@startuml Identity Map
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 200
+skinparam sequenceParticipant underline
+
+participant "SubjectMapper" as A
+participant "IdentityMap" as B
+database Database as C
+
+-> A: findById(subjectId)
+activate A
+
+A -> B:get(subjectId)
+activate B
+
+B --> A:Subject
+deactivate B
+
+alt subject == null
+
+    A -> C: SELECT * FROM subjects WHERE subject_id ='subjectId'
+    activate C
+
+    C --> A: ResultSet
+    deactivate C
+
+end
+
+<-- A : Subject
+deactivate A
+
+@enduml
