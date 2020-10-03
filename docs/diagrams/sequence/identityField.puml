@@ -5,22 +5,22 @@ skinparam roundcorner 20
 skinparam maxmessagesize 140
 skinparam sequenceParticipant underline
 
-participant "subject" as B
-participant "model" as C
-participant "UUID" as D
+participant "subject" as A
+participant "model" as B
+participant "UUID" as C
 
--> B: <<create>>(name,description)
-activate B 
+-> A: <<create>>(name,description)
+activate A
 
-B -> C: <<create>>()
+A -> B: <<create>>()
+activate B
+
+B -> C:randomUUID()
 activate C
 
-C -> D:randomUUID()
-activate D
-
-D -> C: id
-deactivate D
+C -> B: id
 deactivate C
 deactivate B
+deactivate A
 
 @enduml

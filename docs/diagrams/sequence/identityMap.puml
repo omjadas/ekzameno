@@ -19,14 +19,14 @@ B --> A:Subject
 deactivate B
 
 alt subject == null
-    
+
     A -> C: SELECT * FROM subjects WHERE subject_id ='subjectId'
     activate C
-    
+
     C --> A: ResultSet
     deactivate C
 
-end 
+end
 
 <-- A : Subject
 deactivate A
