@@ -71,8 +71,8 @@ public class ExamSubmission extends Model {
     }
 
     @JsonGetter("questionSubmissions")
-    private List<QuestionSubmission> getRawQuestionSubmissions(
-    ) throws SQLException {
+    private List<QuestionSubmission> getRawQuestionSubmissions()
+        throws SQLException {
         return questionSubmissions.getRawList();
     }
 
