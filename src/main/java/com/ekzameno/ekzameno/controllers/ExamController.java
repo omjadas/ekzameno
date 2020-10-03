@@ -1,5 +1,7 @@
 package com.ekzameno.ekzameno.controllers;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -160,13 +162,27 @@ public class ExamController {
     @Path("/{examId}/submissions")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ExamSubmission getSubmission(
+    public List<ExamSubmission> getSubmission(
         @PathParam("examId") String examId,
         @Context SecurityContext securityContext
     ) {
-        return examService.getSubmission(
-            UUID.fromString(examId),
-            UUID.fromString(securityContext.getUserPrincipal().getName())
-        );
+        Principal principal = securityContext.getUserPrincipal();
+
+        if (securityContext.isUserInRole("STUDENT")) {
+            List<ExamSubmission> examSubmissions = new ArrayList<>();
+
+            ExamSubmission submission = examService.getSubmissionForUser(
+                UUID.fromString(examId),
+                UUID.fromString(principal.getName())
+            );
+
+            if (submission != null) {
+                examSubmissions.add(submission);
+            }
+
+            return examSubmissions;
+        } else {
+            return examService.getSubmissions(UUID.fromString(examId));
+        }
     }
 }

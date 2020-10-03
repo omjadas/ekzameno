@@ -10,11 +10,24 @@ export interface Exam {
   finishTime: string,
 }
 
+export interface ExamSubmission {
+  id: string,
+  examId: string,
+  studentId: string,
+  marks: number,
+  questionSubmissions: {
+    id: string,
+    answer: string,
+    questionId: string,
+  }[],
+}
+
 export interface ExamState extends Exam {
   id: string,
   slug: string,
   subjectId: string,
   questionIds: string[],
+  submissions?: ExamSubmission[],
 }
 
 export interface Answer {
@@ -102,13 +115,23 @@ export const deleteExam = createAsyncThunk(
 export const submitExam = createAsyncThunk(
   "exams/submitExam",
   async ({ examId, answers }: { examId: string, answers: Answer[] }) => {
-    await fetch(`/api/exams/${examId}/submissions`, {
+    const res = await fetch(`/api/exams/${examId}/submissions`, {
       method: "post",
       body: JSON.stringify({ answers }),
       headers: {
         "content-type": "application/json",
       },
     });
+
+    return res.json() as Promise<ExamSubmission>;
+  }
+);
+
+export const fetchSubmissions = createAsyncThunk(
+  "exams/fetchSubmission",
+  async (examId: string) => {
+    const res = await fetch(`/api/exams/${examId}/submissions`);
+    return res.json() as Promise<ExamSubmission[]>;
   }
 );
 
@@ -160,6 +183,21 @@ export const examsSlice = createSlice({
       if (exam !== undefined) {
         exam.questionIds === undefined && (exam.questionIds = []);
         exam.questionIds.push(action.payload.id);
+      }
+    });
+    builder.addCase(submitExam.fulfilled, (state, action) => {
+      const exam = state.entities[action.payload.examId];
+
+      if (exam !== undefined) {
+        exam.submissions = exam.submissions ?? [];
+        exam.submissions.push(action.payload);
+      }
+    });
+    builder.addCase(fetchSubmissions.fulfilled, (state, action) => {
+      const exam = state.entities[action.payload[0].examId];
+
+      if (exam !== undefined) {
+        exam.submissions = action.payload;
       }
     });
   },

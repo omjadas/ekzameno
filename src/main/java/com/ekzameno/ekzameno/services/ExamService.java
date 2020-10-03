@@ -185,12 +185,34 @@ public class ExamService {
         }
     }
 
-    public ExamSubmission getSubmission(UUID examId, UUID userId) {
+    /**
+     * Retrieve all submissions for a given exam.
+     *
+     * @param examId ID of the exam to retrieve submissions for
+     * @return submissions for the specified exam
+     */
+    public List<ExamSubmission> getSubmissions(UUID examId) {
+        try {
+            return examSubmissionMapper.findAllForExam(examId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Retrieve the submission for a given user and exam.
+     *
+     * @param examId ID of the exam
+     * @param userId ID of the user
+     * @return the submission the user made for the exam
+     */
+    public ExamSubmission getSubmissionForUser(UUID examId, UUID userId) {
         try {
             return examSubmissionMapper.findByRelationIds(userId, examId);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new InternalServerErrorException();
+            return null;
         }
     }
 }
