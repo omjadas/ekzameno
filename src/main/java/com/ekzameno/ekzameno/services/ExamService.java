@@ -11,6 +11,7 @@ import javax.ws.rs.NotFoundException;
 
 import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
+import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -23,6 +24,8 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  */
 public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
+    private ExamSubmissionMapper examSubmissionMapper =
+        new ExamSubmissionMapper();
 
     /**
      * Fetches an exam for a given slug.
@@ -176,6 +179,15 @@ public class ExamService {
 
             UnitOfWork.getCurrent().commit();
             return examSubmission;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    public ExamSubmission getSubmission(UUID examId, UUID userId) {
+        try {
+            return examSubmissionMapper.findByRelationIds(userId, examId);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();

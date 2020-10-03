@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -6,10 +7,9 @@ import { deleteExam, fetchExam, selectExamBySlug, updateExam } from "../../redux
 import { selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
-import { Questions } from "../question/questions";
 import { QuestionModal } from "../question/questionModal";
+import { Questions } from "../question/questions";
 import styles from "../subject/subject.module.scss";
-import { unwrapResult } from "@reduxjs/toolkit";
 
 export const Exam = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();

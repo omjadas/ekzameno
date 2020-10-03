@@ -149,4 +149,24 @@ public class ExamController {
             dto.answers
         );
     }
+
+    /**
+     * Retrieve the user's submission for a given exam.
+     *
+     * @param examId          ID of the exam to retrieve the submission for
+     * @param securityContext Security context for the request
+     * @return the user's submission for the exam
+     */
+    @Path("/{examId}/submissions")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ExamSubmission getSubmission(
+        @PathParam("examId") String examId,
+        @Context SecurityContext securityContext
+    ) {
+        return examService.getSubmission(
+            UUID.fromString(examId),
+            UUID.fromString(securityContext.getUserPrincipal().getName())
+        );
+    }
 }
