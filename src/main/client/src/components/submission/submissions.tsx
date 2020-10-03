@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Button, Form, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
@@ -8,6 +8,7 @@ import { ExamState, fetchSubmissions, selectExamById, submitExam, updateExamSubm
 import { selectSubjectById, SubjectState } from "../../redux/slices/subjectsSlice";
 import { fetchUsers, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
+import { SubmissionModal } from "./submissionModal";
 
 export interface SubmissionsProps {
   examId: string,
@@ -38,11 +39,19 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     state => selectSubjectById(state, exam?.subjectId ?? "")
   );
   const students = useSelector(selectUsersByIds(subject?.students ?? []));
+  const [
+    submissionModalShow,
+    setSubmissionModalShow,
+  ] = useState<string | null>(null);
 
-  const submissions: Record<string, number> = {};
+  const submissions: Record<string, number | undefined> = {};
 
   exam?.submissions?.forEach(submission => {
-    submissions[submission.studentId] = submission.marks ?? -1;
+    if (submission.marks !== undefined) {
+      submissions[submission.studentId] = submission.marks < 0
+        ? undefined
+        : submission.marks;
+    }
   });
 
   useEffect(() => {
@@ -129,34 +138,41 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
               <tbody>
                 {
                   students.map((student, i) => (
-                    <tr key={student.id}>
-                      <td>
-                        {student.name}
-                      </td>
-                      <td>
-                        <Form.Control
-                          onClick={() => {}}
-                          type="number"
-                          name={`marks[${i}].marks`}
-                          value={values.marks[i].marks}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          disabled={isSubmitting}
-                          isInvalid={
-                            !!(
-                              touched.marks
-                                && touched.marks[i]
-                                && errors.marks
-                                && errors.marks[i]
-                            )
-                          } />
-                      </td>
-                      <td>
-                        <Button>
-                          Show Details
-                        </Button>
-                      </td>
-                    </tr>
+                    <Fragment key={student.id}>
+                      <tr>
+                        <td>
+                          {student.name}
+                        </td>
+                        <td>
+                          <Form.Control
+                            onClick={() => {}}
+                            type="number"
+                            name={`marks[${i}].marks`}
+                            value={values.marks[i].marks}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            disabled={isSubmitting}
+                            isInvalid={
+                              !!(
+                                touched.marks
+                                  && touched.marks[i]
+                                  && errors.marks
+                                  && errors.marks[i]
+                              )
+                            } />
+                        </td>
+                        <td>
+                          <Button onClick={() => setSubmissionModalShow(student.id)}>
+                            Show Details
+                          </Button>
+                        </td>
+                      </tr>
+                      <SubmissionModal
+                        show={submissionModalShow === student.id}
+                        onHide={() => setSubmissionModalShow(null)}
+                        examId={props.examId}
+                        studentId={student.id} />
+                    </Fragment>
                   ))
                 }
               </tbody>

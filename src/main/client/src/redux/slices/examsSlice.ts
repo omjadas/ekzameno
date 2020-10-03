@@ -10,16 +10,18 @@ export interface Exam {
   finishTime: string,
 }
 
+export interface QuestionSubmission {
+  id: string,
+  answer: string,
+  questionId: string,
+}
+
 export interface ExamSubmission {
   id: string,
   examId: string,
   studentId: string,
   marks?: number,
-  questionSubmissions: {
-    id: string,
-    answer: string,
-    questionId: string,
-  }[],
+  questionSubmissions: QuestionSubmission[],
 }
 
 export interface ExamState extends Exam {
