@@ -154,17 +154,19 @@ public class ExamService {
      *
      * @param examId    id of the Exam
      * @param studentId id of the question
+     * @param marks     number of marks for the submission
      * @param answers   answers
      * @return a new exam submission
      */
     public ExamSubmission createSubmission(
         UUID examId,
         UUID studentId,
+        Integer marks,
         List<CreateQuestionSubmissionDTO> answers
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             ExamSubmission examSubmission = new ExamSubmission(
-                0,
+                marks == null ? -1 : marks,
                 studentId,
                 examId
             );
@@ -212,6 +214,34 @@ public class ExamService {
             return examSubmissionMapper.findByRelationIds(userId, examId);
         } catch (NotFoundException e) {
             return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Update an exam submission.
+     *
+     * @param examId    ID of the exam
+     * @param studentId ID of the student
+     * @param marks     Number of marks assigned to the exam submission
+     * @return updated ExamSubmission
+     */
+    public ExamSubmission updateSubmission(
+        UUID examId,
+        UUID studentId,
+        Integer marks
+    ) {
+        try (
+            DBConnection connection = DBConnection.getInstance();
+        ) {
+            ExamSubmission examSubmission =
+                examSubmissionMapper.findByRelationIds(studentId, examId);
+
+            examSubmission.setMarks(marks);
+            UnitOfWork.getCurrent().commit();
+            return examSubmission;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();

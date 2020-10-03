@@ -291,7 +291,7 @@ export const QuestionModal = (
                                     // @ts-ignore
                                     className={
                                       touched.options
-                                        && (touched.options as unknown as boolean[])[i]
+                                        && touched.options[i]
                                         && errors.options
                                         && errors.options[i]
                                         && "d-block"

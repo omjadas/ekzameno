@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
 import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice";
-import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsByIds } from "../../redux/slices/questionsSlice";
+import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { QuestionModal } from "./questionModal";
@@ -26,7 +26,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   const exam = useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
   );
-  const questions = useSelector(selectQuestionsByIds(exam?.questionIds ?? []));
+  const questions = useSelector(selectQuestionsForExam(props.examId));
   const [questionModalShow, setQuestionModalShow] = useState<string | null>(null);
   const me = useSelector(selectMe);
   const options = useSelector(selectAllOptions);
@@ -63,6 +63,10 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   }, [dispatch, props.examId]);
 
+  if (me === undefined) {
+    return <></>;
+  }
+
   const answers: Record<string, string> = {};
 
   if (
@@ -88,6 +92,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   const onSubmit = (values: FormValues): void => {
     dispatch(submitExam({
       examId: props.examId,
+      studentId: me.id,
       answers: values.answers,
     }))
       .then(unwrapResult)
