@@ -96,7 +96,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   };
 
-  if (me?.type === "INSTRUCTOR") {
+  if (me?.type === "INSTRUCTOR" && exam !== undefined) {
     return (
       <div className={styles.wrapper}>
         {
@@ -110,12 +110,17 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                     <br />
                     Type: {questionLabels[question.type]}
                   </Card.Text>
-                  <Button className="mr-2" onClick={() => setQuestionModalShow(question.id)}>
-                    Edit
-                  </Button>
-                  <Button className="mr-2" onClick={() => onClick(question.id)}>
-                    Delete
-                  </Button>
+                  {
+                    new Date(exam.startTime) > new Date() &&
+                      <>
+                        <Button className="mr-2" onClick={() => setQuestionModalShow(question.id)}>
+                          Edit
+                        </Button>
+                        <Button className="mr-2" onClick={() => onClick(question.id)}>
+                          Delete
+                        </Button>
+                      </>
+                  }
                   <QuestionModal
                     show={questionModalShow === question.id}
                     onHide={() => setQuestionModalShow(null)}
