@@ -1,8 +1,6 @@
-@startuml
+@startuml Architecture Diagram
 
-node "Client" {
-
-}
+node "Client"
 
 node "Web Server" {
     [Controllers]
@@ -11,25 +9,16 @@ node "Web Server" {
     [Services]
 }
 
-database "Database" {
+database "Database"
 
-}
-
-Controllers --> Client
 Controllers --> Services
 
-Services --> Controllers
 Services --> Mappers
 Services --> Models
 
-Mappers --> Services
 Mappers --> Models
 Mappers --> Database
 
-Models --> Mappers
-
 Client --> Controllers
-
-Database --> Mappers
 
 @enduml
