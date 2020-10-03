@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import * as yup from "yup";
 import { Answer, ExamState, selectExamById, submitExam } from "../../redux/slices/examsSlice";
 import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice";
 import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsByIds } from "../../redux/slices/questionsSlice";
@@ -21,15 +20,6 @@ interface QuestionProps {
 interface FormValues {
   answers: Answer[],
 }
-
-const FormSchema = yup.object().shape({
-  answers: yup.array().of(
-    yup.object().shape({
-      questionId: yup.string().required(),
-      answer: yup.string(),
-    })
-  ).required(),
-});
 
 export const Questions = (props: QuestionProps): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -132,7 +122,6 @@ export const Questions = (props: QuestionProps): JSX.Element => {
               answer: "",
             })),
           }}
-          validationSchema={FormSchema}
           onSubmit={onSubmit}>
           {
             ({

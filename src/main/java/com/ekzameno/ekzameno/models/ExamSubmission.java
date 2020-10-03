@@ -1,6 +1,7 @@
 package com.ekzameno.ekzameno.models;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.mappers.ExamMapper;
@@ -8,6 +9,7 @@ import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.proxies.ProxyList;
 import com.ekzameno.ekzameno.proxies.QuestionSubmissionExamSubmissionProxyList;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -15,11 +17,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class ExamSubmission extends Model {
     private int marks;
-    @JsonIgnore
     private ProxyList<QuestionSubmission> questionSubmissions;
     private UUID studentId;
     private UUID examId;
+    @JsonIgnore
     private Student student = null;
+    @JsonIgnore
     private Exam exam = null;
 
     /**
@@ -65,6 +68,12 @@ public class ExamSubmission extends Model {
      */
     public ProxyList<QuestionSubmission> getQuestionSubmissions() {
         return questionSubmissions;
+    }
+
+    @JsonGetter("questionSubmissions")
+    private List<QuestionSubmission> getRawQuestionSubmissions(
+    ) throws SQLException {
+        return questionSubmissions.getRawList();
     }
 
     /**

@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Submission for a Question.
@@ -14,7 +15,9 @@ public class QuestionSubmission extends Model {
     private String answer;
     private UUID questionId;
     private UUID examSubmissionId;
+    @JsonIgnore
     private Question question = null;
+    @JsonIgnore
     private ExamSubmission examSubmission = null;
 
     /**
