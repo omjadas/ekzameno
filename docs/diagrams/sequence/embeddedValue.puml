@@ -5,19 +5,37 @@ skinparam roundcorner 20
 skinparam maxmessagesize 200
 skinparam sequenceParticipant underline
 
-participant "ExamMapper" as A
-database Database as B
+participant "examMapper" as A
+database Database as D
+participant "dateRange" as B
+participant "exam" as C
 
 -> A: findById(examId)
 activate A
 
-A -> B: SELECT * FROM exams WHERE exam_id ='examId'
+A -> D: SELECT * FROM exams WHERE exam_id ='examId'
+activate D
+
+D --> A: ResultSet
+deactivate D
+
+A -> A : load(rs)
+activate A
+
+A -> B : <<create>>(startTime, finishTime)
 activate B
 
-B --> A: ResultSet{..DateRange..}
+B --> A : dateRange
 deactivate B
+deactivate A
 
- <-- A : Exam{..startTime,finishTime..}
+A -> C : <<create>>(id, name, description, dateRange, subjectId, slug)
+activate C
+
+C --> A : exam
+deactivate C
+
+<-- A : exam
 deactivate A
 
 @enduml

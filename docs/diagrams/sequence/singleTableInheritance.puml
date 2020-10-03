@@ -2,21 +2,54 @@
 
 participant "UserMapper" as A
 database Database as B
+participant "AdministratorMapper" as C
+participant "InstructorMapper" as D
+participant "StudentMapper" as E
 
 -> A: findByEmail(email)
+activate A
 
-alt userType.Administrator
+A -> B: SELECT * FROM users where email = 'email'
+activate B
 
-    A -> B: Authentication Accepted
+B --> A: ResultSet
+deactivate B
 
-else userType.Instructor
+A -> A: load(rs)
+activate A
 
-    B -> A: Authentication Failure
+alt type == "administrator"
 
-else userType.Student
+    A -> C: load(rs)
+    activate C
 
-   B -> A: Authentication Failure
+    C --> A: administrator
+    deactivate C
+
+else type == "instructor"
+
+    A -> D: load(rs)
+    activate D
+
+    D --> A : instructor
+    deactivate D
+
+else type == "student"
+
+    A -> E: load(rs)
+    activate E
+
+    E --> A: student
+    deactivate E
 
 end
+
+A --> A: user
+
+deactivate A
+
+<-- A: user
+
+deactivate A
 
 @enduml

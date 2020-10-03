@@ -8,20 +8,29 @@ participant "ExamProxyList" as A
 participant "ExamMapper" as B
 database Database as C
 
--> A: init()
+-> A: get(0)
 activate A
 
-A -> B: findAllForSubject(subjectId)
-activate B
+A -> A: init()
+activate A
 
-B -> C: SELECT * FROM exams WHERE subject_id ='subjectId'
-activate C
+alt models == null
+    A -> B: findAllForSubject(subjectId)
+    activate B
 
-C --> B: ResultSet
-deactivate C
+    B -> C: SELECT * FROM exams WHERE subject_id ='subjectId'
+    activate C
 
-B --> A : List<Exam>
-deactivate B
+    C --> B: ResultSet
+    deactivate C
+
+    B --> A : List<Exam>
+    deactivate B
+end
+
+deactivate A
+
+<-- A: Exam
 
 deactivate A
 

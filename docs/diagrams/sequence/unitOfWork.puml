@@ -18,7 +18,7 @@ activate A
 
 deactivate A
 
- -> A: commit()
+-> A: commit()
 activate A
 
 A -> B: DELETE FROM exams WHERE id = 'examId'
@@ -30,7 +30,6 @@ A -> B:  UPDATE subjects SET name = 'SDA', description = 'something' WHERE id = 
 activate B
 
 deactivate B
-
 deactivate A
 
 @enduml

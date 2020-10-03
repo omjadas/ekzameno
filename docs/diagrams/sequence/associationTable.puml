@@ -5,10 +5,10 @@ skinparam roundcorner 20
 skinparam maxmessagesize 230
 skinparam sequenceParticipant underline
 
-participant "SubjectMapper" as A
+participant "subjectMapper" as A
 database Database
 
--> A:getSubjectsForInstructor(instructorId)
+-> A: getSubjectsForInstructor(instructorId)
 activate A
 
 A -> Database: "SELECT * FROM subjects JOIN instructor_subjects ON subjects.id = instructor_subjects.subject_id WHERE instructor_subjects.user_id = 'instructorId'

@@ -17,7 +17,7 @@ activate B
 B --> A: ResultSet
 deactivate B
 
- <-- A : Subject
+<-- A : Subject
 deactivate A
 
 @enduml
