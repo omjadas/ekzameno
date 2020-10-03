@@ -210,9 +210,11 @@ public class ExamService {
     public ExamSubmission getSubmissionForUser(UUID examId, UUID userId) {
         try {
             return examSubmissionMapper.findByRelationIds(userId, examId);
+        } catch (NotFoundException e) {
+            return null;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw new InternalServerErrorException();
         }
     }
 }

@@ -131,7 +131,10 @@ export const fetchSubmissions = createAsyncThunk(
   "exams/fetchSubmission",
   async (examId: string) => {
     const res = await fetch(`/api/exams/${examId}/submissions`);
-    return res.json() as Promise<ExamSubmission[]>;
+    return {
+      examId,
+      submissions: await res.json() as ExamSubmission[],
+    };
   }
 );
 
@@ -194,10 +197,10 @@ export const examsSlice = createSlice({
       }
     });
     builder.addCase(fetchSubmissions.fulfilled, (state, action) => {
-      const exam = state.entities[action.payload[0].examId];
+      const exam = state.entities[action.payload.examId];
 
       if (exam !== undefined) {
-        exam.submissions = action.payload;
+        exam.submissions = action.payload.submissions;
       }
     });
   },
