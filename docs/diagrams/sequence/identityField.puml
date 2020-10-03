@@ -2,20 +2,31 @@
 
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 20
-skinparam maxmessagesize 150
+skinparam maxmessagesize 140
 skinparam sequenceParticipant underline
 
 participant "subjectMapper" as A
-database Database as B
+participant "subject" as B
+participant "model" as C
+database Database as D
 
--> A: createSubject(name,description,instructors,students)
+-> A: insert(name,description)
 activate A
 
-A -> B: INSERT INTO subjects id, slug, name, description
-activate B
+A -> B: <<create>>(name,description)
+activate B 
 
-B --> A: ResultSet
+B -> C: <<create>>
+activate C
+
+C -> C:subject(id)
+deactivate C
 deactivate B
+
+A -> D: INSERT INTO subjects(id, slug, name, description)
+activate D
+
+deactivate D
 
 <-- A : Subject
 deactivate A

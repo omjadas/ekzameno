@@ -6,16 +6,27 @@ skinparam maxmessagesize 200
 skinparam sequenceParticipant underline
 
 participant "SubjectMapper" as A
-database Database as B
+participant "IdentityMap" as B
+database Database as C
 
 -> A: findById(subjectId)
 activate A
 
-A -> B: SELECT * FROM subjects WHERE subject_id ='subjectId'
+A -> B:get(subjectId)
 activate B
 
-B --> A: ResultSet
+B --> A:Subject
 deactivate B
+
+alt subject == null
+    
+    A -> C: SELECT * FROM subjects WHERE subject_id ='subjectId'
+    activate C
+    
+    C --> A: ResultSet
+    deactivate C
+
+end 
 
 <-- A : Subject
 deactivate A
