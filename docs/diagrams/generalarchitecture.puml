@@ -1,0 +1,35 @@
+@startuml
+
+node "Client" {
+
+}
+
+node "Web Server" {
+    [Controllers]
+    [Mappers]
+    [Models]
+    [Services]
+}
+
+database "Database" {
+
+}
+
+Controllers --> Client
+Controllers --> Services
+
+Services --> Controllers
+Services --> Mappers
+Services --> Models
+
+Mappers --> Services
+Mappers --> Models
+Mappers --> Database
+
+Models --> Mappers
+
+Client --> Controllers
+
+Database --> Mappers
+
+@enduml
