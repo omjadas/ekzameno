@@ -11,6 +11,8 @@ node "Web Server" {
 
 database "Database"
 
+Client --> Controllers
+
 Controllers --> Services
 
 Services --> Mappers
@@ -18,7 +20,5 @@ Services --> Models
 
 Mappers --> Models
 Mappers --> Database
-
-Client --> Controllers
 
 @enduml
