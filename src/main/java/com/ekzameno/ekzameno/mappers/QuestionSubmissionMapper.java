@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
@@ -41,12 +43,16 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             statement.setObject(1, questionId);
             statement.setObject(2, examSubmissionId);
             ResultSet rs = statement.executeQuery();
-            QuestionSubmission questionSubmission = load(rs);
-            IdentityMap.getInstance().put(
-                questionSubmission.getId(),
-                questionSubmission
-            );
-            return questionSubmission;
+            if (rs.next()) {
+                QuestionSubmission questionSubmission = load(rs);
+                IdentityMap.getInstance().put(
+                    questionSubmission.getId(),
+                    questionSubmission
+                );
+                return questionSubmission;
+            } else {
+                throw new NotFoundException();
+            }
         }
     }
 

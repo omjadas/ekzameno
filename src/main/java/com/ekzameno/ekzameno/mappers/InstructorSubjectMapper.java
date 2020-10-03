@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.InstructorSubject;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
@@ -39,12 +41,16 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
             statement.setObject(1, instructorId);
             statement.setObject(2, subjectId);
             ResultSet rs = statement.executeQuery();
-            InstructorSubject instructorSubject = load(rs);
-            IdentityMap.getInstance().put(
-                instructorSubject.getId(),
-                instructorSubject
-            );
-            return instructorSubject;
+            if (rs.next()) {
+                InstructorSubject instructorSubject = load(rs);
+                IdentityMap.getInstance().put(
+                    instructorSubject.getId(),
+                    instructorSubject
+                );
+                return instructorSubject;
+            } else {
+                throw new NotFoundException();
+            }
         }
     }
 
