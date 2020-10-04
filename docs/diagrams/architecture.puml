@@ -2,7 +2,7 @@
 
 node "Client"
 
-node "Web Server" {
+node "API Server" {
     [Controllers]
     [Mappers]
     [Models]
