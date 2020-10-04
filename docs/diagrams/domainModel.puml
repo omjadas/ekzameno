@@ -18,7 +18,7 @@ class ShortAnswerQuestion {}
 
 class MultipleChoiceQuestion {}
 
-class Answer {}
+class Option {}
 
 class ExamSubmission {}
 
@@ -45,6 +45,6 @@ ExamSubmission "1" *-- "*" QuestionSubmission
 
 Question "1" *-- "*" QuestionSubmission
 
-MultipleChoiceQuestion "1" *-- "1..*" Answer
+MultipleChoiceQuestion "1" *-- "1..*" Option
 
 @enduml
