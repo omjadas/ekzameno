@@ -203,7 +203,7 @@ public class ExamController {
     @Path("/{examId}/submissions")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ExamSubmission> getSubmission(
+    public List<ExamSubmission> getSubmissions(
         @PathParam("examId") String examId,
         @Context SecurityContext securityContext
     ) {
