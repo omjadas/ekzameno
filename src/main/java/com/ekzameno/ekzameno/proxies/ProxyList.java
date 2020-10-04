@@ -80,5 +80,16 @@ public abstract class ProxyList<T extends Model> {
         Mapper.getMapper(obj.getClass()).delete(obj);
     }
 
+    /**
+     * Retrieve the raw list.
+     *
+     * @return the raw list of models
+     * @throws SQLException if unable to retrieve the models
+     */
+    public List<T> getRawList() throws SQLException {
+        init();
+        return models;
+    }
+
     protected abstract void init() throws SQLException;
 }

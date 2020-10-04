@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
+import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.services.OptionService;
@@ -25,6 +26,7 @@ import com.ekzameno.ekzameno.services.QuestionService;
  * Controller for questions.
  */
 @Path("/questions")
+@Protected
 public class QuestionController {
     private QuestionService questionService = new QuestionService();
     private OptionService optionService = new OptionService();

@@ -163,4 +163,12 @@ export const selectAdministrators = (state: RootState): UserState[] => {
   return selectAllUsers(state).filter(user => user.type === "ADMINISTRATOR");
 };
 
+export const selectUsersByIds = (ids: string[]) => {
+  return (state: RootState): UserState[] => {
+    return ids
+      .map(id => selectUserById(state, id))
+      .filter(user => user !== undefined) as UserState[];
+  };
+};
+
 export default usersSlice.reducer;

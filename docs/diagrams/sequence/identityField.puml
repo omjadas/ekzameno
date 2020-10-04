@@ -1,0 +1,26 @@
+@startuml Identity Field
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 140
+skinparam sequenceParticipant underline
+
+participant "subject" as A
+participant "model" as B
+participant "UUID" as C
+
+-> A: <<create>>(name,description)
+activate A
+
+A -> B: <<create>>()
+activate B
+
+B -> C:randomUUID()
+activate C
+
+C -> B: id
+deactivate C
+deactivate B
+deactivate A
+
+@enduml

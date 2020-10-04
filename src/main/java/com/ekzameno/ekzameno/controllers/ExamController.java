@@ -1,10 +1,13 @@
 package com.ekzameno.ekzameno.controllers;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -129,24 +132,98 @@ public class ExamController {
     /**
      * Create a submission for a given exam.
      *
-     * @param examId          ID of the exam to create the question for
+     * @param examId          ID of the exam to create the submission for
+     * @param studentId       ID of the student to create the submission for
      * @param dto             Question DTO
      * @param securityContext Security context for the request
      * @return Response to the client
      */
-    @Path("/{examId}/submissions")
+    @Path("/{examId}/submissions/{studentId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ExamSubmission submitExam(
         @PathParam("examId") String examId,
+        @PathParam("studentId") String studentId,
         @Context SecurityContext securityContext,
         CreateExamSubmissionDTO dto
     ) {
+        if (
+            securityContext.isUserInRole("student") &&
+                !securityContext.getUserPrincipal().getName().equals(studentId)
+        ) {
+            throw new ForbiddenException();
+        }
+
         return examService.createSubmission(
             UUID.fromString(examId),
-            UUID.fromString(securityContext.getUserPrincipal().getName()),
+            UUID.fromString(studentId),
+            dto.marks,
             dto.answers
         );
+    }
+
+    /**
+     * Update an exam submission.
+     *
+     * @param examId          ID of the exam
+     * @param studentId       ID of the student
+     * @param securityContext Security context for the request
+     * @param dto             DTO for the exam submission
+     * @return the updated exam submission
+     */
+    @Path("/{examId}/submissions/{studentId}")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ExamSubmission updateExamSubmission(
+        @PathParam("examId") String examId,
+        @PathParam("studentId") String studentId,
+        @Context SecurityContext securityContext,
+        CreateExamSubmissionDTO dto
+    ) {
+        if (securityContext.isUserInRole("student")) {
+            throw new ForbiddenException();
+        }
+
+        return examService.updateSubmission(
+            UUID.fromString(examId),
+            UUID.fromString(studentId),
+            dto.marks
+        );
+    }
+
+    /**
+     * Retrieve the user's submission for a given exam.
+     *
+     * @param examId          ID of the exam to retrieve the submission for
+     * @param securityContext Security context for the request
+     * @return the user's submission for the exam
+     */
+    @Path("/{examId}/submissions")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ExamSubmission> getSubmission(
+        @PathParam("examId") String examId,
+        @Context SecurityContext securityContext
+    ) {
+        Principal principal = securityContext.getUserPrincipal();
+
+        if (securityContext.isUserInRole("STUDENT")) {
+            List<ExamSubmission> examSubmissions = new ArrayList<>();
+
+            ExamSubmission submission = examService.getSubmissionForUser(
+                UUID.fromString(examId),
+                UUID.fromString(principal.getName())
+            );
+
+            if (submission != null) {
+                examSubmissions.add(submission);
+            }
+
+            return examSubmissions;
+        } else {
+            return examService.getSubmissions(UUID.fromString(examId));
+        }
     }
 }

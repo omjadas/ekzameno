@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Associative table for Students and Subjects.
@@ -13,7 +14,9 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
 public class Enrolment extends Model {
     private UUID studentId;
     private UUID subjectId;
+    @JsonIgnore
     private Student student = null;
+    @JsonIgnore
     private Subject subject = null;
 
     /**

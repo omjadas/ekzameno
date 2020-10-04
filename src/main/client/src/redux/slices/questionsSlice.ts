@@ -144,6 +144,13 @@ export const {
   selectIds: selectQuestionIds,
 } = questionsAdapter.getSelectors<RootState>(state => state.questions);
 
+export const selectQuestionsForExam = (examId: string) => {
+  return (state: RootState): QuestionState[] => {
+    return selectAllQuestions(state)
+      .filter(question => question.examId === examId);
+  };
+};
+
 export const selectQuestionsByIds = (ids: string[]) => {
   return (state: RootState): QuestionState[] => {
     return ids

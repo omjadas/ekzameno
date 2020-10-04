@@ -1,3 +1,4 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
 import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
@@ -6,10 +7,10 @@ import { deleteExam, fetchExam, selectExamBySlug, updateExam } from "../../redux
 import { selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
-import { Questions } from "../question/questions";
 import { QuestionModal } from "../question/questionModal";
+import { Questions } from "../question/questions";
 import styles from "../subject/subject.module.scss";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { Submissions } from "../submission/submissions";
 
 export const Exam = (): JSX.Element => {
   const { slug } = useParams<{ slug: string }>();
@@ -48,6 +49,16 @@ export const Exam = (): JSX.Element => {
   const currentTime = new Date();
   const startTime = new Date(exam.startTime);
   const finishTime = new Date(exam.finishTime);
+
+  let state: "new" | "published" | "closed";
+
+  if (startTime > currentTime) {
+    state = "new";
+  } else if (finishTime < currentTime) {
+    state = "closed";
+  } else {
+    state = "published";
+  }
 
   const publishNow = (): void => {
     dispatch(updateExam({
@@ -96,7 +107,7 @@ export const Exam = (): JSX.Element => {
                 Delete Exam
               </Button>
               {
-                startTime > currentTime &&
+                state === "new" &&
                   <>
                     <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
                       Add Question
@@ -107,8 +118,7 @@ export const Exam = (): JSX.Element => {
                   </>
               }
               {
-                finishTime > currentTime &&
-                startTime < currentTime &&
+                state === "published" &&
                   <Button onClick={closeNow}>
                     Close Exam
                   </Button>
@@ -128,7 +138,11 @@ export const Exam = (): JSX.Element => {
         show={questionModalShow}
         onHide={() => setQuestionModalShow(false)}
         examId={exam.id} />
-      <Questions examId={exam.id}></Questions>
+      {
+        state !== "closed"
+          ? <Questions examId={exam.id} />
+          : <Submissions examId={exam.id} />
+      }
     </Container>
   );
 };
