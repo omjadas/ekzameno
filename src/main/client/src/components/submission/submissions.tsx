@@ -166,7 +166,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
                           <Form.Control
                             type="number"
                             name={`marks[${i}].marks`}
-                            value={values.marks[i].marks}
+                            value={values.marks[i]?.marks}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             min="0"
