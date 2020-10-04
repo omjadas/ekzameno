@@ -1,10 +1,13 @@
+import { unwrapResult } from "@reduxjs/toolkit";
+import { Formik } from "formik";
+import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
-import { Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { ExamState, QuestionSubmission, selectExamById } from "../../redux/slices/examsSlice";
+import { ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
 import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectUserById, UserState } from "../../redux/slices/usersSlice";
-import { RootState } from "../../redux/store";
+import { RootState, useAppDispatch } from "../../redux/store";
 
 interface SubmissionModalProps {
   show: boolean,
@@ -13,7 +16,12 @@ interface SubmissionModalProps {
   studentId: string,
 }
 
+interface FormValues {
+  marks: number[],
+}
+
 export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
+  const dispatch = useAppDispatch();
   const student = useSelector<RootState, UserState | undefined>(
     state => selectUserById(state, props.studentId)
   );
@@ -38,6 +46,35 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
       questionMap[question.id] = question;
     });
 
+  const handleSubmit = (values: FormValues): void => {
+    const marks = values.marks.reduce((a, b) => a + b, 0);
+
+    if (Object.entries(questionSubmissions).length === 0) {
+      dispatch(submitExam({
+        examId: props.examId,
+        studentId: props.studentId,
+        marks,
+        answers: [],
+      }))
+        .then(unwrapResult)
+        .then(props.onHide)
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      dispatch(updateExamSubmission({
+        examId: props.examId,
+        studentId: props.studentId,
+        marks: marks,
+      }))
+        .then(unwrapResult)
+        .then(props.onHide)
+        .catch(e => {
+          console.error(e);
+        });
+    }
+  };
+
   if (student === undefined) {
     return <></>;
   }
@@ -49,17 +86,42 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
           Mark {student.name}&apos;s Exam
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Formik
+        initialValues={{ marks: [] }}
+        onSubmit={handleSubmit}>
         {
-          questions.map(question => (
-            <div key={question.id}>
-              question: {question.question}
-              <br />
-              answer: {questionSubmissions[question.id]?.answer ?? ""}
-            </div>
-          ))
+          ({
+            isSubmitting,
+            handleSubmit,
+          }) => (
+            <Form onSubmit={handleSubmit as any}>
+              <Modal.Body>
+                {
+                  questions.map((question, i) => (
+                    <React.Fragment key={question.id}>
+                      <Form.Group>
+                        <Form.Label>{question.question}</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder={questionSubmissions[question.id]?.answer ?? ""}
+                          readOnly />
+                      </Form.Group>
+                      <FormikControl
+                        label="Marks"
+                        name={`marks[${i}]`}
+                        type="number"/>
+                      <br />
+                    </React.Fragment>
+                  ))
+                }
+              </Modal.Body>
+              <Modal.Footer>
+                <Button type="submit" disabled={isSubmitting}>Submit Marks</Button>
+              </Modal.Footer>
+            </Form>
+          )
         }
-      </Modal.Body>
+      </Formik>
     </Modal>
   );
 };

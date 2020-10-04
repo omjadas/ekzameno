@@ -115,7 +115,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
         marks: submissions[s.id],
       })) }}
       onSubmit={handleSubmit}
-      validationSchema={FormSchema}>
+      validationSchema={FormSchema}
+      enableReinitialize>
       {
         ({
           handleBlur,
