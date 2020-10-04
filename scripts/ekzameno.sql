@@ -42,24 +42,28 @@ CREATE TABLE exam_submissions (
     id uuid PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES users ON DELETE CASCADE,
     exam_id uuid NOT NULL REFERENCES exams ON DELETE CASCADE,
-    marks integer
+    marks integer,
+    UNIQUE(user_id, exam_id)
 );
 
 CREATE TABLE question_submissions (
     id uuid PRIMARY KEY,
     answer text,
     exam_submission_id uuid NOT NULL REFERENCES exam_submissions ON DELETE CASCADE,
-    question_id uuid NOT NULL REFERENCES questions ON DELETE CASCADE
+    question_id uuid NOT NULL REFERENCES questions ON DELETE CASCADE,
+    UNIQUE(exam_submission_id, question_id)
 );
 
 CREATE TABLE instructor_subjects (
     id uuid PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES users ON DELETE CASCADE,
-    subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE
+    subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
+    UNIQUE(user_id, subject_id)
 );
 
 CREATE TABLE enrolments (
     id uuid PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES users ON DELETE CASCADE,
-    subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE
+    subject_id uuid NOT NULL REFERENCES subjects ON DELETE CASCADE,
+    UNIQUE(user_id, subject_id)
 );

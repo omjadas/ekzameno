@@ -5,10 +5,9 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import * as yup from "yup";
-import { Answer, ExamState, selectExamById, submitExam } from "../../redux/slices/examsSlice";
+import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
 import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice";
-import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsByIds } from "../../redux/slices/questionsSlice";
+import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { QuestionModal } from "./questionModal";
@@ -22,21 +21,12 @@ interface FormValues {
   answers: Answer[],
 }
 
-const FormSchema = yup.object().shape({
-  answers: yup.array().of(
-    yup.object().shape({
-      questionId: yup.string().required(),
-      answer: yup.string(),
-    })
-  ).required(),
-});
-
 export const Questions = (props: QuestionProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const exam = useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
   );
-  const questions = useSelector(selectQuestionsByIds(exam?.questionIds ?? []));
+  const questions = useSelector(selectQuestionsForExam(props.examId));
   const [questionModalShow, setQuestionModalShow] = useState<string | null>(null);
   const me = useSelector(selectMe);
   const options = useSelector(selectAllOptions);
@@ -65,6 +55,30 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, joinedMultipleChoiceQuestionIds]);
 
+  useEffect(() => {
+    dispatch(fetchSubmissions(props.examId))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
+  }, [dispatch, props.examId]);
+
+  if (me === undefined) {
+    return <></>;
+  }
+
+  const answers: Record<string, string> = {};
+
+  if (
+    me?.type === "STUDENT" &&
+    exam?.submissions !== undefined &&
+    exam.submissions.length > 0
+  ) {
+    exam.submissions[0].questionSubmissions.forEach(q => {
+      answers[q.questionId] = q.answer;
+    });
+  }
+
   const onClick = (id: string): void => {
     dispatch(deleteQuestion({
       questionId: id,
@@ -78,6 +92,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   const onSubmit = (values: FormValues): void => {
     dispatch(submitExam({
       examId: props.examId,
+      studentId: me.id,
       answers: values.answers,
     }))
       .then(unwrapResult)
@@ -86,63 +101,67 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   };
 
-  return (
-    <>
-      {
-        me?.type === "INSTRUCTOR" &&
-        <div className={styles.wrapper}>
-          {
-            questions.map(question => {
-              return (
-                <Card key={question.id}>
-                  <Card.Header>{question.question}</Card.Header>
-                  <Card.Body>
-                    <Card.Text>
-                      Marks: {question.marks}
-                      <br />
-                      Type: {questionLabels[question.type]}
-                    </Card.Text>
-                    <Button className="mr-2" onClick={() => setQuestionModalShow(question.id)}>
-                      Edit
-                    </Button>
-                    <Button className="mr-2" onClick={() => onClick(question.id)}>
-                      Delete
-                    </Button>
-                    <QuestionModal
-                      show={questionModalShow === question.id}
-                      onHide={() => setQuestionModalShow(null)}
-                      id={question.id}
-                      question={question.question}
-                      marks={question.marks}
-                      type={question.type}
-                      optionIds={question.optionIds} />
-                  </Card.Body>
-                </Card>
-              );
-            })
-          }
-        </div>
-      }
-      {
-        me?.type === "STUDENT" &&
-        <Formik
-          initialValues={{
-            answers: questions.map(question => ({
-              questionId: question.id,
-              answer: "",
-            })),
-          }}
-          validationSchema={FormSchema}
-          onSubmit={onSubmit}>
-          {
-            ({
-              handleSubmit,
-              isSubmitting,
-              setFieldValue,
-              handleBlur,
-              values,
-            }) => (
-              <Form id="answerExam" onSubmit={handleSubmit as any}>
+  if (me?.type === "INSTRUCTOR" && exam !== undefined) {
+    return (
+      <div className={styles.wrapper}>
+        {
+          questions.map(question => {
+            return (
+              <Card key={question.id}>
+                <Card.Header>{question.question}</Card.Header>
+                <Card.Body>
+                  <Card.Text>
+                    Marks: {question.marks}
+                    <br />
+                    Type: {questionLabels[question.type]}
+                  </Card.Text>
+                  {
+                    new Date(exam.startTime) > new Date() &&
+                      <>
+                        <Button className="mr-2" onClick={() => setQuestionModalShow(question.id)}>
+                          Edit
+                        </Button>
+                        <Button className="mr-2" onClick={() => onClick(question.id)}>
+                          Delete
+                        </Button>
+                      </>
+                  }
+                  <QuestionModal
+                    show={questionModalShow === question.id}
+                    onHide={() => setQuestionModalShow(null)}
+                    id={question.id}
+                    question={question.question}
+                    marks={question.marks}
+                    type={question.type}
+                    optionIds={question.optionIds} />
+                </Card.Body>
+              </Card>
+            );
+          })
+        }
+      </div>
+    );
+  } else if (me?.type === "STUDENT" && exam?.submissions !== undefined) {
+    const disabled = exam.submissions.length > 0 || new Date(exam.finishTime) < new Date();
+    return (
+      <Formik
+        initialValues={{
+          answers: questions.map(question => ({
+            questionId: question.id,
+            answer: answers[question.id] ?? "",
+          })),
+        }}
+        onSubmit={onSubmit}>
+        {
+          ({
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+            handleBlur,
+            values,
+          }) => (
+            <Form id="answerExam" onSubmit={handleSubmit as any}>
+              <fieldset disabled={disabled}>
                 {
                   questions.map((question, i) => {
                     if (question.type === "MULTIPLE_CHOICE") {
@@ -165,7 +184,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                               `answers[${i}].answer`,
                               option.value,
                             )}
-                            isDisabled={isSubmitting}
+                            isDisabled={isSubmitting || disabled}
                             onBlur={handleBlur} />
                         </Form.Group>
                       );
@@ -182,14 +201,16 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                     return <></>;
                   })
                 }
-                <Button type="submit" disabled={isSubmitting}>
-                  Submit Exam
-                </Button>
-              </Form>
-            )
-          }
-        </Formik>
-      }
-    </>
-  );
+              </fieldset>
+              <Button type="submit" disabled={isSubmitting || disabled}>
+                Submit Exam
+              </Button>
+            </Form>
+          )
+        }
+      </Formik>
+    );
+  }
+
+  return <></>;
 };

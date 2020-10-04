@@ -11,6 +11,7 @@ import javax.ws.rs.NotFoundException;
 
 import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
+import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -23,6 +24,8 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  */
 public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
+    private ExamSubmissionMapper examSubmissionMapper =
+        new ExamSubmissionMapper();
 
     /**
      * Fetches an exam for a given slug.
@@ -151,17 +154,19 @@ public class ExamService {
      *
      * @param examId    id of the Exam
      * @param studentId id of the question
+     * @param marks     number of marks for the submission
      * @param answers   answers
      * @return a new exam submission
      */
     public ExamSubmission createSubmission(
         UUID examId,
         UUID studentId,
+        Integer marks,
         List<CreateQuestionSubmissionDTO> answers
     ) {
         try (DBConnection connection = DBConnection.getInstance()) {
             ExamSubmission examSubmission = new ExamSubmission(
-                0,
+                marks == null ? -1 : marks,
                 studentId,
                 examId
             );
@@ -174,6 +179,67 @@ public class ExamService {
                 );
             }
 
+            UnitOfWork.getCurrent().commit();
+            return examSubmission;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Retrieve all submissions for a given exam.
+     *
+     * @param examId ID of the exam to retrieve submissions for
+     * @return submissions for the specified exam
+     */
+    public List<ExamSubmission> getSubmissions(UUID examId) {
+        try {
+            return examSubmissionMapper.findAllForExam(examId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Retrieve the submission for a given user and exam.
+     *
+     * @param examId ID of the exam
+     * @param userId ID of the user
+     * @return the submission the user made for the exam
+     */
+    public ExamSubmission getSubmissionForUser(UUID examId, UUID userId) {
+        try {
+            return examSubmissionMapper.findByRelationIds(userId, examId);
+        } catch (NotFoundException e) {
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
+     * Update an exam submission.
+     *
+     * @param examId    ID of the exam
+     * @param studentId ID of the student
+     * @param marks     Number of marks assigned to the exam submission
+     * @return updated ExamSubmission
+     */
+    public ExamSubmission updateSubmission(
+        UUID examId,
+        UUID studentId,
+        Integer marks
+    ) {
+        try (
+            DBConnection connection = DBConnection.getInstance();
+        ) {
+            ExamSubmission examSubmission =
+                examSubmissionMapper.findByRelationIds(studentId, examId);
+
+            examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return examSubmission;
         } catch (SQLException e) {

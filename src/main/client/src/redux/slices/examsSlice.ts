@@ -10,11 +10,26 @@ export interface Exam {
   finishTime: string,
 }
 
+export interface QuestionSubmission {
+  id: string,
+  answer: string,
+  questionId: string,
+}
+
+export interface ExamSubmission {
+  id: string,
+  examId: string,
+  studentId: string,
+  marks?: number,
+  questionSubmissions: QuestionSubmission[],
+}
+
 export interface ExamState extends Exam {
   id: string,
   slug: string,
   subjectId: string,
   questionIds: string[],
+  submissions?: ExamSubmission[],
 }
 
 export interface Answer {
@@ -101,14 +116,60 @@ export const deleteExam = createAsyncThunk(
 
 export const submitExam = createAsyncThunk(
   "exams/submitExam",
-  async ({ examId, answers }: { examId: string, answers: Answer[] }) => {
-    await fetch(`/api/exams/${examId}/submissions`, {
+  async ({
+    examId,
+    studentId,
+    answers,
+    marks,
+  }: {
+    examId: string,
+    studentId: string,
+    answers: Answer[],
+    marks?: number,
+  }) => {
+    const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
       method: "post",
-      body: JSON.stringify({ answers }),
+      body: JSON.stringify({ marks, answers }),
       headers: {
         "content-type": "application/json",
       },
     });
+
+    return res.json() as Promise<ExamSubmission>;
+  }
+);
+
+export const updateExamSubmission = createAsyncThunk(
+  "exams/updateSubmission",
+  async ({
+    examId,
+    studentId,
+    marks,
+  }: {
+    examId: string,
+    studentId: string,
+    marks: number,
+  }) => {
+    const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
+      method: "put",
+      body: JSON.stringify({ marks }),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    return res.json() as Promise<ExamSubmission>;
+  }
+);
+
+export const fetchSubmissions = createAsyncThunk(
+  "exams/fetchSubmission",
+  async (examId: string) => {
+    const res = await fetch(`/api/exams/${examId}/submissions`);
+    return {
+      examId,
+      submissions: await res.json() as ExamSubmission[],
+    };
   }
 );
 
@@ -162,6 +223,34 @@ export const examsSlice = createSlice({
         exam.questionIds.push(action.payload.id);
       }
     });
+    builder.addCase(submitExam.fulfilled, (state, action) => {
+      const exam = state.entities[action.payload.examId];
+
+      if (exam !== undefined) {
+        exam.submissions = exam.submissions ?? [];
+        exam.submissions.push(action.payload);
+      }
+    });
+    builder.addCase(fetchSubmissions.fulfilled, (state, action) => {
+      const exam = state.entities[action.payload.examId];
+
+      if (exam !== undefined) {
+        exam.submissions = action.payload.submissions;
+      }
+    });
+    builder.addCase(updateExamSubmission.fulfilled, (state, action) => {
+      const exam = state.entities[action.payload.examId];
+
+      if (exam !== undefined) {
+        exam.submissions = exam.submissions?.map(submission => {
+          if (submission.id === action.payload.id) {
+            return action.payload;
+          } else {
+            return submission;
+          }
+        });
+      }
+    });
   },
 });
 
@@ -176,6 +265,12 @@ export const {
 export const selectExamBySlug = (slug: string) => {
   return (state: RootState): ExamState | undefined => {
     return selectExamById(state, state.exams.slugs[slug]);
+  };
+};
+
+export const selectExamsForSubject = (subjectId: string) => {
+  return (state: RootState): ExamState[] => {
+    return selectAllExams(state).filter(exam => exam.subjectId === subjectId);
   };
 };
 

@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
+import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.services.OptionService;
 
@@ -19,6 +20,7 @@ import com.ekzameno.ekzameno.services.OptionService;
  * Controller for options.
  */
 @Path("/options")
+@Protected
 public class OptionController {
     private final OptionService optionService = new OptionService();
 

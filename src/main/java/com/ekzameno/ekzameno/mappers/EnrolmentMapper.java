@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.Enrolment;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.IdentityMap;
@@ -39,12 +41,16 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
             statement.setObject(1, studentId);
             statement.setObject(2, subjectId);
             ResultSet rs = statement.executeQuery();
-            Enrolment enrolment = load(rs);
-            IdentityMap.getInstance().put(
-                enrolment.getId(),
-                enrolment
-            );
-            return enrolment;
+            if (rs.next()) {
+                Enrolment enrolment = load(rs);
+                IdentityMap.getInstance().put(
+                    enrolment.getId(),
+                    enrolment
+                );
+                return enrolment;
+            } else {
+                throw new NotFoundException();
+            }
         }
     }
 
