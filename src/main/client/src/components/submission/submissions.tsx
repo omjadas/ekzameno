@@ -58,9 +58,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
 
   exam?.submissions?.forEach(submission => {
     if (submission.marks !== undefined) {
-      submissions[submission.studentId] = submission.marks < 0
-        ? undefined
-        : submission.marks;
+      submissions[submission.studentId] = submission.marks;
     }
   });
 
@@ -90,15 +88,14 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
       });
   }, [props.examId, dispatch]);
 
-  const handleSubmit = (values: FormValues): void => {
-    console.log(values);
-    values.marks.forEach(mark => {
+  const handleSubmit = (values: FormValues): Promise<any> => {
+    const promises: Promise<any>[] = values.marks.map(mark => {
       if (mark.marks === undefined) {
-        return;
+        return Promise.resolve();
       }
 
       if (submissions[mark.studentId] === undefined) {
-        dispatch(submitExam({
+        return dispatch(submitExam({
           examId: props.examId,
           studentId: mark.studentId,
           marks: mark.marks,
@@ -109,7 +106,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
             console.error(e);
           });
       } else {
-        dispatch(updateExamSubmission({
+        return dispatch(updateExamSubmission({
           examId: props.examId,
           studentId: mark.studentId,
           marks: mark.marks,
@@ -120,6 +117,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           });
       }
     });
+
+    return Promise.all(promises);
   };
 
   if (exam?.submissions === undefined) {
@@ -130,7 +129,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     <Formik
       initialValues={{ marks: students.map(s => ({
         studentId: s.id,
-        marks: submissions[s.id],
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        marks: submissions[s.id] === undefined ? undefined : (submissions[s.id]! < 0 ? undefined : submissions[s.id]),
       })) }}
       onSubmit={handleSubmit}
       validationSchema={FormSchema}
