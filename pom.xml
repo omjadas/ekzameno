@@ -159,6 +159,15 @@
                 <version>2.8.2</version>
             </plugin>
             <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>3.0.4</version>
+                <configuration>
+                    <appName>swen90007-ekzameno</appName>
+                    <jdkVersion>11</jdkVersion>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
                 <version>1.8.2</version>
