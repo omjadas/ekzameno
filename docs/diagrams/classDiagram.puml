@@ -16,6 +16,10 @@ package "models" #DDDDDD {
 
   proxies.ProxyList o-- Model : - models
 
+  shared.UnitOfWork o-- Model : - newObjects
+  shared.UnitOfWork o-- Model : - dirtyObjects
+  shared.UnitOfWork o-- Model : - deletedObjects
+
   Question <|-- ShortAnswerQuestion
   Question <|-- MultipleChoiceQuestion
 
@@ -725,10 +729,6 @@ package "shared" #DDDDDD {
     + void registerDeleted(Model obj)
     + void commit()
   }
-
-  UnitOfWork o-- models.Model : - newObjects
-  UnitOfWork o-- models.Model : - dirtyObjects
-  UnitOfWork o-- models.Model : - deletedObjects
 }
 
 @enduml
