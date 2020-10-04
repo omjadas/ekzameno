@@ -1,4 +1,4 @@
-@startuml
+@startuml Class Diagram
 
 package "models" #DDDDDD {
 
@@ -15,10 +15,12 @@ package "models" #DDDDDD {
   Model <|-- ExamSubmission
   Model <|-- Option
 
+  proxies.ProxyList o-- Model : - models
+
   Question <|-- ShortAnswerQuestion
   Question <|-- MultipleChoiceQuestion
 
-  class User {
+  abstract class User {
     - String email
     - String name
     - String passwordHash
@@ -40,7 +42,7 @@ package "models" #DDDDDD {
     + Administrator(String email,String name,String passwordHash)
   }
 
-  Instructor o-- ProxyList : - subjects
+  Instructor o-- proxies.ProxyList : - subjects
 
   class Instructor {
     + String TYPE
@@ -50,8 +52,8 @@ package "models" #DDDDDD {
     + ProxyList<Subject> getSubjects()
   }
 
-  Student o-- ProxyList : - subjects
-  Student o-- ProxyList : - examSubmissions
+  Student o-- proxies.ProxyList : - subjects
+  Student o-- proxies.ProxyList : - examSubmissions
 
   class Student {
     + String TYPE
@@ -69,7 +71,7 @@ package "models" #DDDDDD {
     + void setToDate(Date toDate)
   }
 
-  class Model {
+  abstract class Model {
     - UUID id
     + Model()
     + Model(UUID id)
@@ -94,8 +96,8 @@ package "models" #DDDDDD {
     + void setSubject(Subject subject)
   }
 
-  Exam o-- ProxyList : - questions
-  Exam o-- ProxyList : - examSubmissions
+  Exam o-- proxies.ProxyList : - questions
+  Exam o-- proxies.ProxyList : - examSubmissions
   Exam o-- DateRange : - dateRange
   Exam o-- Subject : - subject
 
@@ -120,12 +122,12 @@ package "models" #DDDDDD {
     + UUID getSubjectId()
     + Subject getSubject()
     + void setSubjectId(UUID subjectId)
-    + void setSubject(Subject subject) 
+    + void setSubject(Subject subject)
   }
 
-  Subject o-- ProxyList : - instructors
-  Subject o-- ProxyList : - students
-  Subject o-- ProxyList : - exams
+  Subject o-- proxies.ProxyList : - instructors
+  Subject o-- proxies.ProxyList : - students
+  Subject o-- proxies.ProxyList : - exams
 
   class Subject {
     - String name
@@ -137,7 +139,7 @@ package "models" #DDDDDD {
     + String getSlug()
     + String getDescription()
     + ProxyList<Instructor> getInstructors()
-    + ProxyList<Student> getStudents()     
+    + ProxyList<Student> getStudents()
     + ProxyList<Exam> getExams()
     + void setName(String name)
     + void setDescription(String description)
@@ -161,10 +163,10 @@ package "models" #DDDDDD {
     + void setSubject(Subject subject)
   }
 
-  Question o-- ProxyList : - questionSubmissions
+  Question o-- proxies.ProxyList : - questionSubmissions
   Question o-- Exam : - exam
 
-  class Question {
+  abstract class Question {
     - String question
     - int marks
     - UUID examId
@@ -189,7 +191,7 @@ package "models" #DDDDDD {
     + ShortAnswerQuestion(String question, int marks, UUID examId)
   }
 
-  MultipleChoiceQuestion o-- ProxyList : - options
+  MultipleChoiceQuestion o-- proxies.ProxyList : - options
 
   class MultipleChoiceQuestion {
     + String TYPE
@@ -237,7 +239,7 @@ package "models" #DDDDDD {
     + void setExamSubmission(ExamSubmission examSubmission)
   }
 
-  ExamSubmission o-- ProxyList : - questionSubmissions
+  ExamSubmission o-- proxies.ProxyList : - questionSubmissions
   ExamSubmission o-- Student : - student
   ExamSubmission o-- Exam : - exam
 
@@ -275,7 +277,7 @@ package "proxies" #DDDDDD {
   ProxyList <|-- InstructorProxyList
   ProxyList <|-- OptionProxyList
 
-  class ProxyList {
+  abstract class ProxyList {
     # UUID id
     + ProxyList(UUID id)
     + void add(T obj)
@@ -325,7 +327,7 @@ package "proxies" #DDDDDD {
     + QuestionSubmissionQuestionProxyList(UUID questionId)
     # void init()
   }
-  
+
   class StudentProxyList {
     + StudentProxyList(UUID subjectId)
     # void init()
@@ -345,17 +347,17 @@ package "proxies" #DDDDDD {
   }
 }
 
-package "controllers" #DDDDDD { 
+package "controllers" #DDDDDD {
 
-  UserController o-- UserService : - userService
+  UserController o-- services.UserService : - userService
   class UserController {
     + List<User> getUsers()
     + Response createUser(CreateUserDTO dto)
   }
 
-  SubjectController o-- SubjectService : - subjectService
-  SubjectController o-- ExamService : - examService
-  SubjectController o-- UserService : - userService
+  SubjectController o-- services.SubjectService : - subjectService
+  SubjectController o-- services.ExamService : - examService
+  SubjectController o-- services.UserService : - userService
 
   class SubjectController{
     + List<Subject> getSubjects()
@@ -372,16 +374,16 @@ package "controllers" #DDDDDD {
     + Response deleteStudentFromSubject()
   }
 
-  AuthController o-- AuthService : - authService
+  AuthController o-- services.AuthService : - authService
 
   class AuthController {
     - Key key
     + Response signIn(SignInUserDTO dto)
-    + Response signOut() 
+    + Response signOut()
   }
 
-  ExamController o-- ExamService : - examService
-  ExamController o-- QuestionService : - questionService
+  ExamController o-- services.ExamService : - examService
+  ExamController o-- services.QuestionService : - questionService
 
   class ExamController {
     + Exam getExam()
@@ -392,15 +394,15 @@ package "controllers" #DDDDDD {
     + ExamSubmission submitExam(CreateExamSubmissionDTO dto)
   }
 
-  OptionController o-- optionService : - optionService
+  OptionController o-- services.OptionService : - optionService
 
   class OptionController {
     + Option updateOption(CreateOptionDTO dto)
     + Response deleteOption()
   }
 
-  QuestionController o-- QuestionService : - questionService
-  QuestionController o-- OptionService : - optionService
+  QuestionController o-- services.QuestionService : - questionService
+  QuestionController o-- services.OptionService : - optionService
 
   class QuestionController {
     + Question updateQuestion(CreateQuestionDTO dto)
@@ -412,15 +414,15 @@ package "controllers" #DDDDDD {
 
 package "services" #DDDDDD {
 
-  AuthService o-- UserMapper : - userMapper
- 
+  AuthService o-- mappers.UserMapper : - userMapper
+
   class AuthService {
     + User authenticateUser(String email, String password)
   }
 
-  UserService o-- UserMapper : - userMapper
-  UserService o-- InstructorMapper : - instructorMapper
-  UserService o-- StudentMapper : - studentMapper
+  UserService o-- mappers.UserMapper : - userMapper
+  UserService o-- mappers.InstructorMapper : - instructorMapper
+  UserService o-- mappers.StudentMapper : - studentMapper
 
   class UserService {
     + List<User> getUsers() {String name,
@@ -432,7 +434,7 @@ package "services" #DDDDDD {
     + List<Student> getStudentsForSubject(UUID subjectId)
   }
 
-  ExamService o-- ExamMapper : - examMapper
+  ExamService o-- mappers.ExamMapper : - examMapper
 
   class ExamService {
     + Exam getExam(String slug)
@@ -454,7 +456,7 @@ package "services" #DDDDDD {
         List<CreateQuestionSubmissionDTO> answers)
   }
 
-  QuestionService o-- QuestionMapper : - questionMapper
+  QuestionService o-- mappers.QuestionMapper : - questionMapper
 
   class QuestionService {
     + Question createQuestion(UUID examId,
@@ -469,9 +471,9 @@ package "services" #DDDDDD {
     + List<Question> getQuestionsForExam(UUID examId)
   }
 
-  SubjectService o-- SubjectMapper : - subjectMapper
-  SubjectService o-- EnrolmentMapper : - enrolmentMapper
-  SubjectService o-- InstructorSubjectMapper : - instructorSubjectMapper
+  SubjectService o-- mappers.SubjectMapper : - subjectMapper
+  SubjectService o-- mappers.EnrolmentMapper : - enrolmentMapper
+  SubjectService o-- mappers.InstructorSubjectMapper : - instructorSubjectMapper
 
   class SubjectService {
     + List<Subject> getSubjects()
@@ -493,7 +495,7 @@ package "services" #DDDDDD {
         UUID subjectId)
   }
 
-  OptionService o-- OptionMapper : - optionMapper
+  OptionService o-- mappers.OptionMapper : - optionMapper
 
   class OptionService {
     + Option createOption(String answer,
@@ -550,7 +552,7 @@ package "mappers" #DDDDDD {
     # User load(ResultSet rs)
     # String getType()
   }
-  
+
   class AdministratorMapper {
     # Administrator load(ResultSet rs)
     # String getType()
@@ -590,7 +592,7 @@ package "mappers" #DDDDDD {
   }
 
   class InstructorSubjectMapper {
-    - String tableName  
+    - String tableName
     + InstructorSubject findByRelationIds(UUID instructorId,
         UUID subjectId)
     + void insert(InstructorSubject instructorSubject)
@@ -614,7 +616,7 @@ package "mappers" #DDDDDD {
     + List<Option> findAllForQuestion(UUID id)
     + void insert(Option option)
     + void update(Option option)
-    # Option load(ResultSet rs) 
+    # Option load(ResultSet rs)
     # String getTableName()
   }
 
