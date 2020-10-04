@@ -42,14 +42,6 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
   const questionMap: Record<string, QuestionState> = {};
   const questions = useSelector(selectQuestionsForExam(props.examId));
 
-  useEffect(() => {
-    dispatch(fetchQuestions(props.examId))
-      .then(unwrapResult)
-      .catch(e => {
-        console.error(e);
-      });
-  }, [props.examId, dispatch]);
-
   questions
     .forEach(question => {
       questionMap[question.id] = question;
@@ -118,6 +110,8 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                         </Form.Group>
                         <FormikControl
                           label="Marks"
+                          min="0"
+                          max={question.marks}
                           name={`marks[${i}]`}
                           type="number"/>
                         <br />

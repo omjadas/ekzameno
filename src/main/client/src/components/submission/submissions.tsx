@@ -5,6 +5,7 @@ import { Button, Form, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
 import { ExamState, fetchSubmissions, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
+import { fetchQuestions, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectSubjectById, SubjectState } from "../../redux/slices/subjectsSlice";
 import { fetchUsers, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
@@ -35,10 +36,15 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   const exam = useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
   );
+
+  const questions = useSelector(selectQuestionsForExam(props.examId));
+
   const subject = useSelector<RootState, SubjectState | undefined>(
     state => selectSubjectById(state, exam?.subjectId ?? "")
   );
+
   let students = useSelector(selectUsersByIds(subject?.students ?? []));
+
   const [
     submissionModalShow,
     setSubmissionModalShow,
@@ -75,6 +81,14 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
         });
     }
   }, [dispatch, usersStatus, me]);
+
+  useEffect(() => {
+    dispatch(fetchQuestions(props.examId))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
+  }, [props.examId, dispatch]);
 
   const handleSubmit = (values: FormValues): void => {
     console.log(values);
@@ -155,6 +169,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
                             value={values.marks[i].marks}
                             onBlur={handleBlur}
                             onChange={handleChange}
+                            min="0"
+                            max={questions.reduce((a, b) => a + b.marks, 0)}
                             disabled={isSubmitting || me?.type === "STUDENT"}
                             isInvalid={
                               !!(
