@@ -264,7 +264,7 @@ public class SubjectController {
     }
 
     /**
-     * Delete given instrucotr from given subject.
+     * Delete given instructor from given subject.
      *
      * @param subjectId subject's id
      * @param studentId instructor's id
