@@ -38,11 +38,15 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   const subject = useSelector<RootState, SubjectState | undefined>(
     state => selectSubjectById(state, exam?.subjectId ?? "")
   );
-  const students = useSelector(selectUsersByIds(subject?.students ?? []));
+  let students = useSelector(selectUsersByIds(subject?.students ?? []));
   const [
     submissionModalShow,
     setSubmissionModalShow,
   ] = useState<string | null>(null);
+
+  if (me?.type === "STUDENT") {
+    students = students.filter(s => s.id === me.id);
+  }
 
   const submissions: Record<string, number | undefined> = {};
 
@@ -146,13 +150,12 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
                         </td>
                         <td>
                           <Form.Control
-                            onClick={() => {}}
                             type="number"
                             name={`marks[${i}].marks`}
                             value={values.marks[i].marks}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || me?.type === "STUDENT"}
                             isInvalid={
                               !!(
                                 touched.marks
@@ -178,9 +181,12 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
                 }
               </tbody>
             </Table>
-            <Button type="submit" disabled={isSubmitting}>
-              Submit Marks
-            </Button>
+            {
+              me?.type !== "STUDENT" &&
+                <Button type="submit" disabled={isSubmitting}>
+                  Submit Marks
+                </Button>
+            }
           </Form>
         )
       }

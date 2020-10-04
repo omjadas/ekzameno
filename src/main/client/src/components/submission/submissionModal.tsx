@@ -1,12 +1,12 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
-import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
-import { selectUserById, UserState } from "../../redux/slices/usersSlice";
+import { fetchQuestions, QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
+import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 
 interface SubmissionModalProps {
@@ -25,6 +25,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
   const student = useSelector<RootState, UserState | undefined>(
     state => selectUserById(state, props.studentId)
   );
+  const me = useSelector(selectMe);
 
   const questionSubmissions: Record<string, QuestionSubmission | undefined> = {};
 
@@ -40,6 +41,14 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
 
   const questionMap: Record<string, QuestionState> = {};
   const questions = useSelector(selectQuestionsForExam(props.examId));
+
+  useEffect(() => {
+    dispatch(fetchQuestions(props.examId))
+      .then(unwrapResult)
+      .catch(e => {
+        console.error(e);
+      });
+  }, [props.examId, dispatch]);
 
   questions
     .forEach(question => {
@@ -83,7 +92,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          Mark {student.name}&apos;s Exam
+          {student.name}&apos;s Exam
         </Modal.Title>
       </Modal.Header>
       <Formik
@@ -95,29 +104,34 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
             handleSubmit,
           }) => (
             <Form onSubmit={handleSubmit as any}>
-              <Modal.Body>
-                {
-                  questions.map((question, i) => (
-                    <React.Fragment key={question.id}>
-                      <Form.Group>
-                        <Form.Label>{question.question}</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder={questionSubmissions[question.id]?.answer ?? ""}
-                          readOnly />
-                      </Form.Group>
-                      <FormikControl
-                        label="Marks"
-                        name={`marks[${i}]`}
-                        type="number"/>
-                      <br />
-                    </React.Fragment>
-                  ))
-                }
-              </Modal.Body>
-              <Modal.Footer>
-                <Button type="submit" disabled={isSubmitting}>Submit Marks</Button>
-              </Modal.Footer>
+              <fieldset disabled={me?.type === "STUDENT"}>
+                <Modal.Body>
+                  {
+                    questions.map((question, i) => (
+                      <React.Fragment key={question.id}>
+                        <Form.Group>
+                          <Form.Label>{question.question}</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder={questionSubmissions[question.id]?.answer ?? ""}
+                            readOnly />
+                        </Form.Group>
+                        <FormikControl
+                          label="Marks"
+                          name={`marks[${i}]`}
+                          type="number"/>
+                        <br />
+                      </React.Fragment>
+                    ))
+                  }
+                </Modal.Body>
+              </fieldset>
+              {
+                me?.type !== "STUDENT" &&
+                  <Modal.Footer>
+                    <Button type="submit" disabled={isSubmitting}>Submit Marks</Button>
+                  </Modal.Footer>
+              }
             </Form>
           )
         }
