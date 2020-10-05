@@ -21,7 +21,7 @@
     "@types/react-select": "^3.0.21",
     "@types/yup": "^0.29.7",
     "bootstrap": "^4.5.2",
-    "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-jest": "^24.1.0",
     "formik": "^2.1.7",
     "formik-react-bootstrap": "^0.2.3",
     "node-sass": "^4.14.1",
