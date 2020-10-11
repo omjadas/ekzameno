@@ -59,7 +59,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     let count = 0;
     let newMarks = 0;
     for (let i = 0 ; i < values.submissionMark.length ; i++) {
-      count= values.submissionMark[i].mark;
+      count = values.submissionMark[i].mark;
       newMarks += count;
     }
     if (marks === undefined) {

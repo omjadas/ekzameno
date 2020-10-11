@@ -230,6 +230,7 @@ public class ExamService {
      * @param examId    ID of the exam
      * @param studentId ID of the student
      * @param marks     Number of marks assigned to the exam submission
+     * @param answers   answers
      * @return updated ExamSubmission
      */
     public ExamSubmission updateSubmission(

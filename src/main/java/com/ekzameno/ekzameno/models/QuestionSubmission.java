@@ -80,7 +80,7 @@ public class QuestionSubmission extends Model {
         this.mark = mark;
         UnitOfWork.getCurrent().registerDirty(this);
     }
-    
+
     /**
      * Set the answer for the QuestionSubmission (marks the QuestionSubmission
      * as dirty).

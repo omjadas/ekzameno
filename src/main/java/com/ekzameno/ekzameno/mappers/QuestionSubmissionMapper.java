@@ -136,7 +136,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     public void insert(QuestionSubmission questionSubmission)
             throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, answer, exam_submission_id, question_id, mark) VALUES (?,?,?,?,?)";
+            " (id, answer, exam_submission_id, question_id, mark) " +
+            "VALUES (?,?,?,?,?)";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
@@ -156,8 +157,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     public void update(QuestionSubmission questionSubmission)
             throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET answer = ?, exam_submission_id = ?, question_id = ?, mark = ? " +
-            "WHERE id = ?";
+            " SET answer = ?, exam_submission_id = ?, question_id = ?, " +
+            "mark = ? WHERE id = ?";
 
         Connection connection = DBConnection.getInstance().getConnection();
 
