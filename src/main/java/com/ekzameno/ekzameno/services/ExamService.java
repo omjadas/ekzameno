@@ -243,12 +243,12 @@ public class ExamService {
         ) {
             ExamSubmission examSubmission =
                 examSubmissionMapper.findByRelationIds(studentId, examId);
-                for (CreateQuestionSubmissionDTO answer : answers) {
-                    QuestionSubmission questionSubmission = questionSubmissionMapper
-                        .findByRelationIds(UUID.fromString(
-                            answer.questionId), examSubmission.getId());
-                    questionSubmission.setMark(answer.mark); 
-                }
+            for (CreateQuestionSubmissionDTO answer : answers) {
+                QuestionSubmission questionSubmission = questionSubmissionMapper
+                    .findByRelationIds(UUID.fromString(
+                    answer.questionId), examSubmission.getId());
+                questionSubmission.setMark(answer.mark); 
+            }
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return examSubmission;
