@@ -27,9 +27,8 @@ public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
     private ExamSubmissionMapper examSubmissionMapper =
         new ExamSubmissionMapper();
-    private QuestionSubmissionMapper questionSubmissionMapper = 
+    private QuestionSubmissionMapper questionSubmissionMapper =
         new QuestionSubmissionMapper();
-
 
     /**
      * Fetches an exam for a given slug.
@@ -244,11 +243,12 @@ public class ExamService {
         ) {
             ExamSubmission examSubmission =
                 examSubmissionMapper.findByRelationIds(studentId, examId);
-                UUID Id = examSubmission.getId();
-            for (CreateQuestionSubmissionDTO answer : answers) {
-                QuestionSubmission questionSubmission = questionSubmissionMapper.findByRelationIds(UUID.fromString(answer.questionId), Id);
-                questionSubmission.setMark(answer.mark);    
-            }
+                for (CreateQuestionSubmissionDTO answer : answers) {
+                    QuestionSubmission questionSubmission = questionSubmissionMapper
+                        .findByRelationIds(UUID.fromString(
+                            answer.questionId), examSubmission.getId());
+                    questionSubmission.setMark(answer.mark); 
+                }
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return examSubmission;

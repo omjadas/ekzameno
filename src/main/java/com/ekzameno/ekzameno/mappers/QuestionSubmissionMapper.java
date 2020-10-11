@@ -184,7 +184,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         );
         Integer mark = rs.getInt("mark");
         mark = rs.wasNull() ? null : mark;
-        return new QuestionSubmission(id, answer, questionId, examSubmissionId, mark);
+        return new QuestionSubmission(id, answer, questionId,
+        examSubmissionId, mark);
     }
 
     @Override

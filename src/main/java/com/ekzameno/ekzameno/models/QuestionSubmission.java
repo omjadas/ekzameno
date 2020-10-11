@@ -73,7 +73,7 @@ public class QuestionSubmission extends Model {
 
     /**
      * Set the mark for the question
-     * 
+     *
      * @param mark Mark for the question
      */
     public void setMark(Integer mark) {
