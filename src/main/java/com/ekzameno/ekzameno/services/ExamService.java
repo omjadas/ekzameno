@@ -247,7 +247,7 @@ public class ExamService {
                 QuestionSubmission questionSubmission = questionSubmissionMapper
                     .findByRelationIds(UUID.fromString(
                     answer.questionId), examSubmission.getId());
-                questionSubmission.setMark(answer.mark); 
+                questionSubmission.setMark(answer.mark);
             }
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();
