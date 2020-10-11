@@ -189,7 +189,8 @@ public class ExamController {
         return examService.updateSubmission(
             UUID.fromString(examId),
             UUID.fromString(studentId),
-            dto.marks
+            dto.marks,
+            dto.answers
         );
     }
 

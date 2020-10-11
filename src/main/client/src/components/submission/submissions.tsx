@@ -110,6 +110,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           examId: props.examId,
           studentId: mark.studentId,
           marks: mark.marks,
+          answers: [],
         }))
           .then(unwrapResult)
           .catch(e => {

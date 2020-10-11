@@ -51,6 +51,7 @@ CREATE TABLE question_submissions (
     answer text,
     exam_submission_id uuid NOT NULL REFERENCES exam_submissions ON DELETE CASCADE,
     question_id uuid NOT NULL REFERENCES questions ON DELETE CASCADE,
+    mark integer,
     UNIQUE(exam_submission_id, question_id)
 );
 

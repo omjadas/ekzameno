@@ -4,7 +4,7 @@ import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
+import { ExamState, QuestionSubmission, selectExamById, SubmissionMark, submitExam1, updateExamSubmission } from "../../redux/slices/examsSlice";
 import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
@@ -18,6 +18,7 @@ interface SubmissionModalProps {
 
 interface FormValues {
   marks: number[],
+  submissionMark: SubmissionMark[],
 }
 
 export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
@@ -34,7 +35,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     ?.find(submission => submission.studentId === props.studentId)
     ?.marks;
 
-  const questionSubmissions: Record<string, QuestionSubmission | undefined> = {};
+  const questionSubmissions: Record<string, QuestionSubmission> = {};
 
   useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
@@ -55,14 +56,19 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     });
 
   const handleSubmit = (values: FormValues): void => {
-    const newMarks = values.marks.reduce((a, b) => a + b, 0);
-
+    let count = 0
+    let newMarks = 0
+    for(let i = 0 ; i < values.submissionMark.length ; i++)
+    {
+      count= values.submissionMark[i].mark
+      newMarks += count
+    }
     if (marks === undefined) {
-      dispatch(submitExam({
+      dispatch(submitExam1({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
-        answers: [],
+        answers: values.submissionMark,
       }))
         .then(unwrapResult)
         .then(props.onHide)
@@ -74,6 +80,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
+        answers: values.submissionMark,
       }))
         .then(unwrapResult)
         .then(props.onHide)
@@ -95,7 +102,13 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         </Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={{ marks: [] }}
+        initialValues={{ marks: [],
+          submissionMark: questions.map(question => ({
+            questionId: question.id,
+            answer: questionSubmissions[question.id]?.answer,
+            mark: questionSubmissions[question.id]?.mark === undefined ? 0 : questionSubmissions[question.id]?.mark,
+          })),
+        }}
         onSubmit={handleSubmit}>
         {
           ({
@@ -119,7 +132,8 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                           label="Marks"
                           min="0"
                           max={question.marks}
-                          name={`marks[${i}]`}
+                          name={`submissionMark[${i}].mark`}
+                          value={questionSubmissions[question.id]?.mark}
                           type="number"/>
                         <br />
                       </React.Fragment>

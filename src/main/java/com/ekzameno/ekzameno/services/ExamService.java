@@ -12,6 +12,7 @@ import javax.ws.rs.NotFoundException;
 import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
+import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -175,7 +176,8 @@ public class ExamService {
                 new QuestionSubmission(
                     answer.answer,
                     UUID.fromString(answer.questionId),
-                    examSubmission.getId()
+                    examSubmission.getId(),
+                    answer.mark
                 );
             }
 
@@ -231,14 +233,19 @@ public class ExamService {
     public ExamSubmission updateSubmission(
         UUID examId,
         UUID studentId,
-        Integer marks
+        Integer marks,
+        List<CreateQuestionSubmissionDTO> answers
     ) {
         try (
             DBConnection connection = DBConnection.getInstance();
         ) {
             ExamSubmission examSubmission =
                 examSubmissionMapper.findByRelationIds(studentId, examId);
-
+                UUID Id = examSubmission.getId();
+            // for (CreateQuestionSubmissionDTO answer : answers) {
+            //     QuestionSubmission questionSubmission = QuestionSubmissionMapper.findByRelationIds(UUID.fromString(answer.questionId), Id);
+            //     questionSubmission.setMark(answer.mark);    
+            // }
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return examSubmission;

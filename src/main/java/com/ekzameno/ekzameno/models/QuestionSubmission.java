@@ -19,6 +19,7 @@ public class QuestionSubmission extends Model {
     private Question question = null;
     @JsonIgnore
     private ExamSubmission examSubmission = null;
+    private int mark;
 
     /**
      * Create a QuestionSubmission with an ID.
@@ -27,16 +28,19 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
+     * @param mark             Mark for the question
      */
     public QuestionSubmission(
             UUID id,
             String answer,
             UUID questionId,
-            UUID examSubmissionId) {
+            UUID examSubmissionId,
+            int mark) {
         super(id);
         this.answer = answer;
         this.questionId = questionId;
         this.examSubmissionId = examSubmissionId;
+        this.mark = mark;
     }
 
     /**
@@ -45,21 +49,38 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
+     * @param mark             Mark for the question
      */
     public QuestionSubmission(
         String answer,
         UUID questionId,
-        UUID examSubmissionId
+        UUID examSubmissionId,
+        int mark
     ) {
         this.answer = answer;
         this.questionId = questionId;
         this.examSubmissionId = examSubmissionId;
+        this.mark = mark;
     }
 
     public String getAnswer() {
         return answer;
     }
 
+    public int getMark() {
+        return mark;
+    }
+
+    /**
+     * Set the mark for the question
+     * 
+     * @param mark Mark for the question
+     */
+    public void setMark(int mark) {
+        this.mark = mark;
+        UnitOfWork.getCurrent().registerDirty(this);
+    }
+    
     /**
      * Set the answer for the QuestionSubmission (marks the QuestionSubmission
      * as dirty).
