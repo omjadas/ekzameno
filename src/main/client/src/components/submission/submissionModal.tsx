@@ -133,7 +133,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                           min="0"
                           max={question.marks}
                           name={`submissionMark[${i}].mark`}
-                          value={questionSubmissions[question.id]?.mark}
+                          //value={questionSubmissions[question.id]?.mark}
                           type="number"/>
                         <br />
                       </React.Fragment>

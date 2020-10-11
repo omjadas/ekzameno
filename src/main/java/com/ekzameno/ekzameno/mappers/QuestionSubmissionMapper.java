@@ -182,11 +182,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             "exam_submission_id",
             java.util.UUID.class
         );
-        // int mark;
-        // if(rs.wasNull())
-        //     mark = rs.getInt("mark");
-        // else
-        int mark = rs.getInt("mark");
+        Integer mark = rs.getInt("mark");
+        mark = rs.wasNull() ? null : mark;
         return new QuestionSubmission(id, answer, questionId, examSubmissionId, mark);
     }
 

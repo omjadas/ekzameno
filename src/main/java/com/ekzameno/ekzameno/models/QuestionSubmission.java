@@ -55,7 +55,7 @@ public class QuestionSubmission extends Model {
         String answer,
         UUID questionId,
         UUID examSubmissionId,
-        int mark
+        Integer mark
     ) {
         this.answer = answer;
         this.questionId = questionId;
@@ -67,7 +67,7 @@ public class QuestionSubmission extends Model {
         return answer;
     }
 
-    public int getMark() {
+    public Integer getMark() {
         return mark;
     }
 
@@ -76,7 +76,7 @@ public class QuestionSubmission extends Model {
      * 
      * @param mark Mark for the question
      */
-    public void setMark(int mark) {
+    public void setMark(Integer mark) {
         this.mark = mark;
         UnitOfWork.getCurrent().registerDirty(this);
     }
