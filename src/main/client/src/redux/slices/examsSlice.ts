@@ -183,7 +183,7 @@ export const updateExamSubmission = createAsyncThunk(
   }) => {
     const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
       method: "put",
-      body: JSON.stringify({ marks }),
+      body: JSON.stringify({ marks, answers }),
       headers: {
         "content-type": "application/json",
       },

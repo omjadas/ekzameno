@@ -56,12 +56,11 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     });
 
   const handleSubmit = (values: FormValues): void => {
-    let count = 0
-    let newMarks = 0
-    for(let i = 0 ; i < values.submissionMark.length ; i++)
-    {
-      count= values.submissionMark[i].mark
-      newMarks += count
+    let count = 0;
+    let newMarks = 0;
+    for (let i = 0 ; i < values.submissionMark.length ; i++) {
+      count= values.submissionMark[i].mark;
+      newMarks += count;
     }
     if (marks === undefined) {
       dispatch(submitExam1({
