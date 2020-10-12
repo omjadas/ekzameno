@@ -1,5 +1,7 @@
 import React from "react";
-import { Modal, Tab } from "react-bootstrap";
+import { Modal, Spinner, Tab } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { selectUsersStatus } from "../../redux/slices/usersSlice";
 import { SignIn } from "./signIn/signIn";
 
 export interface AuthProps {
@@ -8,6 +10,16 @@ export interface AuthProps {
 }
 
 export const AuthModal = (props: AuthProps): JSX.Element => {
+  const usersStatus = useSelector(selectUsersStatus);
+
+  if (usersStatus === "loading") {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
+  }
+
   return (
     <div>
       <Modal show={props.show} onHide={props.onHide} centered>

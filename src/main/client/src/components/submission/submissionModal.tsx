@@ -2,11 +2,11 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
 import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
-import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
+import { selectMe, selectUserById, selectUsersStatus, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 
 interface SubmissionModalProps {
@@ -83,8 +83,14 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     }
   };
 
-  if (student === undefined) {
-    return <></>;
+  const usersStatus = useSelector(selectUsersStatus);
+
+  if (student === undefined || usersStatus === "loading") {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
   }
 
   return (

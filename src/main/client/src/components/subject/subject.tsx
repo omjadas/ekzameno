@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
-import { Button, Container, Jumbotron } from "react-bootstrap";
+import { Button, Container, Jumbotron, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSubject, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
@@ -47,6 +47,14 @@ export const Subject = (): JSX.Element => {
   if (subject === undefined) {
     return (
       <div>Unable to find subject</div>
+    );
+  }
+
+  if (subjectsStatus === "loading") {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
     );
   }
 

@@ -2,12 +2,12 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
+import { Button, Card, Form, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
 import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice";
-import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
+import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam, selectQuestionsStatus } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { QuestionModal } from "./questionModal";
@@ -63,8 +63,14 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   }, [dispatch, props.examId]);
 
-  if (me === undefined) {
-    return <></>;
+  const questionsStatus = useSelector(selectQuestionsStatus);
+
+  if (me === undefined || questionsStatus === "loading") {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
   }
 
   const answers: Record<string, string> = {};

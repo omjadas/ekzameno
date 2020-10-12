@@ -2,10 +2,11 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { addUser, UserType } from "../../redux/slices/usersSlice";
+import { addUser, selectUsersStatus, UserType } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface UserModalProps {
@@ -65,6 +66,16 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
         console.error(e);
       });
   };
+
+  const usersStatus = useSelector(selectUsersStatus);
+
+  if (usersStatus === "loading") {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
+  }
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>
