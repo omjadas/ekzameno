@@ -17,9 +17,9 @@ public class IdentityMap {
     private IdentityMap() { }
 
     /**
-     * Retrieve singleton IdentityMap.
+     * Retrieve thread local IdentityMap.
      *
-     * @return singleton IdentityMap
+     * @return thread local IdentityMap
      */
     public static IdentityMap getCurrent() {
         IdentityMap im = identityMap.get();
