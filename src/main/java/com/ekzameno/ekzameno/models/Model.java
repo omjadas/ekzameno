@@ -17,7 +17,7 @@ public abstract class Model {
     public Model() {
         this.id = UUID.randomUUID();
         UnitOfWork.getCurrent().registerNew(this);
-        IdentityMap.getInstance().put(id, this);
+        IdentityMap.getCurrent().put(id, this);
     }
 
     /**

@@ -10,7 +10,8 @@ import com.ekzameno.ekzameno.models.Model;
  * IdentityMap used to cache models in memory.
  */
 public class IdentityMap {
-    private static final IdentityMap identityMap = new IdentityMap();
+    private static final ThreadLocal<IdentityMap> identityMap =
+        new ThreadLocal<>();
     private final Map<UUID, Model> map = new HashMap<>();
 
     private IdentityMap() { }
@@ -20,8 +21,15 @@ public class IdentityMap {
      *
      * @return singleton IdentityMap
      */
-    public static IdentityMap getInstance() {
-        return identityMap;
+    public static IdentityMap getCurrent() {
+        IdentityMap im = identityMap.get();
+
+        if (im == null) {
+            im = new IdentityMap();
+            identityMap.set(im);
+        }
+
+        return im;
     }
 
     /**

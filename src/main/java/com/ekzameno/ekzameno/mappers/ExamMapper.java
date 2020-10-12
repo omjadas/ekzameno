@@ -42,7 +42,7 @@ public class ExamMapper extends Mapper<Exam> {
     public List<Exam> findAllForSubject(UUID id) throws SQLException {
         String query = "SELECT * FROM " + tableName + " WHERE subject_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -54,7 +54,7 @@ public class ExamMapper extends Mapper<Exam> {
 
             while (rs.next()) {
                 Exam exam = load(rs);
-                IdentityMap.getInstance().put(exam.getId(), exam);
+                IdentityMap.getCurrent().put(exam.getId(), exam);
                 exams.add(exam);
             }
 
@@ -73,7 +73,7 @@ public class ExamMapper extends Mapper<Exam> {
         String query = "SELECT * FROM " + tableName + " WHERE subject_id = ? " +
             "AND start_time < NOW()";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -85,7 +85,7 @@ public class ExamMapper extends Mapper<Exam> {
 
             while (rs.next()) {
                 Exam exam = load(rs);
-                IdentityMap.getInstance().put(exam.getId(), exam);
+                IdentityMap.getCurrent().put(exam.getId(), exam);
                 exams.add(exam);
             }
 
@@ -99,7 +99,7 @@ public class ExamMapper extends Mapper<Exam> {
             " (id, slug, name, description, start_time, finish_time, " +
             "subject_id) VALUES (?,?,?,?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -127,7 +127,7 @@ public class ExamMapper extends Mapper<Exam> {
             " SET name = ?, description = ?, start_time = ?, " +
             "finish_time = ?, subject_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);

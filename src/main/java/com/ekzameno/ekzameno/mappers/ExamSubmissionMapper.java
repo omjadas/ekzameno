@@ -35,7 +35,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         String query = "SELECT * FROM " + tableName +
             " WHERE user_id = ? AND exam_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -45,7 +45,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 ExamSubmission examSubmission = load(rs);
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     examSubmission.getId(),
                     examSubmission
                 );
@@ -66,7 +66,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     public List<ExamSubmission> findAllForExam(UUID id) throws SQLException {
         String query = "SELECT * FROM " + tableName + " WHERE exam_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -79,7 +79,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             while (rs.next()) {
                 ExamSubmission examSubmission = load(rs);
 
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     examSubmission.getId(),
                     examSubmission
                 );
@@ -102,7 +102,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         String query = "SELECT * FROM " + tableName +
             " WHERE exam_submissions.user_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -115,7 +115,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             while (rs.next()) {
                 ExamSubmission examSubmission = load(rs);
 
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     examSubmission.getId(),
                     examSubmission
                 );
@@ -132,7 +132,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         String query = "INSERT INTO " + tableName +
             " (id, marks, user_id, exam_id) VALUES (?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -150,7 +150,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         String query = "UPDATE " + tableName +
             " SET marks = ?, user_id = ?, exam_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);

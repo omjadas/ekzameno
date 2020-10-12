@@ -106,7 +106,7 @@ public class UnitOfWork {
             Mapper.getMapper(obj.getClass()).delete(obj);
         }
 
-        DBConnection.getInstance().getConnection().commit();
+        DBConnection.getCurrent().getConnection().commit();
         current.set(null);
     }
 }

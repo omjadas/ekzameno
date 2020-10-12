@@ -28,7 +28,7 @@ public class OptionMapper extends Mapper<Option> {
     public List<Option> findAllForQuestion(UUID id) throws SQLException {
         String query = "SELECT * FROM " + tableName + " WHERE question_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -40,7 +40,7 @@ public class OptionMapper extends Mapper<Option> {
 
             while (rs.next()) {
                 Option option = load(rs);
-                IdentityMap.getInstance().put(option.getId(), option);
+                IdentityMap.getCurrent().put(option.getId(), option);
                 options.add(option);
             }
 
@@ -53,7 +53,7 @@ public class OptionMapper extends Mapper<Option> {
         String query = "INSERT INTO " + tableName +
             " (id, answer, correct, question_id) VALUES (?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -71,7 +71,7 @@ public class OptionMapper extends Mapper<Option> {
         String query = "UPDATE " + tableName +
             " SET answer = ?, correct = ?, question_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);

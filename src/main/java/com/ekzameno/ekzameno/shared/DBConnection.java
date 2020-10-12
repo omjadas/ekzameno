@@ -31,7 +31,7 @@ public class DBConnection implements AutoCloseable {
      * @return thread local singleton DBConnection
      * @throws SQLException if unable to connect to the data base
      */
-    public static DBConnection getInstance() throws SQLException {
+    public static DBConnection getCurrent() throws SQLException {
         DBConnection dbc = dbConnection.get();
 
         if (dbc == null) {

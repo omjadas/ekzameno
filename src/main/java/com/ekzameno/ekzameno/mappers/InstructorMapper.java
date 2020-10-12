@@ -29,7 +29,7 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
             "ON users.id = instructor_subjects.user_id " +
             "WHERE instructor_subjects.subject_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -41,7 +41,7 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
 
             while (rs.next()) {
                 Instructor instructor = load(rs);
-                IdentityMap.getInstance().put(instructor.getId(), instructor);
+                IdentityMap.getCurrent().put(instructor.getId(), instructor);
                 instructors.add(instructor);
             }
 
