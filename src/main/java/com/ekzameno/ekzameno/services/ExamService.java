@@ -35,7 +35,7 @@ public class ExamService {
      */
     public Exam getExam(String slug)
         throws NotFoundException, InternalServerErrorException {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findBySlug(slug);
         } catch (SQLException e) {
             throw new InternalServerErrorException();
@@ -49,7 +49,7 @@ public class ExamService {
      * @return all exams for the subject
      */
     public List<Exam> getExamsForSubject(UUID subjectId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,7 +64,7 @@ public class ExamService {
      * @return all exams for the subject
      */
     public List<Exam> getPublishedExamsForSubject(UUID subjectId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findAllPublishedExams(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,7 +89,7 @@ public class ExamService {
         Date finishTime,
         UUID subjectId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             DateRange dateRange = new DateRange(startTime, finishTime);
             Exam exam = new Exam(name, description, dateRange, subjectId);
             UnitOfWork.getCurrent().commit();
@@ -117,7 +117,7 @@ public class ExamService {
         Date finishTime,
         UUID examId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Exam exam = examMapper.findById(examId);
             exam.setName(name);
             exam.setDescription(description);
@@ -139,7 +139,7 @@ public class ExamService {
     public void deleteExam(
         UUID examId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Exam exam = examMapper.findById(examId);
             UnitOfWork.getCurrent().registerDeleted(exam);
             UnitOfWork.getCurrent().commit();
@@ -164,7 +164,7 @@ public class ExamService {
         Integer marks,
         List<CreateQuestionSubmissionDTO> answers
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             ExamSubmission examSubmission = new ExamSubmission(
                 marks == null ? -1 : marks,
                 studentId,
@@ -234,7 +234,7 @@ public class ExamService {
         Integer marks
     ) {
         try (
-            DBConnection connection = DBConnection.getInstance();
+            DBConnection connection = DBConnection.getCurrent();
         ) {
             ExamSubmission examSubmission =
                 examSubmissionMapper.findByRelationIds(studentId, examId);

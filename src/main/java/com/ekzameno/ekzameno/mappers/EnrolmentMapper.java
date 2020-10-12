@@ -33,7 +33,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         String query = "SELECT * FROM " + tableName +
             " WHERE user_id = ? AND subject_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -43,7 +43,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 Enrolment enrolment = load(rs);
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     enrolment.getId(),
                     enrolment
                 );
@@ -61,7 +61,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         String query = "INSERT INTO " + tableName +
             " (id, user_id, subject_id) VALUES (?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -80,7 +80,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         String query = "UPDATE " + tableName +
             " SET user_id = ?, subject_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -106,7 +106,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         String query = "DELETE FROM " + tableName +
             " WHERE user_id = ? AND subject_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);

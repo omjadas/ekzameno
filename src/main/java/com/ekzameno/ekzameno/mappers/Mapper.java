@@ -50,7 +50,7 @@ public abstract class Mapper<T extends Model> {
      * @throws SQLException if unable to retrieve the model
      */
     public T findById(UUID id) throws SQLException, NotFoundException {
-        IdentityMap identityMap = IdentityMap.getInstance();
+        IdentityMap identityMap = IdentityMap.getCurrent();
         T obj = (T) identityMap.get(id);
 
         if (obj != null) {
@@ -64,7 +64,7 @@ public abstract class Mapper<T extends Model> {
         throws SQLException, NotFoundException {
         String query = "SELECT * FROM " + getTableName() +
             " WHERE " + prop + " = ?";
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -73,7 +73,7 @@ public abstract class Mapper<T extends Model> {
             try (ResultSet rs = statement.executeQuery();) {
                 if (rs.next()) {
                     T obj = load(rs);
-                    IdentityMap.getInstance().put(obj.getId(), obj);
+                    IdentityMap.getCurrent().put(obj.getId(), obj);
                     return obj;
                 } else {
                     throw new NotFoundException();
@@ -89,10 +89,10 @@ public abstract class Mapper<T extends Model> {
      * @throws SQLException if unable to retrieve the models
      */
     public List<T> findAll() throws SQLException {
-        IdentityMap identityMap = IdentityMap.getInstance();
+        IdentityMap identityMap = IdentityMap.getCurrent();
         String query = "SELECT * FROM " + getTableName();
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -145,14 +145,14 @@ public abstract class Mapper<T extends Model> {
     public void deleteById(UUID id) throws SQLException {
         String query = "DELETE FROM " + getTableName() + " WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, id);
             statement.executeUpdate();
-            IdentityMap.getInstance().remove(id);
+            IdentityMap.getCurrent().remove(id);
         }
     }
 

@@ -45,7 +45,7 @@ public class SubjectMapper extends Mapper<Subject> {
             "ON subjects.id = enrolments.subject_id " +
             "WHERE enrolments.user_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -57,7 +57,7 @@ public class SubjectMapper extends Mapper<Subject> {
 
             while (rs.next()) {
                 Subject subject = load(rs);
-                IdentityMap.getInstance().put(subject.getId(), subject);
+                IdentityMap.getCurrent().put(subject.getId(), subject);
                 subjects.add(subject);
             }
 
@@ -78,7 +78,7 @@ public class SubjectMapper extends Mapper<Subject> {
             "subjects.id = instructor_subjects.subject_id " +
             "WHERE instructor_subjects.user_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -90,7 +90,7 @@ public class SubjectMapper extends Mapper<Subject> {
 
             while (rs.next()) {
                 Subject subject = load(rs);
-                IdentityMap.getInstance().put(subject.getId(), subject);
+                IdentityMap.getCurrent().put(subject.getId(), subject);
                 subjects.add(subject);
             }
 
@@ -104,7 +104,7 @@ public class SubjectMapper extends Mapper<Subject> {
             tableName +
             " (id, slug, name, description) VALUES (?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -122,7 +122,7 @@ public class SubjectMapper extends Mapper<Subject> {
         String query = "UPDATE " + tableName +
             " SET name = ?, description = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);

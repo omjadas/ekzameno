@@ -30,7 +30,7 @@ public class OptionService {
         boolean correct,
         UUID questionId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Option option = new Option(answer, correct, questionId);
             UnitOfWork.getCurrent().commit();
             return option;
@@ -52,7 +52,7 @@ public class OptionService {
         String answer,
         boolean correct
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Option option = optionMapper.findById(optionId);
             option.setAnswer(answer);
             option.setCorrect(correct);
@@ -69,7 +69,7 @@ public class OptionService {
      * @param optionId ID of the option to update
      */
     public void deleteOption(UUID optionId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             optionMapper.deleteById(optionId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
@@ -84,7 +84,7 @@ public class OptionService {
      * @return options
      */
     public List<Option> getOptionsForQuestion(UUID questionId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return optionMapper.findAllForQuestion(questionId);
         } catch (SQLException e) {
             throw new InternalServerErrorException();

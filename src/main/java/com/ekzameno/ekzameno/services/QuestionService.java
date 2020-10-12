@@ -39,7 +39,7 @@ public class QuestionService {
         String type,
         List<CreateOptionDTO> options
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Question q;
 
             if (type.toUpperCase().equals(MultipleChoiceQuestion.TYPE)) {
@@ -77,7 +77,7 @@ public class QuestionService {
         int marks,
         UUID questionId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Question questionReturn = questionMapper.findById(questionId);
             questionReturn.setQuestion(question);
             questionReturn.setMarks(marks);
@@ -97,7 +97,7 @@ public class QuestionService {
     public void deleteQuestion(
         UUID questionId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Question question = questionMapper.findById(questionId);
             UnitOfWork.getCurrent().registerDeleted(question);
             UnitOfWork.getCurrent().commit();
