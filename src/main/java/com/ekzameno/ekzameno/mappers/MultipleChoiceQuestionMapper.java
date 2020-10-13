@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
  * Data Mapper for MultipleChoiceQuestions.
