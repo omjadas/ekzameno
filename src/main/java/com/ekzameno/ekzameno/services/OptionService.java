@@ -53,7 +53,7 @@ public class OptionService {
         boolean correct
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Option option = optionMapper.findById(optionId);
+            Option option = optionMapper.findById(optionId, true);
             option.setAnswer(answer);
             option.setCorrect(correct);
             UnitOfWork.getCurrent().commit();

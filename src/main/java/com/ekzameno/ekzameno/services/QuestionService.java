@@ -78,7 +78,7 @@ public class QuestionService {
         UUID questionId
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Question questionReturn = questionMapper.findById(questionId);
+            Question questionReturn = questionMapper.findById(questionId, true);
             questionReturn.setQuestion(question);
             questionReturn.setMarks(marks);
             UnitOfWork.getCurrent().commit();
@@ -98,8 +98,7 @@ public class QuestionService {
         UUID questionId
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Question question = questionMapper.findById(questionId);
-            UnitOfWork.getCurrent().registerDeleted(question);
+            questionMapper.deleteById(questionId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             e.printStackTrace();
