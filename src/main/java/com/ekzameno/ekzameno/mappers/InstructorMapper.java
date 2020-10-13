@@ -52,6 +52,10 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
     @Override
     protected Instructor load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Instructor instructor = (Instructor) IdentityMap.getCurrent().get(id);
+        if (instructor != null) {
+            return instructor;
+        }
         String email = rs.getString("email");
         String name = rs.getString("name");
         String passwordHash = rs.getString("password_hash");

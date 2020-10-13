@@ -87,6 +87,10 @@ public class OptionMapper extends Mapper<Option> {
     @Override
     protected Option load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Option option = (Option) IdentityMap.getCurrent().get(id);
+        if (option != null) {
+            return option;
+        }
         String answer = rs.getString("answer");
         boolean correct = rs.getBoolean("correct");
         UUID questionId = rs.getObject("question_id", java.util.UUID.class);

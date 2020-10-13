@@ -52,6 +52,10 @@ public class StudentMapper extends AbstractUserMapper<Student> {
     @Override
     protected Student load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Student student = (Student) IdentityMap.getCurrent().get(id);
+        if (student != null) {
+            return student;
+        }
         String email = rs.getString("email");
         String name = rs.getString("name");
         String passwordHash = rs.getString("password_hash");

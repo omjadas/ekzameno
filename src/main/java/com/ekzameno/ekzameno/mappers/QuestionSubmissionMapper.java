@@ -174,6 +174,11 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     @Override
     protected QuestionSubmission load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        QuestionSubmission questionSubmission =
+            (QuestionSubmission) IdentityMap.getCurrent().get(id);
+        if (questionSubmission != null) {
+            return questionSubmission;
+        }
         String answer = rs.getString("answer");
         UUID questionId = rs.getObject("question_id", java.util.UUID.class);
         UUID examSubmissionId = rs.getObject(
