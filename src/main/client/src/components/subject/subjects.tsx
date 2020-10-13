@@ -24,7 +24,7 @@ export const Subjects = (): JSX.Element => {
 
   if (subjectsStatus !== "finished") {
     return (
-      <Spinner animation="border" role="status">
+      <Spinner animation="border" role="status" className={styles.spinner}>
         <span className="sr-only">Loading...</span>
       </Spinner>
     );

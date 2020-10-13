@@ -52,7 +52,7 @@ export const Subject = (): JSX.Element => {
 
   if (subject === undefined) {
     return (
-      <Spinner animation="border" role="status">
+      <Spinner animation="border" role="status" className={styles.spinner}>
         <span className="sr-only">Loading...</span>
       </Spinner>
     );

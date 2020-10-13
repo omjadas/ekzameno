@@ -10,6 +10,7 @@ import { selectSubjectById, SubjectState } from "../../redux/slices/subjectsSlic
 import { fetchUsers, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { SubmissionModal } from "./submissionModal";
+import styles from "./submissions.module.scss";
 
 export interface SubmissionsProps {
   examId: string,
@@ -123,7 +124,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
 
   if (exam?.submissions === undefined || usersStatus !== "finished") {
     return (
-      <Spinner animation="border" role="status">
+      <Spinner animation="border" role="status" className={styles.spinner}>
         <span className="sr-only">Loading...</span>
       </Spinner>
     );
