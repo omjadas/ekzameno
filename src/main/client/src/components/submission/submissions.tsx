@@ -121,7 +121,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     return Promise.all(promises);
   };
 
-  if (exam?.submissions === undefined || usersStatus === "loading") {
+  if (exam?.submissions === undefined || usersStatus !== "finished") {
     return (
       <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>

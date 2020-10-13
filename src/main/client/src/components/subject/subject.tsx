@@ -50,7 +50,7 @@ export const Subject = (): JSX.Element => {
     );
   }
 
-  if (subjectsStatus === "loading") {
+  if (subject === undefined) {
     return (
       <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>

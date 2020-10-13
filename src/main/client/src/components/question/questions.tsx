@@ -65,7 +65,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
 
   const questionsStatus = useSelector(selectQuestionsStatus);
 
-  if (me === undefined || questionsStatus === "loading") {
+  if (me === undefined || exam !== undefined && exam.questionIds.length !== questions.length) {
     return (
       <Spinner animation="border" role="status">
         <span className="sr-only">Loading...</span>
