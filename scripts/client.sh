@@ -8,6 +8,6 @@ fi
 
 cd "${BASH_SOURCE%/*}/../src/main/client" || exit
 
-[[ ! -d "./node_modules" ]] && npm ci
+[[ ! -d ./node_modules || package-lock.json -nt ./node_modules ]] && npm ci
 
 npm run "$1"
