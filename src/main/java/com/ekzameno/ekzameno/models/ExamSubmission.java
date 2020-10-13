@@ -164,4 +164,48 @@ public class ExamSubmission extends Model {
         this.examId = student.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((examId == null) ? 0 : examId.hashCode());
+        result = prime * result + marks;
+        result = prime * result + ((studentId == null)
+            ? 0
+            : studentId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ExamSubmission other = (ExamSubmission) obj;
+        if (examId == null) {
+            if (other.examId != null) {
+                return false;
+            }
+        } else if (!examId.equals(other.examId)) {
+            return false;
+        }
+        if (marks != other.marks) {
+            return false;
+        }
+        if (studentId == null) {
+            if (other.studentId != null) {
+                return false;
+            }
+        } else if (!studentId.equals(other.studentId)) {
+            return false;
+        }
+        return true;
+    }
 }

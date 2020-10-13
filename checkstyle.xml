@@ -71,7 +71,16 @@
         <module name="OneStatementPerLine" />
         <module name="OneTopLevelClass" />
         <module name="OperatorWrap">
+            <property
+                name="tokens"
+                value="EQUAL,NOT_EQUAL,DIV,PLUS,MINUS,STAR,MOD,SR,BSR,GE,GT,SL,
+                       LE,LT,BXOR,BOR,LOR,BAND,LAND,TYPE_EXTENSION_AND,
+                       LITERAL_INSTANCEOF" />
             <property name="option" value="eol" />
+        </module>
+        <module name="OperatorWrap">
+            <property name="tokens" value="QUESTION,COLON"/>
+            <property name="option" value="nl" />
         </module>
         <module name="OuterTypeFilename" />
         <module name="OverloadMethodsDeclarationOrder" />

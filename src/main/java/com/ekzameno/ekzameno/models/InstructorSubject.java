@@ -122,4 +122,46 @@ public class InstructorSubject extends Model {
         this.subjectId = subject.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((instructorId == null)
+            ? 0
+            : instructorId.hashCode());
+        result = prime * result + ((subjectId == null)
+            ? 0
+            : subjectId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        InstructorSubject other = (InstructorSubject) obj;
+        if (instructorId == null) {
+            if (other.instructorId != null) {
+                return false;
+            }
+        } else if (!instructorId.equals(other.instructorId)) {
+            return false;
+        }
+        if (subjectId == null) {
+            if (other.subjectId != null) {
+                return false;
+            }
+        } else if (!subjectId.equals(other.subjectId)) {
+            return false;
+        }
+        return true;
+    }
 }
