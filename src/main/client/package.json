@@ -20,7 +20,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/react-select": "^3.0.22",
     "@types/yup": "^0.29.7",
-    "bootstrap": "^4.5.2",
+    "bootstrap": "^4.5.3",
     "eslint-plugin-jest": "^24.1.0",
     "formik": "^2.2.0",
     "formik-react-bootstrap": "^0.2.3",
