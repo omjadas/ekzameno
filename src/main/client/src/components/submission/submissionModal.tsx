@@ -87,8 +87,10 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     <Modal show={props.show} onHide={props.onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          {student!.name}&apos;s Exam
+          {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            student!.name
+          }&apos;s Exam
         </Modal.Title>
       </Modal.Header>
       <Formik
