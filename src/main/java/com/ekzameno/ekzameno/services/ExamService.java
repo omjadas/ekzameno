@@ -1,7 +1,6 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +37,7 @@ public class ExamService {
         try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findBySlug(slug);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -53,7 +53,7 @@ public class ExamService {
             return examMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -68,7 +68,7 @@ public class ExamService {
             return examMapper.findAllPublishedExams(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -95,6 +95,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -126,6 +132,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -144,6 +156,12 @@ public class ExamService {
             UnitOfWork.getCurrent().registerDeleted(exam);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -182,6 +200,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return examSubmission;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -243,6 +267,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return examSubmission;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
