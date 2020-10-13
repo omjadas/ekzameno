@@ -2,10 +2,9 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Button, Form, Modal } from "react-bootstrap";
 import * as yup from "yup";
-import { updateExam, addExam, selectExamsStatus } from "../../redux/slices/examsSlice";
+import { updateExam, addExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface ExamModalProps {
@@ -77,16 +76,6 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
         });
     }
   };
-
-  const examsStatus = useSelector(selectExamsStatus);
-
-  if (examsStatus === "loading") {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
-  }
 
   return (
     <Modal show={props.show} onHide={props.onHide} centered>

@@ -4,12 +4,12 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { FieldArray, Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
-import { Button, Form, InputGroup, Modal, Spinner } from "react-bootstrap";
+import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
 import { addOption, deleteOption, selectOptionsByIds, updateOption } from "../../redux/slices/optionsSlice";
-import { addQuestion, questionLabels, QuestionType, selectQuestionsStatus, updateQuestion } from "../../redux/slices/questionsSlice";
+import { addQuestion, questionLabels, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface QuestionModalProps {
@@ -182,16 +182,6 @@ export const QuestionModal = (
         });
     }
   };
-
-  const questionsStatus = useSelector(selectQuestionsStatus);
-
-  if (questionsStatus === "loading") {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
-  }
 
   return (
     <Modal show={props.show} onHide={onHide} centered>

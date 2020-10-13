@@ -2,10 +2,9 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
-import { Button, Form, Modal, Spinner, Tab } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Button, Form, Modal, Tab } from "react-bootstrap";
 import * as yup from "yup";
-import { selectUsersStatus, signIn } from "../../../redux/slices/usersSlice";
+import { signIn } from "../../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../../redux/store";
 
 interface Props {
@@ -37,16 +36,6 @@ export const SignIn = (props: Props): JSX.Element => {
         console.error(e);
       });
   };
-
-  const usersStatus = useSelector(selectUsersStatus);
-
-  if (usersStatus === "loading") {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
-  }
 
   return (
     <Tab.Pane eventKey="signIn">
