@@ -151,6 +151,10 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     protected Exam load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Exam exam = (Exam) IdentityMap.getCurrent().get(id);
+        if (exam != null) {
+            return exam;
+        }
         String name = rs.getString("name");
         String description = rs.getString("description");
         String slug = rs.getString("slug");

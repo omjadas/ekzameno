@@ -120,6 +120,12 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
     @Override
     protected InstructorSubject load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        InstructorSubject instructorSubject = (InstructorSubject) IdentityMap
+            .getCurrent()
+            .get(id);
+        if (instructorSubject != null) {
+            return instructorSubject;
+        }
         UUID instructorId = rs.getObject("user_id", java.util.UUID.class);
         UUID subjectId = rs.getObject("subject_id", java.util.UUID.class);
         return new InstructorSubject(id, instructorId, subjectId);

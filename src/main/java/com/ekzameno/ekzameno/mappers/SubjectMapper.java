@@ -137,6 +137,10 @@ public class SubjectMapper extends Mapper<Subject> {
     @Override
     protected Subject load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Subject subject = (Subject) IdentityMap.getCurrent().get(id);
+        if (subject != null) {
+            return subject;
+        }
         String name = rs.getString("name");
         String description = rs.getString("description");
         String slug = rs.getString("slug");
