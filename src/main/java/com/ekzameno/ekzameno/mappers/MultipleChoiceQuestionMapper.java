@@ -16,7 +16,9 @@ public class MultipleChoiceQuestionMapper
     protected MultipleChoiceQuestion load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         MultipleChoiceQuestion multipleChoiceQuestion =
-            (MultipleChoiceQuestion) IdentityMap.getCurrent().get(id);
+            (MultipleChoiceQuestion) IdentityMap
+                .getCurrent()
+                .get(id);
         if (multipleChoiceQuestion != null) {
             return multipleChoiceQuestion;
         }
