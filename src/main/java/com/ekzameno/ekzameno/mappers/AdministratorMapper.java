@@ -14,8 +14,9 @@ public class AdministratorMapper extends AbstractUserMapper<Administrator> {
     @Override
     protected Administrator load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
-        Administrator administrator =
-            (Administrator) IdentityMap.getCurrent().get(id);
+        Administrator administrator = (Administrator) IdentityMap
+            .getCurrent()
+            .get(id);
         if (administrator != null) {
             return administrator;
         }

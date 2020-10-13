@@ -166,8 +166,9 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     @Override
     protected ExamSubmission load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
-        ExamSubmission examSubmission = (ExamSubmission)
-            IdentityMap.getCurrent().get(id);
+        ExamSubmission examSubmission = (ExamSubmission) IdentityMap
+           .getCurrent()
+           .get(id);
         if (examSubmission != null) {
             return examSubmission;
         }

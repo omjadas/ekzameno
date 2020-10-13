@@ -120,8 +120,9 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
     @Override
     protected Enrolment load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
-        Enrolment enrolment = (Enrolment)
-            IdentityMap.getCurrent().get(id);
+        Enrolment enrolment = (Enrolment) IdentityMap
+            .getCurrent()
+            .get(id);
         if (enrolment != null) {
             return enrolment;
         }
