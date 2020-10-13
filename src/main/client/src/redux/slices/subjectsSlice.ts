@@ -17,6 +17,9 @@ export interface SubjectState extends Subject {
   id: string,
   slug: string,
   examIds: string[],
+  meta: {
+    eTag: string,
+  },
 }
 
 interface SubjectsState extends State {

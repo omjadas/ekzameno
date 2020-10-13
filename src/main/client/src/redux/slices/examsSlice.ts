@@ -30,6 +30,9 @@ export interface ExamState extends Exam {
   subjectId: string,
   questionIds: string[],
   submissions?: ExamSubmission[],
+  meta: {
+    eTag: string,
+  },
 }
 
 export interface Answer {

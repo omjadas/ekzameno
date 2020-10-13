@@ -27,6 +27,9 @@ export interface QuestionState extends Question {
   id: string,
   examId: string,
   optionIds: string[],
+  meta: {
+    eTag: string,
+  },
 }
 
 const questionsAdapter = createEntityAdapter<QuestionState>();

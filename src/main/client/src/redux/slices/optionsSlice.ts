@@ -10,6 +10,9 @@ export interface Option {
 export interface OptionState extends Option {
   id: string,
   questionId: string,
+  meta: {
+    eTag: string,
+  },
 }
 
 const optionsAdapter = createEntityAdapter<OptionState>();
