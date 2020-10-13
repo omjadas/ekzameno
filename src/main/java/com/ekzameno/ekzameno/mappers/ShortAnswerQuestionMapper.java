@@ -16,7 +16,9 @@ public class ShortAnswerQuestionMapper
     protected ShortAnswerQuestion load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
         ShortAnswerQuestion shortAnswerQuestion =
-            (ShortAnswerQuestion) IdentityMap.getCurrent().get(id);
+            (ShortAnswerQuestion) IdentityMap
+                .getCurrent()
+                .get(id);
         if (shortAnswerQuestion != null) {
             return shortAnswerQuestion;
         }
