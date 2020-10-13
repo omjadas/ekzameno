@@ -89,6 +89,15 @@ public class UnitOfWork {
     }
 
     /**
+     * Rollback the transaction.
+     *
+     * @throws SQLException if unable to rollback the transaction
+     */
+    public void rollback() throws SQLException {
+        DBConnection.getCurrent().getConnection().rollback();
+    }
+
+    /**
      * Commit changes to models.
      *
      * @throws SQLException if unable to commit changes
