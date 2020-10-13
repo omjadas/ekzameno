@@ -18,20 +18,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class EnrolmentMapper extends Mapper<Enrolment> {
     private static final String tableName = "enrolments";
 
-    /**
-     * Retrieve the Enrolment with the given relation IDs.
-     *
-     * @param studentId ID of the student
-     * @param subjectId ID of the subject
-     * @return the Enrolment with the specified relation IDs
-     * @throws SQLException if unable to retrieve the Enrolment
-     */
     public Enrolment findByRelationIds(
         UUID studentId,
-        UUID subjectId
+        UUID subjectId,
+        boolean forUpdate
     ) throws SQLException {
         String query = "SELECT * FROM " + tableName +
-            " WHERE user_id = ? AND subject_id = ?";
+            " WHERE user_id = ? AND subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -52,6 +46,21 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
                 throw new NotFoundException();
             }
         }
+    }
+
+    /**
+     * Retrieve the Enrolment with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param subjectId ID of the subject
+     * @return the Enrolment with the specified relation IDs
+     * @throws SQLException if unable to retrieve the Enrolment
+     */
+    public Enrolment findByRelationIds(
+        UUID studentId,
+        UUID subjectId
+    ) throws SQLException {
+        return findByRelationIds(studentId, subjectId, false);
     }
 
     @Override

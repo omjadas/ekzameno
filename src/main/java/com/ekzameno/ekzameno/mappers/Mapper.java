@@ -42,6 +42,20 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
+    public T findById(
+        UUID id,
+        boolean forUpdate
+    ) throws NotFoundException, SQLException {
+        IdentityMap identityMap = IdentityMap.getCurrent();
+        T obj = (T) identityMap.get(id);
+
+        if (obj != null) {
+            return obj;
+        }
+
+        return findByProp("id", id, forUpdate);
+    }
+
     /**
      * Find a model for a given ID.
      *
@@ -50,20 +64,13 @@ public abstract class Mapper<T extends Model> {
      * @throws SQLException if unable to retrieve the model
      */
     public T findById(UUID id) throws SQLException, NotFoundException {
-        IdentityMap identityMap = IdentityMap.getCurrent();
-        T obj = (T) identityMap.get(id);
-
-        if (obj != null) {
-            return obj;
-        }
-
-        return findByProp("id", id);
+        return findById(id, false);
     }
 
-    protected T findByProp(String prop, Object value)
+    protected T findByProp(String prop, Object value, boolean forUpdate)
         throws SQLException, NotFoundException {
         String query = "SELECT * FROM " + getTableName() +
-            " WHERE " + prop + " = ?";
+            " WHERE " + prop + " = ?" + (forUpdate ? " FOR UPDATE" : "");
         Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
@@ -82,15 +89,10 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
-    /**
-     * Find all models of a given type.
-     *
-     * @return all models of a given type
-     * @throws SQLException if unable to retrieve the models
-     */
-    public List<T> findAll() throws SQLException {
+    public List<T> findAll(boolean forUpdate) throws SQLException {
         IdentityMap identityMap = IdentityMap.getCurrent();
-        String query = "SELECT * FROM " + getTableName();
+        String query = "SELECT * FROM " + getTableName() +
+            (forUpdate ? " FOR UPDATE" : "");
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -108,6 +110,16 @@ public abstract class Mapper<T extends Model> {
 
             return objects;
         }
+    }
+
+    /**
+     * Find all models of a given type.
+     *
+     * @return all models of a given type
+     * @throws SQLException if unable to retrieve the models
+     */
+    public List<T> findAll() throws SQLException {
+        return findAll(false);
     }
 
     /**

@@ -17,6 +17,11 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     private static final String tableName = "users";
 
+    public User findByEmail(String email, boolean forUpdate)
+        throws SQLException, NotFoundException {
+        return findByProp("email", email, forUpdate);
+    }
+
     /**
      * Find a user by their email address.
      *
@@ -26,12 +31,7 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
      */
     public User findByEmail(String email)
         throws SQLException, NotFoundException {
-        try {
-            return findByProp("email", email);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            throw new NotFoundException();
-        }
+        return findByEmail(email, false);
     }
 
     @Override

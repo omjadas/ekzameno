@@ -18,15 +18,12 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class OptionMapper extends Mapper<Option> {
     private static final String tableName = "options";
 
-    /**
-     * Retrieve all options for a given question ID.
-     *
-     * @param id ID of the question to retrieve options for
-     * @return options for the given question
-     * @throws SQLException if unable to retrieve the options
-     */
-    public List<Option> findAllForQuestion(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName + " WHERE question_id = ?";
+    public List<Option> findAllForQuestion(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE question_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -46,6 +43,17 @@ public class OptionMapper extends Mapper<Option> {
 
             return options;
         }
+    }
+
+    /**
+     * Retrieve all options for a given question ID.
+     *
+     * @param id ID of the question to retrieve options for
+     * @return options for the given question
+     * @throws SQLException if unable to retrieve the options
+     */
+    public List<Option> findAllForQuestion(UUID id) throws SQLException {
+        return findAllForQuestion(id, false);
     }
 
     @Override

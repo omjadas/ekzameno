@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -21,6 +23,13 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
 
+    public Exam findBySlug(
+        String slug,
+        boolean forUpdate
+    ) throws NotFoundException, SQLException {
+        return findByProp("slug", slug, forUpdate);
+    }
+
     /**
      * Find a model for a given slug.
      *
@@ -29,7 +38,34 @@ public class ExamMapper extends Mapper<Exam> {
      * @throws SQLException if unable to retrieve the model
      */
     public Exam findBySlug(String slug) throws SQLException {
-        return findByProp("slug", slug);
+        return findBySlug(slug, false);
+    }
+
+    public List<Exam> findAllForSubject(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
+
+        Connection connection = DBConnection.getCurrent().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Exam> exams = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Exam exam = load(rs);
+                IdentityMap.getCurrent().put(exam.getId(), exam);
+                exams.add(exam);
+            }
+
+            return exams;
+        }
     }
 
     /**
@@ -40,7 +76,15 @@ public class ExamMapper extends Mapper<Exam> {
      * @throws SQLException if unable to retrieve the exams
      */
     public List<Exam> findAllForSubject(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ?";
+        return findAllForSubject(id, false);
+    }
+
+    public List<Exam> findAllPublishedExams(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ? " +
+            "AND start_time < NOW()" + (forUpdate ? " FOR UPDATE" : "");
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -70,27 +114,7 @@ public class ExamMapper extends Mapper<Exam> {
      * @throws SQLException if unable to retrieve the exams
      */
     public List<Exam> findAllPublishedExams(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ? " +
-            "AND start_time < NOW()";
-
-        Connection connection = DBConnection.getCurrent().getConnection();
-
-        try (
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            List<Exam> exams = new ArrayList<>();
-
-            statement.setObject(1, id);
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()) {
-                Exam exam = load(rs);
-                IdentityMap.getCurrent().put(exam.getId(), exam);
-                exams.add(exam);
-            }
-
-            return exams;
-        }
+        return findAllPublishedExams(id, false);
     }
 
     @Override
