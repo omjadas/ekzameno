@@ -20,6 +20,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class SubjectMapper extends Mapper<Subject> {
     private static final String tableName = "subjects";
 
+    /**
+     * Find a subject for a given slug.
+     *
+     * @param slug      ID of the subject to find
+     * @param forUpdate whether the row should be locked
+     * @return subject with the given ID
+     * @throws SQLException if unable to retrieve the subject
+     */
     public Subject findBySlug(
         String slug,
         boolean forUpdate
@@ -39,6 +47,14 @@ public class SubjectMapper extends Mapper<Subject> {
         return findBySlug(slug, false);
     }
 
+    /**
+     * Retrieve all subjects for a given student ID.
+     *
+     * @param id        ID of the student to retrieve subjects for
+     * @param forUpdate whether the rows should be locked
+     * @return subjects for the given student
+     * @throws SQLException if unable to retrieve the subjects
+     */
     public List<Subject> findAllForStudent(
         UUID id,
         boolean forUpdate
@@ -79,6 +95,14 @@ public class SubjectMapper extends Mapper<Subject> {
         return findAllForStudent(id, false);
     }
 
+    /**
+     * Retrieve subjects for a given instructor ID.
+     *
+     * @param id        ID of the instructor to retrieve subjects for
+     * @param forUpdate whether the rows should be locked
+     * @return subjects for the given instructor
+     * @throws SQLException if unable to retrieve the subjects
+     */
     public List<Subject> findAllForInstructor(
         UUID id,
         boolean forUpdate

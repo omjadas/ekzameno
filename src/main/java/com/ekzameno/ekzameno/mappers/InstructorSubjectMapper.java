@@ -18,6 +18,15 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
     private static final String tableName = "instructor_subjects";
 
+    /**
+     * Retrieve the InstructorSubject with the given relation IDs.
+     *
+     * @param instructorId ID of the instructor
+     * @param subjectId    ID of the subject
+     * @param forUpdate    whether the row should be locked
+     * @return the InstructorSubject with the given relation IDs
+     * @throws SQLException if unable to retrieve the InstructorSubject
+     */
     public InstructorSubject findByRelationIds(
         UUID instructorId,
         UUID subjectId,

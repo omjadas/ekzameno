@@ -42,6 +42,14 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
+    /**
+     * Find a model for a given ID.
+     *
+     * @param id        ID of the model to find
+     * @param forUpdate whether the row should be locked
+     * @return model with the given ID
+     * @throws SQLException if unable to retrieve the model
+     */
     public T findById(
         UUID id,
         boolean forUpdate
@@ -89,6 +97,13 @@ public abstract class Mapper<T extends Model> {
         }
     }
 
+    /**
+     * Find all models of a given type.
+     *
+     * @param forUpdate whether the rows should be locked
+     * @return all models of a given type
+     * @throws SQLException if unable to retrieve the models
+     */
     public List<T> findAll(boolean forUpdate) throws SQLException {
         IdentityMap identityMap = IdentityMap.getCurrent();
         String query = "SELECT * FROM " + getTableName() +

@@ -18,6 +18,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
  * Data Mapper for Questions.
  */
 public class QuestionMapper extends AbstractQuestionMapper<Question> {
+    /**
+     * Retrieve all questions for a given exam ID.
+     *
+     * @param id        ID of the exam to retrieve questions for
+     * @param forUpdate whether the rows should be updated
+     * @return questions for the given exam
+     * @throws SQLException if unable to retrieve the questions
+     */
     public List<Question> findAllForExam(
         UUID id,
         boolean forUpdate
@@ -44,6 +52,7 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
             return questions;
         }
     }
+
     /**
      * Retrieve all questions for a given exam ID.
      *

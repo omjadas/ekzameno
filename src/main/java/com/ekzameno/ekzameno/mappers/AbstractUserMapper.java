@@ -17,6 +17,14 @@ import com.ekzameno.ekzameno.shared.DBConnection;
 public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     private static final String tableName = "users";
 
+    /**
+     * Find a user by their email address.
+     *
+     * @param email     email address of the user to find
+     * @param forUpdate whether the row should be locked
+     * @return the user with the specified email address
+     * @throws SQLException if unable to retrieve the user
+     */
     public User findByEmail(String email, boolean forUpdate)
         throws SQLException, NotFoundException {
         return findByProp("email", email, forUpdate);

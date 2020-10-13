@@ -16,6 +16,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
  * Data Mapper for Students.
  */
 public class StudentMapper extends AbstractUserMapper<Student> {
+    /**
+     * Retrieve all students for a given subject ID.
+     *
+     * @param id        ID of the subject to retrieve students for
+     * @param forUpdate whether the rows should be locked
+     * @return students for the given subject
+     * @throws SQLException if unable to retrieve the students
+     */
     public List<Student> findAllForSubject(
         UUID id,
         boolean forUpdate

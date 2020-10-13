@@ -16,6 +16,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
  * Data Mapper for Instructors.
  */
 public class InstructorMapper extends AbstractUserMapper<Instructor> {
+    /**
+     * Retrieve all instructors for a given subject ID.
+     *
+     * @param id        ID of the subject to retrieve instructors for
+     * @param forUpdate whether the rows should be locked
+     * @return instructors for the given subject
+     * @throws SQLException if unable to retrieve the instructors
+     */
     public List<Instructor> findAllForSubject(
         UUID id,
         boolean forUpdate

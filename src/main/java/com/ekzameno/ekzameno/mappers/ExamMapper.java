@@ -23,6 +23,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
 
+    /**
+     * Find an exam for a given slug.
+     *
+     * @param slug      ID of the model to find
+     * @param forUpdate whether the row should be locked
+     * @return model with the given ID
+     * @throws SQLException if unable to retrieve the model
+     */
     public Exam findBySlug(
         String slug,
         boolean forUpdate
@@ -31,7 +39,7 @@ public class ExamMapper extends Mapper<Exam> {
     }
 
     /**
-     * Find a model for a given slug.
+     * Find an exam for a given slug.
      *
      * @param slug ID of the model to find
      * @return model with the given ID
@@ -41,6 +49,14 @@ public class ExamMapper extends Mapper<Exam> {
         return findBySlug(slug, false);
     }
 
+    /**
+     * Retrieve all exams for a given subject ID.
+     *
+     * @param id        ID of the subject to retrieve exams for
+     * @param forUpdate whether the rows should be locked
+     * @return exams for the given subject
+     * @throws SQLException if unable to retrieve the exams
+     */
     public List<Exam> findAllForSubject(
         UUID id,
         boolean forUpdate
@@ -79,6 +95,14 @@ public class ExamMapper extends Mapper<Exam> {
         return findAllForSubject(id, false);
     }
 
+    /**
+     * Retrieve all published exams for a given subject ID.
+     *
+     * @param id        ID of the subject to retrieve exams for
+     * @param forUpdate whether the rows should be locked
+     * @return exams for the given subject
+     * @throws SQLException if unable to retrieve the exams
+     */
     public List<Exam> findAllPublishedExams(
         UUID id,
         boolean forUpdate

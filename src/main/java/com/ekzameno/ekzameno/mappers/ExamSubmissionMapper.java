@@ -20,6 +20,15 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     private static final String tableName = "exam_submissions";
 
+    /**
+     * Find the ExamSubmission with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param examId    ID of the exam
+     * @param forUpdate whether the row should be locked
+     * @return the ExamSubmission with the given relation IDs
+     * @throws SQLException if unable to retrieve the ExamSubmission
+     */
     public ExamSubmission findByRelationIds(
         UUID studentId,
         UUID examId,
@@ -65,6 +74,14 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         return findByRelationIds(studentId, examId, false);
     }
 
+    /**
+     * Retrieve all exam submissions for a given exam ID.
+     *
+     * @param id        ID of the exam to retrieve submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return submissions for the given exam
+     * @throws SQLException if unable to retrieve the submissions
+     */
     public List<ExamSubmission> findAllForExam(
         UUID id,
         boolean forUpdate
@@ -108,6 +125,14 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         return findAllForExam(id, false);
     }
 
+    /**
+     * Retrieve all exam submissions for a given student ID.
+     *
+     * @param id        ID of the student to retrieve submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return submissions for the given student
+     * @throws SQLException if unable to retrieve the submissions
+     */
     public List<ExamSubmission> findAllForStudent(
         UUID id,
         boolean forUpdate

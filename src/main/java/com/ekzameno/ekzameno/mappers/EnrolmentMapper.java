@@ -18,6 +18,15 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class EnrolmentMapper extends Mapper<Enrolment> {
     private static final String tableName = "enrolments";
 
+    /**
+     * Retrieve the Enrolment with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param subjectId ID of the subject
+     * @param forUpdate whether the row should be locked
+     * @return the Enrolment with the specified relation IDs
+     * @throws SQLException if unable to retrieve the Enrolment
+     */
     public Enrolment findByRelationIds(
         UUID studentId,
         UUID subjectId,

@@ -20,6 +20,15 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     private static final String tableName = "question_submissions";
 
+    /**
+     * Retrieve the QuestionSubmission with the given relation IDs.
+     *
+     * @param questionId       ID of the question
+     * @param examSubmissionId ID of the exam submission
+     * @param forUpdate        whether the row should be locked
+     * @return the QuestionSubmission with the specified relation IDs
+     * @throws SQLException if unable to retrieve the QuestionSubmission
+     */
     public QuestionSubmission findByRelationIds(
         UUID questionId,
         UUID examSubmissionId,
@@ -65,6 +74,15 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         return findByRelationIds(questionId, examSubmissionId, false);
     }
 
+    /**
+     * Retrieve all questions submissions for a given exam submission ID.
+     *
+     * @param id        ID of the exam submission to retrieve the question
+     *                  submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return questions submissions for the given exam submission
+     * @throws SQLException if unable to retrieve the question submissions
+     */
     public List<QuestionSubmission> findAllForExamSubmission(
         UUID id,
         boolean forUpdate
@@ -110,6 +128,14 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
         return findAllForExamSubmission(id, false);
     }
 
+    /**
+     * Retrieve all question submissions for a given question ID.
+     *
+     * @param id        ID of the question to retrieve submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return submissions for the given question
+     * @throws SQLException if unable to retrieve the question submissions
+     */
     public List<QuestionSubmission> findAllForQuestion(
         UUID id,
         boolean forUpdate

@@ -18,6 +18,14 @@ import com.ekzameno.ekzameno.shared.IdentityMap;
 public class OptionMapper extends Mapper<Option> {
     private static final String tableName = "options";
 
+    /**
+     * Retrieve all options for a given question ID.
+     *
+     * @param id        ID of the question to retrieve options for
+     * @param forUpdate whether the rows should be locked
+     * @return options for the given question
+     * @throws SQLException if unable to retrieve the options
+     */
     public List<Option> findAllForQuestion(
         UUID id,
         boolean forUpdate
