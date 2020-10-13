@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
 import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice";
-import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam, selectQuestionsStatus } from "../../redux/slices/questionsSlice";
+import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { QuestionModal } from "./questionModal";
@@ -62,8 +62,6 @@ export const Questions = (props: QuestionProps): JSX.Element => {
         console.error(e);
       });
   }, [dispatch, props.examId]);
-
-  const questionsStatus = useSelector(selectQuestionsStatus);
 
   if (me === undefined || exam !== undefined && exam.questionIds.length !== questions.length) {
     return (
