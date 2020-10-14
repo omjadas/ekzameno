@@ -18,9 +18,11 @@ import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
+import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.Question;
+import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.services.OptionService;
 import com.ekzameno.ekzameno.services.QuestionService;
 
@@ -54,7 +56,7 @@ public class QuestionController {
             dto.question,
             dto.marks,
             UUID.fromString(questionId),
-            headers.getRequestHeader("if-match").get(0)
+            headers.getHeaderString("if-match")
         );
     }
 
@@ -109,6 +111,42 @@ public class QuestionController {
             dto.answer,
             dto.correct,
             UUID.fromString(questionId)
+        );
+    }
+
+    @Path("/{questionId}/submissions/{examSubmissionId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public QuestionSubmission createSubmission(
+        @PathParam("questionId") String questionId,
+        @PathParam("examSubmissionId") String examSubmissionId,
+        CreateQuestionSubmissionDTO dto
+    ) {
+        return questionService.createSubmission(
+            UUID.fromString(questionId),
+            UUID.fromString(examSubmissionId),
+            dto.answer,
+            dto.marks
+        );
+    }
+
+    @Path("/{questionId}/submissions/{examSubmissionId}")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public QuestionSubmission createSubmission(
+        @PathParam("questionId") String questionId,
+        @PathParam("examSubmissionId") String examSubmissionId,
+        @Context HttpHeaders headers,
+        CreateQuestionSubmissionDTO dto
+    ) {
+        return questionService.updateSubmission(
+            UUID.fromString(questionId),
+            UUID.fromString(examSubmissionId),
+            dto.answer,
+            dto.marks,
+            headers.getHeaderString("if-match")
         );
     }
 }

@@ -75,7 +75,7 @@ public class ExamController {
             dto.startTime,
             dto.finishTime,
             UUID.fromString(examId),
-            headers.getRequestHeader("if-match").get(0)
+            headers.getHeaderString("if-match")
         );
     }
 
@@ -196,7 +196,7 @@ public class ExamController {
             UUID.fromString(examId),
             UUID.fromString(studentId),
             dto.marks,
-            headers.getRequestHeader("if-match").get(0)
+            headers.getHeaderString("if-match")
         );
     }
 

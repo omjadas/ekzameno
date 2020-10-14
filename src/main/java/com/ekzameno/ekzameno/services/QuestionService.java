@@ -10,9 +10,11 @@ import javax.ws.rs.InternalServerErrorException;
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
+import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.Question;
+import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 import com.ekzameno.ekzameno.shared.DBConnection;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
@@ -22,6 +24,8 @@ import com.ekzameno.ekzameno.shared.UnitOfWork;
  */
 public class QuestionService {
     private QuestionMapper questionMapper = new QuestionMapper();
+    private QuestionSubmissionMapper questionSubmissionMapper =
+        new QuestionSubmissionMapper();
 
     /**
      * Create a question for a given exam.
@@ -142,6 +146,58 @@ public class QuestionService {
         try {
             return questionMapper.findAllForExam(examId);
         } catch (SQLException e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    public QuestionSubmission createSubmission(
+        UUID questionId,
+        UUID examSubmissionId,
+        String answer,
+        Integer marks
+    ) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            new QuestionSubmission(answer, questionId, examSubmissionId, marks);
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    public QuestionSubmission updateSubmission(
+        UUID questionId,
+        UUID examSubmissionId,
+        String answer,
+        Integer marks,
+        String eTag
+    ) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            QuestionSubmission questionSubmission = questionSubmissionMapper
+                .findByRelationIds(questionId, examSubmissionId);
+
+            if (!String.valueOf(questionSubmission.hashCode()).equals(eTag)) {
+                throw new PreconditionFailedException();
+            }
+
+            questionSubmission.setAnswer(answer);
+            questionSubmission.setMarks(marks);
+
+            UnitOfWork.getCurrent().commit();
+        } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }

@@ -12,7 +12,6 @@ import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
-//import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -261,7 +260,6 @@ public class ExamService {
      * @param examId    ID of the exam
      * @param studentId ID of the student
      * @param marks     Number of marks assigned to the exam submission
-     * @param answers   answers
      * @param eTag      Entity tag
      * @return updated ExamSubmission
      */
@@ -280,14 +278,6 @@ public class ExamService {
             if (!String.valueOf(examSubmission.hashCode()).equals(eTag)) {
                 throw new PreconditionFailedException();
             }
-
-            // for (CreateQuestionSubmissionDTO answer : answers) {
-            //     QuestionSubmission questionSubmission =
-            //          questionSubmissionMapper
-            //         .findByRelationIds(UUID.fromString(
-            //         answer.questionId), examSubmission.getId(), true);
-            //     questionSubmission.setMarks(answer.marks);
-            // }
 
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();
