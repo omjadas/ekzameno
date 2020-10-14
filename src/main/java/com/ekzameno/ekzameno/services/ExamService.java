@@ -282,7 +282,8 @@ public class ExamService {
             }
 
             // for (CreateQuestionSubmissionDTO answer : answers) {
-            //     QuestionSubmission questionSubmission = questionSubmissionMapper
+            //     QuestionSubmission questionSubmission =
+            //          questionSubmissionMapper
             //         .findByRelationIds(UUID.fromString(
             //         answer.questionId), examSubmission.getId(), true);
             //     questionSubmission.setMarks(answer.marks);
