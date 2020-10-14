@@ -110,7 +110,6 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           examId: props.examId,
           studentId: mark.studentId,
           marks: mark.marks,
-          answers: [],
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           eTag: submissions[mark.studentId]!.meta.eTag,
         }))

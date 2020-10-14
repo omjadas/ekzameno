@@ -19,7 +19,7 @@ public class QuestionSubmission extends Model {
     private Question question = null;
     @JsonIgnore
     private ExamSubmission examSubmission = null;
-    private int mark;
+    private Integer marks;
 
     /**
      * Create a QuestionSubmission with an ID.
@@ -28,20 +28,20 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
-     * @param mark             Mark for the question
+     * @param marks             Mark for the question
      */
     public QuestionSubmission(
         UUID id,
         String answer,
         UUID questionId,
         UUID examSubmissionId,
-        int mark
+        Integer marks
     ) {
         super(id);
         this.answer = answer;
         this.questionId = questionId;
         this.examSubmissionId = examSubmissionId;
-        this.mark = mark;
+        this.marks = marks;
     }
 
     /**
@@ -50,35 +50,35 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
-     * @param mark             Mark for the question
+     * @param marks             Mark for the question
      */
     public QuestionSubmission(
         String answer,
         UUID questionId,
         UUID examSubmissionId,
-        Integer mark
+        Integer marks
     ) {
         this.answer = answer;
         this.questionId = questionId;
         this.examSubmissionId = examSubmissionId;
-        this.mark = mark;
+        this.marks = marks;
     }
 
     public String getAnswer() {
         return answer;
     }
 
-    public Integer getMark() {
-        return mark;
+    public Integer getMarks() {
+        return marks;
     }
 
     /**
      * Set the mark for the question.
      *
-     * @param mark Mark for the question
+     * @param marks Mark for the question
      */
-    public void setMark(Integer mark) {
-        this.mark = mark;
+    public void setMarks(Integer marks) {
+        this.marks = marks;
         UnitOfWork.getCurrent().registerDirty(this);
     }
 

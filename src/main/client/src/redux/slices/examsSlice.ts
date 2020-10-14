@@ -45,11 +45,9 @@ export interface ExamState extends Exam {
 export interface Answer {
   questionId: string,
   answer: string,
+  marks?: number,
 }
 
-export interface SubmissionMark extends Answer {
-  mark: number,
-}
 interface ExamsState extends State {
   slugs: Record<string, string>,
 }
@@ -153,44 +151,17 @@ export const submitExam = createAsyncThunk(
   }
 );
 
-export const submitExam1 = createAsyncThunk(
-  "exams/submitExam",
-  async ({
-    examId,
-    studentId,
-    answers,
-    marks,
-  }: {
-    examId: string,
-    studentId: string,
-    answers: SubmissionMark[],
-    marks?: number,
-  }) => {
-    const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
-      method: "post",
-      body: JSON.stringify({ marks, answers }),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-
-    return res.json() as Promise<ExamSubmission>;
-  }
-);
-
 export const updateExamSubmission = createAsyncThunk(
   "exams/updateSubmission",
   async ({
     examId,
     studentId,
     marks,
-    answers,
     eTag,
   }: {
     examId: string,
     studentId: string,
     marks: number,
-    answers: SubmissionMark[],
     eTag: string,
   }) => {
     const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {

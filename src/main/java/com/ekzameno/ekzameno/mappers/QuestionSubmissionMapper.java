@@ -186,7 +186,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     public void insert(QuestionSubmission questionSubmission)
             throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, answer, exam_submission_id, question_id, mark) " +
+            " (id, answer, exam_submission_id, question_id, marks) " +
             "VALUES (?,?,?,?,?)";
 
         Connection connection = DBConnection.getCurrent().getConnection();
@@ -198,7 +198,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             statement.setString(2, questionSubmission.getAnswer());
             statement.setObject(3, questionSubmission.getExamSubmissionId());
             statement.setObject(4, questionSubmission.getQuestionId());
-            statement.setObject(5, questionSubmission.getMark());
+            statement.setObject(5, questionSubmission.getMarks());
             statement.executeUpdate();
         }
     }
@@ -208,7 +208,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             throws SQLException {
         String query = "UPDATE " + tableName +
             " SET answer = ?, exam_submission_id = ?, question_id = ?, " +
-            "mark = ? WHERE id = ?";
+            "marks = ? WHERE id = ?";
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -219,7 +219,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             statement.setObject(2, questionSubmission.getExamSubmissionId());
             statement.setObject(3, questionSubmission.getQuestionId());
             statement.setObject(4, questionSubmission.getId());
-            statement.setObject(5, questionSubmission.getMark());
+            statement.setObject(5, questionSubmission.getMarks());
             statement.executeUpdate();
         }
     }
@@ -240,10 +240,10 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             "exam_submission_id",
             java.util.UUID.class
         );
-        Integer mark = rs.getInt("mark");
-        mark = rs.wasNull() ? null : mark;
+        Integer marks = rs.getInt("marks");
+        marks = rs.wasNull() ? null : marks;
         return new QuestionSubmission(id, answer, questionId,
-        examSubmissionId, mark);
+        examSubmissionId, marks);
     }
 
     @Override

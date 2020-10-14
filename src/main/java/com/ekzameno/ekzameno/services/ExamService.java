@@ -12,7 +12,7 @@ import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
-import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
+//import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -27,8 +27,8 @@ public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
     private ExamSubmissionMapper examSubmissionMapper =
         new ExamSubmissionMapper();
-    private QuestionSubmissionMapper questionSubmissionMapper =
-        new QuestionSubmissionMapper();
+    // private QuestionSubmissionMapper questionSubmissionMapper =
+    //     new QuestionSubmissionMapper();
 
     /**
      * Fetches an exam for a given slug.
@@ -204,7 +204,7 @@ public class ExamService {
                     answer.answer,
                     UUID.fromString(answer.questionId),
                     examSubmission.getId(),
-                    answer.mark
+                    answer.marks
                 );
             }
 
@@ -269,7 +269,6 @@ public class ExamService {
         UUID examId,
         UUID studentId,
         Integer marks,
-        List<CreateQuestionSubmissionDTO> answers,
         String eTag
     ) {
         try (
@@ -282,12 +281,12 @@ public class ExamService {
                 throw new PreconditionFailedException();
             }
 
-            for (CreateQuestionSubmissionDTO answer : answers) {
-                QuestionSubmission questionSubmission = questionSubmissionMapper
-                    .findByRelationIds(UUID.fromString(
-                    answer.questionId), examSubmission.getId());
-                questionSubmission.setMark(answer.mark);
-            }
+            // for (CreateQuestionSubmissionDTO answer : answers) {
+            //     QuestionSubmission questionSubmission = questionSubmissionMapper
+            //         .findByRelationIds(UUID.fromString(
+            //         answer.questionId), examSubmission.getId(), true);
+            //     questionSubmission.setMarks(answer.marks);
+            // }
 
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();

@@ -6,5 +6,5 @@ package com.ekzameno.ekzameno.dtos;
 public class CreateQuestionSubmissionDTO {
     public String questionId;
     public String answer;
-    public Integer mark;
+    public Integer marks;
 }

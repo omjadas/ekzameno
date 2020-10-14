@@ -196,7 +196,6 @@ public class ExamController {
             UUID.fromString(examId),
             UUID.fromString(studentId),
             dto.marks,
-            dto.answers,
             headers.getRequestHeader("if-match").get(0)
         );
     }

@@ -4,8 +4,8 @@ import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { ExamState, QuestionSubmission, selectExamById, SubmissionMark, submitExam1, updateExamSubmission } from "../../redux/slices/examsSlice";
-import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
+import { Answer, ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
+import { QuestionState, selectQuestionsForExam, updateQuestion } from "../../redux/slices/questionsSlice";
 import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 
@@ -18,8 +18,7 @@ interface SubmissionModalProps {
 }
 
 interface FormValues {
-  marks: number[],
-  submissionMark: SubmissionMark[],
+  answers: Answer[],
 }
 
 export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
@@ -50,14 +49,14 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     });
 
   const handleSubmit = (values: FormValues): void => {
-    const newMarks = values.marks.reduce((a, b) => a + b, 0);
+    const newMarks = values.answers.reduce((a, b) => a + (b.marks ?? 0), 0);
 
     if (props.eTag === undefined) {
       dispatch(submitExam({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
-        answers: values.submissionMark,
+        answers: values.answers,
       }))
         .then(unwrapResult)
         .then(props.onHide)
@@ -69,10 +68,15 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
-        answers: values.submissionMark,
         eTag: props.eTag,
       }))
         .then(unwrapResult)
+        // .then(()=> {
+        //   return Promise.all(values.answers.map(answer => {
+        //     dispatch(updateQuestionSubmission(
+        //       ))
+        //   }));
+        // })
         .then(props.onHide)
         .catch(e => {
           console.error(e);
