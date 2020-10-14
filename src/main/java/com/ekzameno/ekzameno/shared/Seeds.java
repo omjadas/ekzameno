@@ -137,33 +137,6 @@ public class Seeds {
                 sda.getId()
             );
 
-            Exam sdaFinalExam = examService.createExam(
-                "Final Exam (30 Marks)",
-                "The exam contains 4 questions with 3 short" +
-                "answers and 1 multiple choice question. This" +
-                " exam contributes 50% of the final marks.",
-                new Date(),
-                new Date(new Date().getTime() + 604800000),
-                sda.getId()
-            );
-
-            Exam dbmsQuiz = examService.createExam(
-                "Quiz",
-                "The Quiz contains 5 questions of 2 marks each",
-                new Date(),
-                new Date(new Date().getTime() + 604800000),
-                dbms.getId()
-            );
-
-            Exam dbmsFinalExam = examService.createExam(
-                "Final Exam (25 Marks)",
-                "Final Exam:\n" +
-                "Hurdle requirement: 50%",
-                new Date(),
-                new Date(new Date().getTime() + 604800000),
-                dbms.getId()
-            );
-
             CreateOptionDTO msQ1A = new CreateOptionDTO();
             msQ1A.answer = "Identity Map";
             msQ1A.correct = true;
@@ -289,6 +262,16 @@ public class Seeds {
                 Arrays.asList(msQ5A, msQ5B)
             );
 
+            Exam sdaFinalExam = examService.createExam(
+                "Final Exam (30 Marks)",
+                "The exam contains 4 questions with 3 short" +
+                "answers and 1 multiple choice question. This" +
+                " exam contributes 50% of the final marks.",
+                new Date(),
+                new Date(new Date().getTime() + 604800000),
+                sda.getId()
+            );
+
             questionService.createQuestion(
                 sdaFinalExam.getId(),
                 "Explain the benefits of using MVC architecture",
@@ -327,6 +310,14 @@ public class Seeds {
                 10,
                 "SHORT_ANSWER",
                 null
+            );
+
+            Exam dbmsQuiz = examService.createExam(
+                "Quiz",
+                "The Quiz contains 5 questions of 2 marks each",
+                new Date(),
+                new Date(new Date().getTime() + 604800000),
+                dbms.getId()
             );
 
             CreateOptionDTO qQ1A = new CreateOptionDTO();
@@ -436,6 +427,15 @@ public class Seeds {
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(qQ5A, qQ5B, qQ5C, qQ5D)
+            );
+
+            Exam dbmsFinalExam = examService.createExam(
+                "Final Exam (25 Marks)",
+                "Final Exam:\n" +
+                "Hurdle requirement: 50%",
+                new Date(),
+                new Date(new Date().getTime() + 604800000),
+                dbms.getId()
             );
 
             CreateOptionDTO fsQ1A = new CreateOptionDTO();
