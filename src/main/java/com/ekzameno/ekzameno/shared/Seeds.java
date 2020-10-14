@@ -442,8 +442,6 @@ public class Seeds {
                 dbms.getId()
             );
 
-            UUID dbmsFinalExamId = dbmsFinalExam.getId();
-
             CreateOptionDTO fsQ1A = new CreateOptionDTO();
             fsQ1A.answer = "Auto number";
             fsQ1A.correct = false;
@@ -457,6 +455,8 @@ public class Seeds {
             fsQ1D.answer = "Text";
             fsQ1D.correct = true;
 
+            UUID dbmsFinalExamId = dbmsFinalExam.getId();
+
             questionService.createQuestion(
                 dbmsFinalExamId,
                 "Which data type allows alphanumeric characters " +
@@ -467,7 +467,7 @@ public class Seeds {
             );
 
             questionService.createQuestion(
-                sdaFinalExam.getId(),
+                dbmsFinalExam.getId(),
                 "What are Advantages and Disadvantages of DBMS?",
                 10,
                 "SHORT_ANSWER",
@@ -475,7 +475,7 @@ public class Seeds {
             );
 
             questionService.createQuestion(
-                sdaFinalExam.getId(),
+                dbmsFinalExam.getId(),
                 "What is Data Redundancy ?",
                 10,
                 "SHORT_ANSWER",
@@ -505,7 +505,7 @@ public class Seeds {
             );
 
             questionService.createQuestion(
-                sdaFinalExam.getId(),
+                dbmsFinalExam.getId(),
                 "What is DBMS (Database Management System) ?",
                 6,
                 "SHORT_ANSWER",
@@ -513,7 +513,7 @@ public class Seeds {
             );
 
             questionService.createQuestion(
-                sdaFinalExam.getId(),
+                dbmsFinalExam.getId(),
                 "What is SQL (Structured Query Language)?",
                 5,
                 "SHORT_ANSWER",
@@ -543,7 +543,7 @@ public class Seeds {
             );
 
             questionService.createQuestion(
-                sdaFinalExam.getId(),
+                dbmsFinalExam.getId(),
                 "What is the need of DBMS ?",
                 10,
                 "SHORT_ANSWER",
