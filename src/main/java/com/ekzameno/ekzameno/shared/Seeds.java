@@ -111,20 +111,6 @@ public class Seeds {
                 }
             );
 
-            Subject dbms = subjectService.createSubject(
-                "DBMS",
-                "Database Management System",
-                new UUID[] {
-                    eduardo.getId(),
-                    maria.getId()
-                },
-                new UUID[] {
-                    omja.getId(),
-                    joao.getId(),
-                    muzamil.getId()
-                }
-            );
-
             Exam sdaMidSemExam = examService.createExam(
                 "Mid-Sem (35 Marks)",
                 "This exam contains multiple choice and short answer" +
@@ -137,6 +123,8 @@ public class Seeds {
                 sda.getId()
             );
 
+            UUID sdaMidExamId = sdaMidSemExam.getId();
+
             CreateOptionDTO msQ1A = new CreateOptionDTO();
             msQ1A.answer = "Identity Map";
             msQ1A.correct = true;
@@ -145,7 +133,7 @@ public class Seeds {
             msQ1B.correct = false;
 
             questionService.createQuestion(
-                sdaMidSemExam.getId(),
+                sdaMidExamId,
                 "____ is a simple pattern that helps to maintain data " +
                 "integrity",
                 3,
@@ -312,6 +300,20 @@ public class Seeds {
                 null
             );
 
+            Subject dbms = subjectService.createSubject(
+                "DBMS",
+                "Database Management System",
+                new UUID[] {
+                    eduardo.getId(),
+                    maria.getId()
+                },
+                new UUID[] {
+                    omja.getId(),
+                    joao.getId(),
+                    muzamil.getId()
+                }
+            );
+
             Exam dbmsQuiz = examService.createExam(
                 "Quiz",
                 "The Quiz contains 5 questions of 2 marks each",
@@ -319,6 +321,8 @@ public class Seeds {
                 new Date(new Date().getTime() + 604800000),
                 dbms.getId()
             );
+
+            UUID dbmsQuizexamId = dbmsQuiz.getId();
 
             CreateOptionDTO qQ1A = new CreateOptionDTO();
             qQ1A.answer = "One class may have many teachers";
@@ -334,7 +338,7 @@ public class Seeds {
             qQ1D.correct = false;
 
             questionService.createQuestion(
-                dbmsQuiz.getId(),
+                dbmsQuizexamId,
                 "What do you mean by one to many relationship" +
                 "between Teacher and Class table?",
                 2,
@@ -438,6 +442,8 @@ public class Seeds {
                 dbms.getId()
             );
 
+            UUID dbmsFinalExamId = dbmsFinalExam.getId();
+
             CreateOptionDTO fsQ1A = new CreateOptionDTO();
             fsQ1A.answer = "Auto number";
             fsQ1A.correct = false;
@@ -452,7 +458,7 @@ public class Seeds {
             fsQ1D.correct = true;
 
             questionService.createQuestion(
-                dbmsFinalExam.getId(),
+                dbmsFinalExamId,
                 "Which data type allows alphanumeric characters " +
                 "and special symbols to be entered?",
                 3,
