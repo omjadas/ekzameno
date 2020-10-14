@@ -1,7 +1,6 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +38,7 @@ public class ExamService {
         try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findBySlug(slug);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -54,7 +54,7 @@ public class ExamService {
             return examMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -69,7 +69,7 @@ public class ExamService {
             return examMapper.findAllPublishedExams(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -96,6 +96,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -121,7 +127,7 @@ public class ExamService {
         String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Exam exam = examMapper.findById(examId);
+            Exam exam = examMapper.findById(examId, true);
 
             if (!String.valueOf(exam.hashCode()).equals(eTag)) {
                 throw new PreconditionFailedException();
@@ -134,6 +140,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -148,10 +160,15 @@ public class ExamService {
         UUID examId
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Exam exam = examMapper.findById(examId);
-            UnitOfWork.getCurrent().registerDeleted(exam);
+            examMapper.deleteById(examId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -190,6 +207,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return examSubmission;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -247,7 +270,7 @@ public class ExamService {
             DBConnection connection = DBConnection.getCurrent();
         ) {
             ExamSubmission examSubmission =
-                examSubmissionMapper.findByRelationIds(studentId, examId);
+                examSubmissionMapper.findByRelationIds(studentId, examId, true);
 
             if (!String.valueOf(examSubmission.hashCode()).equals(eTag)) {
                 throw new PreconditionFailedException();
@@ -257,6 +280,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return examSubmission;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }

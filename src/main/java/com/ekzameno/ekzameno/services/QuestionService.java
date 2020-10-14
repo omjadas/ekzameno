@@ -60,6 +60,12 @@ public class QuestionService {
             UnitOfWork.getCurrent().commit();
             return q;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -81,7 +87,7 @@ public class QuestionService {
         String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Question questionModel = questionMapper.findById(questionId);
+            Question questionModel = questionMapper.findById(questionId, true);
 
             if (!String.valueOf(questionModel.hashCode()).equals(eTag)) {
                 throw new PreconditionFailedException();
@@ -92,6 +98,12 @@ public class QuestionService {
             UnitOfWork.getCurrent().commit();
             return questionModel;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -106,10 +118,15 @@ public class QuestionService {
         UUID questionId
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Question question = questionMapper.findById(questionId);
-            UnitOfWork.getCurrent().registerDeleted(question);
+            questionMapper.deleteById(questionId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }

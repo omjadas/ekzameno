@@ -99,9 +99,17 @@ public class SubjectService {
             new InstructorSubject(instructorId, subjectId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             if ("23503".equals(e.getSQLState())) {
                 throw new NotFoundException();
             }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -119,9 +127,17 @@ public class SubjectService {
             new Enrolment(studentId, subjectId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             if ("23503".equals(e.getSQLState())) {
                 throw new NotFoundException();
             }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -143,7 +159,14 @@ public class SubjectService {
             );
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -158,7 +181,14 @@ public class SubjectService {
             enrolmentMapper.deleteByRelationIds(studentId, subjectId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -191,6 +221,12 @@ public class SubjectService {
             UnitOfWork.getCurrent().commit();
             return subject;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -212,7 +248,7 @@ public class SubjectService {
         String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Subject subject = subjectMapper.findById(subjectId);
+            Subject subject = subjectMapper.findById(subjectId, true);
 
             if (!String.valueOf(subject.hashCode()).equals(eTag)) {
                 throw new PreconditionFailedException();
@@ -223,6 +259,12 @@ public class SubjectService {
             UnitOfWork.getCurrent().commit();
             return subject;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }

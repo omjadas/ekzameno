@@ -36,6 +36,13 @@ public class OptionService {
             UnitOfWork.getCurrent().commit();
             return option;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -56,7 +63,7 @@ public class OptionService {
         String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Option option = optionMapper.findById(optionId);
+            Option option = optionMapper.findById(optionId, true);
 
             if (!String.valueOf(option.hashCode()).equals(eTag)) {
                 throw new PreconditionFailedException();
@@ -67,6 +74,13 @@ public class OptionService {
             UnitOfWork.getCurrent().commit();
             return option;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -81,6 +95,13 @@ public class OptionService {
             optionMapper.deleteById(optionId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -95,6 +116,7 @@ public class OptionService {
         try (DBConnection connection = DBConnection.getCurrent()) {
             return optionMapper.findAllForQuestion(questionId);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }

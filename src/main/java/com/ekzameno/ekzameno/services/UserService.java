@@ -79,6 +79,12 @@ public class UserService {
             UnitOfWork.getCurrent().commit();
             return user;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             if ("23505".equals(e.getSQLState())) {
                 throw new ConflictException();
             }
@@ -99,7 +105,7 @@ public class UserService {
             return instructorMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -114,7 +120,7 @@ public class UserService {
             return studentMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 }
