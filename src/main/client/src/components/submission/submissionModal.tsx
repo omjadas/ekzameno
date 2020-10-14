@@ -70,10 +70,12 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         marks: newMarks,
         eTag: props.eTag,
       }))
-        .then(unwrapResult)
+        // .then(unwrapResult)
         // .then(()=> {
         //   return Promise.all(values.answers.map(answer => {
         //     dispatch(updateQuestionSubmission(
+        //           questionId: answer.questionId,
+        //           marks: answer.marks,
         //       ))
         //   }));
         // })
@@ -96,12 +98,11 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
       </Modal.Header>
       <Formik
         initialValues={{
-          answers: [],
-          // answers: questions.map(question => ({
-          //   questionId: question.id,
-          //   answer: questionSubmissions[question.id]?.answer,
-          //   marks: questionSubmissions[question.id]?.marks === undefined ? 0 : questionSubmissions[question.id]?.marks,
-          // })),
+          answers: questions.map(question => ({
+            questionId: question.id,
+            answer: "",
+            marks: questionSubmissions[question.id]?.marks === undefined ? 0 : questionSubmissions[question.id]?.marks,
+          })),
         }}
         onSubmit={handleSubmit}>
         {
@@ -126,8 +127,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                           label="Marks"
                           min="0"
                           max={question.marks}
-                          name={`answers[${i}].mark`}
-                          //value={questionSubmissions[question.id]?.mark}
+                          name={`answers[${i}].marks`}
                           type="number"/>
                         <br />
                       </React.Fragment>

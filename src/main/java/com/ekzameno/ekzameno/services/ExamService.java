@@ -12,7 +12,7 @@ import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
-//import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
+import com.ekzameno.ekzameno.mappers.QuestionSubmissionMapper;
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -27,8 +27,8 @@ public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
     private ExamSubmissionMapper examSubmissionMapper =
         new ExamSubmissionMapper();
-    // private QuestionSubmissionMapper questionSubmissionMapper =
-    //     new QuestionSubmissionMapper();
+    private QuestionSubmissionMapper questionSubmissionMapper =
+        new QuestionSubmissionMapper();
 
     /**
      * Fetches an exam for a given slug.
@@ -280,7 +280,6 @@ public class ExamService {
             if (!String.valueOf(examSubmission.hashCode()).equals(eTag)) {
                 throw new PreconditionFailedException();
             }
-
             // for (CreateQuestionSubmissionDTO answer : answers) {
             //     QuestionSubmission questionSubmission =
             //          questionSubmissionMapper
@@ -302,5 +301,5 @@ public class ExamService {
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
-    }
+    }            
 }

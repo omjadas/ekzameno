@@ -44,7 +44,7 @@ export interface ExamState extends Exam {
 
 export interface Answer {
   questionId: string,
-  answer: string,
+  answer?: string,
   marks?: number,
 }
 
