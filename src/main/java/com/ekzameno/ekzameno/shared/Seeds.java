@@ -9,14 +9,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.exceptions.ConflictException;
 import com.ekzameno.ekzameno.models.Exam;
-import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.services.ExamService;
@@ -138,7 +136,7 @@ public class Seeds {
                 "integrity",
                 3,
                 "MULTIPLE_CHOICE",
-                Arrays.asList(msQ1A, msQ1B)   
+                Arrays.asList(msQ1A, msQ1B)
             );
 
             CreateOptionDTO msQ2A = new CreateOptionDTO();
@@ -160,7 +158,7 @@ public class Seeds {
                 "which domain objects have changed (or new object created)",
                 3,
                 "MULTIPLE_CHOICE",
-                Arrays.asList(msQ2A, msQ2B, msQ2C, msQ2D)  
+                Arrays.asList(msQ2A, msQ2B, msQ2C, msQ2D)
             );
 
             CreateOptionDTO msQ3A = new CreateOptionDTO();
@@ -282,7 +280,6 @@ public class Seeds {
                 3,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(fQ1A, fQ1B)
-                 
             );
 
             questionService.createQuestion(
@@ -440,7 +437,7 @@ public class Seeds {
                 new Date(new Date().getTime() + 604800000),
                 dbms.getId()
             );
-            
+
             CreateOptionDTO fsQ1A = new CreateOptionDTO();
             fsQ1A.answer = "Auto number";
             fsQ1A.correct = false;
@@ -460,7 +457,7 @@ public class Seeds {
                 "and special symbols to be entered?",
                 3,
                 "MULTIPLE_CHOICE",
-                Arrays.asList(fsQ1A, fsQ1B, fsQ1C, fsQ1D)     
+                Arrays.asList(fsQ1A, fsQ1B, fsQ1C, fsQ1D)
             );
 
             questionService.createQuestion(
