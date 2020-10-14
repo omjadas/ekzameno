@@ -158,8 +158,15 @@ public class QuestionService {
         Integer marks
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            new QuestionSubmission(answer, questionId, examSubmissionId, marks);
+            QuestionSubmission questionSubmission = new QuestionSubmission(
+                answer,
+                questionId,
+                examSubmissionId,
+                marks
+            );
+
             UnitOfWork.getCurrent().commit();
+            return questionSubmission;
         } catch (SQLException e) {
             try {
                 UnitOfWork.getCurrent().rollback();
@@ -191,6 +198,7 @@ public class QuestionService {
             questionSubmission.setMarks(marks);
 
             UnitOfWork.getCurrent().commit();
+            return questionSubmission;
         } catch (SQLException e) {
             try {
                 UnitOfWork.getCurrent().rollback();

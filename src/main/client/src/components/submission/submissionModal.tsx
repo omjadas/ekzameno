@@ -70,7 +70,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         marks: newMarks,
         eTag: props.eTag,
       }))
-        // .then(unwrapResult)
+        .then(unwrapResult)
         // .then(()=> {
         //   return Promise.all(values.answers.map(answer => {
         //     dispatch(updateQuestionSubmission(
