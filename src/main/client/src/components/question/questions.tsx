@@ -63,7 +63,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   }, [dispatch, props.examId]);
 
-  if (me === undefined || (exam?.questionIds !== undefined && (exam !== undefined && exam.questionIds.length !== questions.length))) {
+  if (me === undefined || (exam?.questionIds !== undefined && exam.questionIds.length !== questions.length)) {
     return (
       <Spinner animation="border" role="status" className={styles.spinner}>
         <span className="sr-only">Loading...</span>
