@@ -123,8 +123,6 @@ public class Seeds {
                 sda.getId()
             );
 
-            UUID sdaMidExamId = sdaMidSemExam.getId();
-
             CreateOptionDTO msQ1A = new CreateOptionDTO();
             msQ1A.answer = "Identity Map";
             msQ1A.correct = true;
@@ -133,7 +131,7 @@ public class Seeds {
             msQ1B.correct = false;
 
             questionService.createQuestion(
-                sdaMidExamId,
+                sdaMidSemExam.getId(),
                 "____ is a simple pattern that helps to maintain data " +
                 "integrity",
                 3,
@@ -322,8 +320,6 @@ public class Seeds {
                 dbms.getId()
             );
 
-            UUID dbmsQuizexamId = dbmsQuiz.getId();
-
             CreateOptionDTO qQ1A = new CreateOptionDTO();
             qQ1A.answer = "One class may have many teachers";
             qQ1A.correct = false;
@@ -338,7 +334,7 @@ public class Seeds {
             qQ1D.correct = false;
 
             questionService.createQuestion(
-                dbmsQuizexamId,
+                dbmsQuiz.getId(),
                 "What do you mean by one to many relationship" +
                 "between Teacher and Class table?",
                 2,
@@ -455,10 +451,8 @@ public class Seeds {
             fsQ1D.answer = "Text";
             fsQ1D.correct = true;
 
-            UUID dbmsFinalExamId = dbmsFinalExam.getId();
-
             questionService.createQuestion(
-                dbmsFinalExamId,
+                dbmsFinalExam.getId(),
                 "Which data type allows alphanumeric characters " +
                 "and special symbols to be entered?",
                 3,
