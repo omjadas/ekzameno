@@ -14,7 +14,8 @@ public class ConflictExceptionMapper
     implements ExceptionMapper<ConflictException> {
     @Override
     public Response toResponse(ConflictException e) {
-        return Response.status(Response.Status.CONFLICT)
+        return Response
+            .status(Response.Status.CONFLICT)
             .build();
     }
 }

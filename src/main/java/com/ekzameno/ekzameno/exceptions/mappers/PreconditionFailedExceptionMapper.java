@@ -14,7 +14,8 @@ public class PreconditionFailedExceptionMapper
     implements ExceptionMapper<PreconditionFailedException> {
     @Override
     public Response toResponse(PreconditionFailedException e) {
-        return Response.status(Response.Status.PRECONDITION_FAILED)
+        return Response
+            .status(Response.Status.PRECONDITION_FAILED)
             .build();
     }
 }
