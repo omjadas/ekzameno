@@ -74,6 +74,7 @@ export const updateSubject = createAsyncThunk(
     newInstructors,
     deletedStudents,
     newStudents,
+    eTag,
   }: {
     id: string,
     subject: Omit<Subject, "instructors" | "students">,
@@ -81,6 +82,7 @@ export const updateSubject = createAsyncThunk(
     newInstructors: string[],
     deletedStudents: string[],
     newStudents: string[],
+    eTag: string,
   }) => {
     const promises = [
       ...deletedInstructors.map(i => fetch(`/api/subjects/${id}/instructors/${i}`, { method: "delete" })),
@@ -96,6 +98,7 @@ export const updateSubject = createAsyncThunk(
       body: JSON.stringify(subject),
       headers: {
         "content-type": "application/json",
+        "if-match": eTag,
       },
     });
 

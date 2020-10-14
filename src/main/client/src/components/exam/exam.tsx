@@ -69,6 +69,7 @@ export const Exam = (): JSX.Element => {
         startTime: new Date().toISOString(),
         finishTime: exam.finishTime,
       },
+      eTag: exam.meta.eTag,
     }))
       .then(unwrapResult)
       .catch(e => {
@@ -85,6 +86,7 @@ export const Exam = (): JSX.Element => {
         startTime: exam.startTime,
         finishTime: new Date().toISOString(),
       },
+      eTag: exam.meta.eTag,
     }))
       .then(unwrapResult)
       .catch(e => {
@@ -133,7 +135,8 @@ export const Exam = (): JSX.Element => {
         name={exam.name}
         description={exam.description}
         startTime={exam.startTime}
-        finishTime={exam.finishTime} />
+        finishTime={exam.finishTime}
+        eTag={exam.meta.eTag} />
       <QuestionModal
         show={questionModalShow}
         onHide={() => setQuestionModalShow(false)}

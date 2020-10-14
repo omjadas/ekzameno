@@ -22,6 +22,7 @@ interface UpdateSubjectProps extends SubjectModalProps {
   description: string,
   instructors: string[],
   students: string[],
+  eTag: string,
 }
 
 interface FormValues {
@@ -78,6 +79,7 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
           name: values.name,
           description: values.description,
         },
+        eTag: props.eTag,
       }))
         .then(unwrapResult)
         .then(() => {

@@ -14,6 +14,9 @@ export interface QuestionSubmission {
   id: string,
   answer: string,
   questionId: string,
+  meta: {
+    eTag: string,
+  },
 }
 
 export interface ExamSubmission {
@@ -22,6 +25,9 @@ export interface ExamSubmission {
   studentId: string,
   marks?: number,
   questionSubmissions: QuestionSubmission[],
+  meta: {
+    eTag: string,
+  },
 }
 
 export interface ExamState extends Exam {
@@ -91,12 +97,13 @@ export const addExam = createAsyncThunk(
 
 export const updateExam = createAsyncThunk(
   "exams/updateExam",
-  async ({ id, exam }: { id: string, exam: Exam }) => {
+  async ({ id, exam, eTag }: { id: string, exam: Exam, eTag: string }) => {
     const res = await fetch(`/api/exams/${id}`, {
       method: "put",
       body: JSON.stringify(exam),
       headers: {
         "content-type": "application/json",
+        "if-match": eTag,
       },
     });
 
@@ -148,16 +155,19 @@ export const updateExamSubmission = createAsyncThunk(
     examId,
     studentId,
     marks,
+    eTag,
   }: {
     examId: string,
     studentId: string,
     marks: number,
+    eTag: string,
   }) => {
     const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
       method: "put",
       body: JSON.stringify({ marks }),
       headers: {
         "content-type": "application/json",
+        "if-match": eTag,
       },
     });
 
