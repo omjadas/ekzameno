@@ -124,7 +124,7 @@ public class ExamService {
         UUID examId
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Exam exam = examMapper.findById(examId);
+            Exam exam = examMapper.findById(examId, true);
             exam.setName(name);
             exam.setDescription(description);
             exam.setStartTime(startTime);
@@ -152,8 +152,7 @@ public class ExamService {
         UUID examId
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Exam exam = examMapper.findById(examId);
-            UnitOfWork.getCurrent().registerDeleted(exam);
+            examMapper.deleteById(examId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             try {
@@ -261,7 +260,7 @@ public class ExamService {
             DBConnection connection = DBConnection.getCurrent();
         ) {
             ExamSubmission examSubmission =
-                examSubmissionMapper.findByRelationIds(studentId, examId);
+                examSubmissionMapper.findByRelationIds(studentId, examId, true);
 
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();

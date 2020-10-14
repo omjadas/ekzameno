@@ -251,7 +251,7 @@ public class SubjectService {
         UUID subjectId
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Subject subject = subjectMapper.findById(subjectId);
+            Subject subject = subjectMapper.findById(subjectId, true);
             subject.setName(name);
             subject.setDescription(description);
             UnitOfWork.getCurrent().commit();

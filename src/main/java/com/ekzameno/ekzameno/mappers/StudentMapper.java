@@ -19,15 +19,20 @@ public class StudentMapper extends AbstractUserMapper<Student> {
     /**
      * Retrieve all students for a given subject ID.
      *
-     * @param id ID of the subject to retrieve students for
+     * @param id        ID of the subject to retrieve students for
+     * @param forUpdate whether the rows should be locked
      * @return students for the given subject
      * @throws SQLException if unable to retrieve the students
      */
-    public List<Student> findAllForSubject(UUID id) throws SQLException {
+    public List<Student> findAllForSubject(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
         String query = "SELECT users.* FROM users " +
             "JOIN enrolments " +
             "ON users.id = enrolments.user_id " +
-            "WHERE enrolments.subject_id = ?";
+            "WHERE enrolments.subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -47,6 +52,17 @@ public class StudentMapper extends AbstractUserMapper<Student> {
 
             return students;
         }
+    }
+
+    /**
+     * Retrieve all students for a given subject ID.
+     *
+     * @param id ID of the subject to retrieve students for
+     * @return students for the given subject
+     * @throws SQLException if unable to retrieve the students
+     */
+    public List<Student> findAllForSubject(UUID id) throws SQLException {
+        return findAllForSubject(id, false);
     }
 
     @Override

@@ -25,15 +25,18 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
      *
      * @param studentId ID of the student
      * @param examId    ID of the exam
+     * @param forUpdate whether the row should be locked
      * @return the ExamSubmission with the given relation IDs
      * @throws SQLException if unable to retrieve the ExamSubmission
      */
     public ExamSubmission findByRelationIds(
         UUID studentId,
-        UUID examId
+        UUID examId,
+        boolean forUpdate
     ) throws SQLException {
         String query = "SELECT * FROM " + tableName +
-            " WHERE user_id = ? AND exam_id = ?";
+            " WHERE user_id = ? AND exam_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -57,6 +60,61 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
     }
 
     /**
+     * Find the ExamSubmission with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param examId    ID of the exam
+     * @return the ExamSubmission with the given relation IDs
+     * @throws SQLException if unable to retrieve the ExamSubmission
+     */
+    public ExamSubmission findByRelationIds(
+        UUID studentId,
+        UUID examId
+    ) throws SQLException {
+        return findByRelationIds(studentId, examId, false);
+    }
+
+    /**
+     * Retrieve all exam submissions for a given exam ID.
+     *
+     * @param id        ID of the exam to retrieve submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return submissions for the given exam
+     * @throws SQLException if unable to retrieve the submissions
+     */
+    public List<ExamSubmission> findAllForExam(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE exam_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
+
+        Connection connection = DBConnection.getCurrent().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<ExamSubmission> examSubmissions = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                ExamSubmission examSubmission = load(rs);
+
+                IdentityMap.getCurrent().put(
+                    examSubmission.getId(),
+                    examSubmission
+                );
+
+                examSubmissions.add(examSubmission);
+            }
+
+            return examSubmissions;
+        }
+    }
+
+    /**
      * Retrieve all exam submissions for a given exam ID.
      *
      * @param id ID of the exam to retrieve submissions for
@@ -64,7 +122,24 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
      * @throws SQLException if unable to retrieve the submissions
      */
     public List<ExamSubmission> findAllForExam(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName + " WHERE exam_id = ?";
+        return findAllForExam(id, false);
+    }
+
+    /**
+     * Retrieve all exam submissions for a given student ID.
+     *
+     * @param id        ID of the student to retrieve submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return submissions for the given student
+     * @throws SQLException if unable to retrieve the submissions
+     */
+    public List<ExamSubmission> findAllForStudent(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName +
+            " WHERE exam_submissions.user_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -99,32 +174,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
      * @throws SQLException if unable to retrieve the submissions
      */
     public List<ExamSubmission> findAllForStudent(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName +
-            " WHERE exam_submissions.user_id = ?";
-
-        Connection connection = DBConnection.getCurrent().getConnection();
-
-        try (
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            List<ExamSubmission> examSubmissions = new ArrayList<>();
-
-            statement.setObject(1, id);
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()) {
-                ExamSubmission examSubmission = load(rs);
-
-                IdentityMap.getCurrent().put(
-                    examSubmission.getId(),
-                    examSubmission
-                );
-
-                examSubmissions.add(examSubmission);
-            }
-
-            return examSubmissions;
-        }
+        return findAllForStudent(id, false);
     }
 
     @Override
