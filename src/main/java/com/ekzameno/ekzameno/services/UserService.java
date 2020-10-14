@@ -8,7 +8,7 @@ import java.util.UUID;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 
-import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
+import com.ekzameno.ekzameno.exceptions.ConflictException;
 import com.ekzameno.ekzameno.mappers.InstructorMapper;
 import com.ekzameno.ekzameno.mappers.StudentMapper;
 import com.ekzameno.ekzameno.mappers.UserMapper;
@@ -51,14 +51,13 @@ public class UserService {
      * @param password password of the user to register
      * @param type type of the user to register
      * @return the new user
-     * @throws UserAlreadyExistsException if the user already exists
      */
     public User registerUser(
         String name,
         String email,
         String password,
         String type
-    ) throws UserAlreadyExistsException {
+    ) {
         String passwordHash = BCrypt.withDefaults().hashToString(
             12,
             password.toCharArray()
@@ -81,7 +80,7 @@ public class UserService {
             return user;
         } catch (SQLException e) {
             if ("23505".equals(e.getSQLState())) {
-                throw new UserAlreadyExistsException();
+                throw new ConflictException();
             }
 
             e.printStackTrace();

@@ -8,6 +8,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -28,7 +30,8 @@ public class OptionController {
      * Update the given option.
      *
      * @param optionId ID of the option to update
-     * @param dto option DTO
+     * @param dto      option DTO
+     * @param headers  request headers
      * @return updated option
      */
     @Path("/{optionId}")
@@ -37,12 +40,14 @@ public class OptionController {
     @Produces(MediaType.APPLICATION_JSON)
     public Option updateOption(
         @PathParam("optionId") String optionId,
+        @Context HttpHeaders headers,
         CreateOptionDTO dto
     ) {
         return optionService.updateOption(
             UUID.fromString(optionId),
             dto.answer,
-            dto.correct
+            dto.correct,
+            headers.getRequestHeader("if-match").get(0)
         );
     }
 
