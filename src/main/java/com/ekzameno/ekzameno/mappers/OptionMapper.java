@@ -21,14 +21,19 @@ public class OptionMapper extends Mapper<Option> {
     /**
      * Retrieve all options for a given question ID.
      *
-     * @param id ID of the question to retrieve options for
+     * @param id        ID of the question to retrieve options for
+     * @param forUpdate whether the rows should be locked
      * @return options for the given question
      * @throws SQLException if unable to retrieve the options
      */
-    public List<Option> findAllForQuestion(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName + " WHERE question_id = ?";
+    public List<Option> findAllForQuestion(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE question_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -40,7 +45,7 @@ public class OptionMapper extends Mapper<Option> {
 
             while (rs.next()) {
                 Option option = load(rs);
-                IdentityMap.getInstance().put(option.getId(), option);
+                IdentityMap.getCurrent().put(option.getId(), option);
                 options.add(option);
             }
 
@@ -48,12 +53,23 @@ public class OptionMapper extends Mapper<Option> {
         }
     }
 
+    /**
+     * Retrieve all options for a given question ID.
+     *
+     * @param id ID of the question to retrieve options for
+     * @return options for the given question
+     * @throws SQLException if unable to retrieve the options
+     */
+    public List<Option> findAllForQuestion(UUID id) throws SQLException {
+        return findAllForQuestion(id, false);
+    }
+
     @Override
     public void insert(Option option) throws SQLException {
         String query = "INSERT INTO " + tableName +
             " (id, answer, correct, question_id) VALUES (?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -71,7 +87,7 @@ public class OptionMapper extends Mapper<Option> {
         String query = "UPDATE " + tableName +
             " SET answer = ?, correct = ?, question_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -87,6 +103,10 @@ public class OptionMapper extends Mapper<Option> {
     @Override
     protected Option load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Option option = (Option) IdentityMap.getCurrent().get(id);
+        if (option != null) {
+            return option;
+        }
         String answer = rs.getString("answer");
         boolean correct = rs.getBoolean("correct");
         UUID questionId = rs.getObject("question_id", java.util.UUID.class);

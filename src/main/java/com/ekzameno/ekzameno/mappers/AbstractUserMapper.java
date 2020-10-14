@@ -20,18 +20,26 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
     /**
      * Find a user by their email address.
      *
+     * @param email     email address of the user to find
+     * @param forUpdate whether the row should be locked
+     * @return the user with the specified email address
+     * @throws SQLException if unable to retrieve the user
+     */
+    public User findByEmail(String email, boolean forUpdate)
+        throws SQLException, NotFoundException {
+        return findByProp("email", email, forUpdate);
+    }
+
+    /**
+     * Find a user by their email address.
+     *
      * @param email email address of the user to find
      * @return the user with the specified email address
      * @throws SQLException if unable to retrieve the user
      */
     public User findByEmail(String email)
         throws SQLException, NotFoundException {
-        try {
-            return findByProp("email", email);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            throw new NotFoundException();
-        }
+        return findByEmail(email, false);
     }
 
     @Override
@@ -39,7 +47,7 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
         String query = "INSERT INTO " + tableName +
             " (id, email, name, password_hash, type) VALUES (?,?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -58,7 +66,7 @@ public abstract class AbstractUserMapper<T extends User> extends Mapper<T> {
         String query = "UPDATE " + tableName +
             " SET email = ?, name = ?, password_hash = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);

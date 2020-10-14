@@ -30,11 +30,18 @@ public class OptionService {
         boolean correct,
         UUID questionId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Option option = new Option(answer, correct, questionId);
             UnitOfWork.getCurrent().commit();
             return option;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -52,13 +59,20 @@ public class OptionService {
         String answer,
         boolean correct
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
-            Option option = optionMapper.findById(optionId);
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            Option option = optionMapper.findById(optionId, true);
             option.setAnswer(answer);
             option.setCorrect(correct);
             UnitOfWork.getCurrent().commit();
             return option;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -69,10 +83,17 @@ public class OptionService {
      * @param optionId ID of the option to update
      */
     public void deleteOption(UUID optionId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             optionMapper.deleteById(optionId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -84,9 +105,10 @@ public class OptionService {
      * @return options
      */
     public List<Option> getOptionsForQuestion(UUID questionId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return optionMapper.findAllForQuestion(questionId);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }

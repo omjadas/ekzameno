@@ -25,17 +25,20 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
      *
      * @param questionId       ID of the question
      * @param examSubmissionId ID of the exam submission
+     * @param forUpdate        whether the row should be locked
      * @return the QuestionSubmission with the specified relation IDs
      * @throws SQLException if unable to retrieve the QuestionSubmission
      */
     public QuestionSubmission findByRelationIds(
         UUID questionId,
-        UUID examSubmissionId
+        UUID examSubmissionId,
+        boolean forUpdate
     ) throws SQLException {
         String query = "SELECT * FROM " + tableName +
-            " WHERE question_id = ? AND exam_submission_id = ?";
+            " WHERE question_id = ? AND exam_submission_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -45,7 +48,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 QuestionSubmission questionSubmission = load(rs);
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     questionSubmission.getId(),
                     questionSubmission
                 );
@@ -53,6 +56,62 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             } else {
                 throw new NotFoundException();
             }
+        }
+    }
+
+    /**
+     * Retrieve the QuestionSubmission with the given relation IDs.
+     *
+     * @param questionId       ID of the question
+     * @param examSubmissionId ID of the exam submission
+     * @return the QuestionSubmission with the specified relation IDs
+     * @throws SQLException if unable to retrieve the QuestionSubmission
+     */
+    public QuestionSubmission findByRelationIds(
+        UUID questionId,
+        UUID examSubmissionId
+    ) throws SQLException {
+        return findByRelationIds(questionId, examSubmissionId, false);
+    }
+
+    /**
+     * Retrieve all questions submissions for a given exam submission ID.
+     *
+     * @param id        ID of the exam submission to retrieve the question
+     *                  submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return questions submissions for the given exam submission
+     * @throws SQLException if unable to retrieve the question submissions
+     */
+    public List<QuestionSubmission> findAllForExamSubmission(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName +
+            " WHERE exam_submission_id = ?" + (forUpdate ? " FOR UPDATE" : "");
+
+        Connection connection = DBConnection.getCurrent().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<QuestionSubmission> questionSubmissions = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                QuestionSubmission questionSubmission = load(rs);
+
+                IdentityMap.getCurrent().put(
+                    questionSubmission.getId(),
+                    questionSubmission
+                );
+
+                questionSubmissions.add(load(rs));
+            }
+
+            return questionSubmissions;
         }
     }
 
@@ -66,10 +125,27 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
      */
     public List<QuestionSubmission> findAllForExamSubmission(UUID id)
             throws SQLException {
-        String query = "SELECT * FROM " + tableName +
-            " WHERE exam_submission_id = ?";
+        return findAllForExamSubmission(id, false);
+    }
 
-        Connection connection = DBConnection.getInstance().getConnection();
+    /**
+     * Retrieve all question submissions for a given question ID.
+     *
+     * @param id        ID of the question to retrieve submissions for
+     * @param forUpdate whether the rows should be locked
+     * @return submissions for the given question
+     * @throws SQLException if unable to retrieve the question submissions
+     */
+    public List<QuestionSubmission> findAllForQuestion(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT question_submissions.* " +
+            "FROM question_submissions " +
+            "WHERE question_submissions.question_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
+
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -82,12 +158,12 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             while (rs.next()) {
                 QuestionSubmission questionSubmission = load(rs);
 
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     questionSubmission.getId(),
                     questionSubmission
                 );
 
-                questionSubmissions.add(load(rs));
+                questionSubmissions.add(questionSubmission);
             }
 
             return questionSubmissions;
@@ -103,33 +179,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
      */
     public List<QuestionSubmission> findAllForQuestion(UUID id)
             throws SQLException {
-        String query = "SELECT question_submissions.* " +
-            "FROM question_submissions " +
-            "WHERE question_submissions.question_id = ?";
-
-        Connection connection = DBConnection.getInstance().getConnection();
-
-        try (
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            List<QuestionSubmission> questionSubmissions = new ArrayList<>();
-
-            statement.setObject(1, id);
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()) {
-                QuestionSubmission questionSubmission = load(rs);
-
-                IdentityMap.getInstance().put(
-                    questionSubmission.getId(),
-                    questionSubmission
-                );
-
-                questionSubmissions.add(questionSubmission);
-            }
-
-            return questionSubmissions;
-        }
+        return findAllForQuestion(id, false);
     }
 
     @Override
@@ -139,7 +189,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             " (id, answer, exam_submission_id, question_id, mark) " +
             "VALUES (?,?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -160,7 +210,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             " SET answer = ?, exam_submission_id = ?, question_id = ?, " +
             "mark = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -177,6 +227,13 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     @Override
     protected QuestionSubmission load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        QuestionSubmission questionSubmission =
+            (QuestionSubmission) IdentityMap
+                .getCurrent()
+                .get(id);
+        if (questionSubmission != null) {
+            return questionSubmission;
+        }
         String answer = rs.getString("answer");
         UUID questionId = rs.getObject("question_id", java.util.UUID.class);
         UUID examSubmissionId = rs.getObject(

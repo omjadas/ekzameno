@@ -23,17 +23,20 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
      *
      * @param instructorId ID of the instructor
      * @param subjectId    ID of the subject
+     * @param forUpdate    whether the row should be locked
      * @return the InstructorSubject with the given relation IDs
      * @throws SQLException if unable to retrieve the InstructorSubject
      */
     public InstructorSubject findByRelationIds(
         UUID instructorId,
-        UUID subjectId
+        UUID subjectId,
+        boolean forUpdate
     ) throws SQLException {
         String query = "SELECT * FROM " + tableName +
-            " WHERE user_id = ? AND subject_id = ?";
+            " WHERE user_id = ? AND subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -43,7 +46,7 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 InstructorSubject instructorSubject = load(rs);
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     instructorSubject.getId(),
                     instructorSubject
                 );
@@ -54,6 +57,21 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
         }
     }
 
+    /**
+     * Retrieve the InstructorSubject with the given relation IDs.
+     *
+     * @param instructorId ID of the instructor
+     * @param subjectId    ID of the subject
+     * @return the InstructorSubject with the given relation IDs
+     * @throws SQLException if unable to retrieve the InstructorSubject
+     */
+    public InstructorSubject findByRelationIds(
+        UUID instructorId,
+        UUID subjectId
+    ) throws SQLException {
+        return findByRelationIds(instructorId, subjectId, false);
+    }
+
     @Override
     public void insert(
         InstructorSubject instructorSubject
@@ -61,7 +79,7 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
         String query = "INSERT INTO " + tableName +
             " (id, user_id, subject_id) VALUES (?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -80,7 +98,7 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
         String query = "UPDATE " + tableName +
             " SET user_id = ?, subject_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -106,7 +124,7 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
         String query = "DELETE FROM " + tableName +
             " WHERE user_id = ? AND subject_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -120,6 +138,12 @@ public class InstructorSubjectMapper extends Mapper<InstructorSubject> {
     @Override
     protected InstructorSubject load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        InstructorSubject instructorSubject = (InstructorSubject) IdentityMap
+            .getCurrent()
+            .get(id);
+        if (instructorSubject != null) {
+            return instructorSubject;
+        }
         UUID instructorId = rs.getObject("user_id", java.util.UUID.class);
         UUID subjectId = rs.getObject("subject_id", java.util.UUID.class);
         return new InstructorSubject(id, instructorId, subjectId);

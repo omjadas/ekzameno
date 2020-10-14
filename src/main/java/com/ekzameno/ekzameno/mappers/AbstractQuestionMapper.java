@@ -21,7 +21,7 @@ public abstract class AbstractQuestionMapper<T extends Question>
         String query = "INSERT INTO " + tableName +
             " (id, question, marks, type, exam_id) VALUES (?,?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -40,7 +40,7 @@ public abstract class AbstractQuestionMapper<T extends Question>
         String query = "UPDATE " + tableName +
             " SET question = ?, marks = ?, exam_id=? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);

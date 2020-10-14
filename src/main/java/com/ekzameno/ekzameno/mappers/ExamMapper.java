@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.NotFoundException;
+
 import com.ekzameno.ekzameno.models.DateRange;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -22,27 +24,47 @@ public class ExamMapper extends Mapper<Exam> {
     private static final String tableName = "exams";
 
     /**
-     * Find a model for a given slug.
+     * Find an exam for a given slug.
+     *
+     * @param slug      ID of the model to find
+     * @param forUpdate whether the row should be locked
+     * @return model with the given ID
+     * @throws SQLException if unable to retrieve the model
+     */
+    public Exam findBySlug(
+        String slug,
+        boolean forUpdate
+    ) throws NotFoundException, SQLException {
+        return findByProp("slug", slug, forUpdate);
+    }
+
+    /**
+     * Find an exam for a given slug.
      *
      * @param slug ID of the model to find
      * @return model with the given ID
      * @throws SQLException if unable to retrieve the model
      */
     public Exam findBySlug(String slug) throws SQLException {
-        return findByProp("slug", slug);
+        return findBySlug(slug, false);
     }
 
     /**
      * Retrieve all exams for a given subject ID.
      *
-     * @param id ID of the subject to retrieve exams for
+     * @param id        ID of the subject to retrieve exams for
+     * @param forUpdate whether the rows should be locked
      * @return exams for the given subject
      * @throws SQLException if unable to retrieve the exams
      */
-    public List<Exam> findAllForSubject(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ?";
+    public List<Exam> findAllForSubject(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -54,7 +76,53 @@ public class ExamMapper extends Mapper<Exam> {
 
             while (rs.next()) {
                 Exam exam = load(rs);
-                IdentityMap.getInstance().put(exam.getId(), exam);
+                IdentityMap.getCurrent().put(exam.getId(), exam);
+                exams.add(exam);
+            }
+
+            return exams;
+        }
+    }
+
+    /**
+     * Retrieve all exams for a given subject ID.
+     *
+     * @param id ID of the subject to retrieve exams for
+     * @return exams for the given subject
+     * @throws SQLException if unable to retrieve the exams
+     */
+    public List<Exam> findAllForSubject(UUID id) throws SQLException {
+        return findAllForSubject(id, false);
+    }
+
+    /**
+     * Retrieve all published exams for a given subject ID.
+     *
+     * @param id        ID of the subject to retrieve exams for
+     * @param forUpdate whether the rows should be locked
+     * @return exams for the given subject
+     * @throws SQLException if unable to retrieve the exams
+     */
+    public List<Exam> findAllPublishedExams(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ? " +
+            "AND start_time < NOW()" + (forUpdate ? " FOR UPDATE" : "");
+
+        Connection connection = DBConnection.getCurrent().getConnection();
+
+        try (
+            PreparedStatement statement = connection.prepareStatement(query);
+        ) {
+            List<Exam> exams = new ArrayList<>();
+
+            statement.setObject(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Exam exam = load(rs);
+                IdentityMap.getCurrent().put(exam.getId(), exam);
                 exams.add(exam);
             }
 
@@ -70,27 +138,7 @@ public class ExamMapper extends Mapper<Exam> {
      * @throws SQLException if unable to retrieve the exams
      */
     public List<Exam> findAllPublishedExams(UUID id) throws SQLException {
-        String query = "SELECT * FROM " + tableName + " WHERE subject_id = ? " +
-            "AND start_time < NOW()";
-
-        Connection connection = DBConnection.getInstance().getConnection();
-
-        try (
-            PreparedStatement statement = connection.prepareStatement(query);
-        ) {
-            List<Exam> exams = new ArrayList<>();
-
-            statement.setObject(1, id);
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()) {
-                Exam exam = load(rs);
-                IdentityMap.getInstance().put(exam.getId(), exam);
-                exams.add(exam);
-            }
-
-            return exams;
-        }
+        return findAllPublishedExams(id, false);
     }
 
     @Override
@@ -99,7 +147,7 @@ public class ExamMapper extends Mapper<Exam> {
             " (id, slug, name, description, start_time, finish_time, " +
             "subject_id) VALUES (?,?,?,?,?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -127,7 +175,7 @@ public class ExamMapper extends Mapper<Exam> {
             " SET name = ?, description = ?, start_time = ?, " +
             "finish_time = ?, subject_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -151,6 +199,10 @@ public class ExamMapper extends Mapper<Exam> {
     @Override
     protected Exam load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Exam exam = (Exam) IdentityMap.getCurrent().get(id);
+        if (exam != null) {
+            return exam;
+        }
         String name = rs.getString("name");
         String description = rs.getString("description");
         String slug = rs.getString("slug");

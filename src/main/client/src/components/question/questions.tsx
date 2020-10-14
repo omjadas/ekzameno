@@ -2,7 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
+import { Button, Card, Form, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
@@ -63,8 +63,12 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   }, [dispatch, props.examId]);
 
-  if (me === undefined) {
-    return <></>;
+  if (me === undefined || (exam !== undefined && exam.questionIds.length !== questions.length)) {
+    return (
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
   }
 
   const answers: Record<string, string> = {};

@@ -1,7 +1,6 @@
 package com.ekzameno.ekzameno.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -38,9 +37,10 @@ public class ExamService {
      */
     public Exam getExam(String slug)
         throws NotFoundException, InternalServerErrorException {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findBySlug(slug);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -52,11 +52,11 @@ public class ExamService {
      * @return all exams for the subject
      */
     public List<Exam> getExamsForSubject(UUID subjectId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -67,11 +67,11 @@ public class ExamService {
      * @return all exams for the subject
      */
     public List<Exam> getPublishedExamsForSubject(UUID subjectId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findAllPublishedExams(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -92,12 +92,18 @@ public class ExamService {
         Date finishTime,
         UUID subjectId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             DateRange dateRange = new DateRange(startTime, finishTime);
             Exam exam = new Exam(name, description, dateRange, subjectId);
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -120,8 +126,8 @@ public class ExamService {
         Date finishTime,
         UUID examId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
-            Exam exam = examMapper.findById(examId);
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            Exam exam = examMapper.findById(examId, true);
             exam.setName(name);
             exam.setDescription(description);
             exam.setStartTime(startTime);
@@ -129,6 +135,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return exam;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -142,11 +154,16 @@ public class ExamService {
     public void deleteExam(
         UUID examId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
-            Exam exam = examMapper.findById(examId);
-            UnitOfWork.getCurrent().registerDeleted(exam);
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            examMapper.deleteById(examId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -167,7 +184,7 @@ public class ExamService {
         Integer marks,
         List<CreateQuestionSubmissionDTO> answers
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             ExamSubmission examSubmission = new ExamSubmission(
                 marks == null ? -1 : marks,
                 studentId,
@@ -186,6 +203,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return examSubmission;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -240,10 +263,10 @@ public class ExamService {
         List<CreateQuestionSubmissionDTO> answers
     ) {
         try (
-            DBConnection connection = DBConnection.getInstance();
+            DBConnection connection = DBConnection.getCurrent();
         ) {
             ExamSubmission examSubmission =
-                examSubmissionMapper.findByRelationIds(studentId, examId);
+                examSubmissionMapper.findByRelationIds(studentId, examId, true);
             for (CreateQuestionSubmissionDTO answer : answers) {
                 QuestionSubmission questionSubmission = questionSubmissionMapper
                     .findByRelationIds(UUID.fromString(
@@ -254,6 +277,12 @@ public class ExamService {
             UnitOfWork.getCurrent().commit();
             return examSubmission;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }

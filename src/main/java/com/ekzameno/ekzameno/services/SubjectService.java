@@ -32,7 +32,7 @@ public class SubjectService {
      * @return all subjects
      */
     public List<Subject> getSubjects() {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return subjectMapper.findAll();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class SubjectService {
      */
     public Subject getSubject(String slug)
         throws NotFoundException, InternalServerErrorException {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return subjectMapper.findBySlug(slug);
         } catch (SQLException e) {
             throw new InternalServerErrorException();
@@ -62,7 +62,7 @@ public class SubjectService {
      * @return list of subjects the instructor teaches.
      */
     public List<Subject> getSubjectsForInstructor(UUID id) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return subjectMapper.findAllForInstructor(id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,7 +77,7 @@ public class SubjectService {
      * @return list of subjects for which the user has access.
      */
     public List<Subject> getSubjectsForStudent(UUID id) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return subjectMapper.findAllForStudent(id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,13 +94,21 @@ public class SubjectService {
      * @throws InternalServerErrorException internal error exception
      */
     public void addInstructorToSubject(UUID subjectId, UUID instructorId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             new InstructorSubject(instructorId, subjectId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             if ("23503".equals(e.getSQLState())) {
                 throw new NotFoundException();
             }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -114,13 +122,21 @@ public class SubjectService {
      * @throws InternalServerErrorException internal error exception
      */
     public void addStudentToSubject(UUID subjectId, UUID studentId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             new Enrolment(studentId, subjectId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             if ("23503".equals(e.getSQLState())) {
                 throw new NotFoundException();
             }
+
+            e.printStackTrace();
             throw new InternalServerErrorException();
         }
     }
@@ -135,14 +151,21 @@ public class SubjectService {
         UUID subjectId,
         UUID instructorId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             instructorSubjectMapper.deleteByRelationIds(
                 instructorId,
                 subjectId
             );
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -156,14 +179,21 @@ public class SubjectService {
         UUID subjectId,
         UUID studentId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             enrolmentMapper.deleteByRelationIds(
                 studentId,
                 subjectId
             );
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -182,7 +212,7 @@ public class SubjectService {
         UUID[] instructors,
         UUID[] students
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Subject subject = new Subject(name, description);
 
             for (UUID i : instructors) {
@@ -196,6 +226,12 @@ public class SubjectService {
             UnitOfWork.getCurrent().commit();
             return subject;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -214,13 +250,19 @@ public class SubjectService {
         String description,
         UUID subjectId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
-            Subject subject = subjectMapper.findById(subjectId);
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            Subject subject = subjectMapper.findById(subjectId, true);
             subject.setName(name);
             subject.setDescription(description);
             UnitOfWork.getCurrent().commit();
             return subject;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }

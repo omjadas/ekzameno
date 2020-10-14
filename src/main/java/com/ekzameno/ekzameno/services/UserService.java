@@ -35,7 +35,7 @@ public class UserService {
      * @return all subjects
      */
     public List<User> getUsers() {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return userMapper.findAll();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,7 +64,7 @@ public class UserService {
             password.toCharArray()
         );
 
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             User user;
 
             if (type.toLowerCase().equals("student")) {
@@ -80,6 +80,12 @@ public class UserService {
             UnitOfWork.getCurrent().commit();
             return user;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             if ("23505".equals(e.getSQLState())) {
                 throw new UserAlreadyExistsException();
             }
@@ -96,11 +102,11 @@ public class UserService {
      * @return list of instructors
      */
     public List<Instructor> getInstructorsForSubject(UUID subjectId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return instructorMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 
@@ -111,11 +117,11 @@ public class UserService {
      * @return list of students
      */
     public List<Student> getStudentsForSubject(UUID subjectId) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             return studentMapper.findAllForSubject(subjectId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            throw new InternalServerErrorException();
         }
     }
 }

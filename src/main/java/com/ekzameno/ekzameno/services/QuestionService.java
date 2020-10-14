@@ -39,7 +39,7 @@ public class QuestionService {
         String type,
         List<CreateOptionDTO> options
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             Question q;
 
             if (type.toUpperCase().equals(MultipleChoiceQuestion.TYPE)) {
@@ -59,6 +59,12 @@ public class QuestionService {
             UnitOfWork.getCurrent().commit();
             return q;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -77,13 +83,19 @@ public class QuestionService {
         int marks,
         UUID questionId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
-            Question questionReturn = questionMapper.findById(questionId);
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            Question questionReturn = questionMapper.findById(questionId, true);
             questionReturn.setQuestion(question);
             questionReturn.setMarks(marks);
             UnitOfWork.getCurrent().commit();
             return questionReturn;
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }
@@ -97,11 +109,16 @@ public class QuestionService {
     public void deleteQuestion(
         UUID questionId
     ) {
-        try (DBConnection connection = DBConnection.getInstance()) {
-            Question question = questionMapper.findById(questionId);
-            UnitOfWork.getCurrent().registerDeleted(question);
+        try (DBConnection connection = DBConnection.getCurrent()) {
+            questionMapper.deleteById(questionId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
+            try {
+                UnitOfWork.getCurrent().rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             e.printStackTrace();
             throw new InternalServerErrorException();
         }

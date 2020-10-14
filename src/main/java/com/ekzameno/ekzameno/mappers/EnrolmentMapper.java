@@ -23,17 +23,20 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
      *
      * @param studentId ID of the student
      * @param subjectId ID of the subject
+     * @param forUpdate whether the row should be locked
      * @return the Enrolment with the specified relation IDs
      * @throws SQLException if unable to retrieve the Enrolment
      */
     public Enrolment findByRelationIds(
         UUID studentId,
-        UUID subjectId
+        UUID subjectId,
+        boolean forUpdate
     ) throws SQLException {
         String query = "SELECT * FROM " + tableName +
-            " WHERE user_id = ? AND subject_id = ?";
+            " WHERE user_id = ? AND subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -43,7 +46,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 Enrolment enrolment = load(rs);
-                IdentityMap.getInstance().put(
+                IdentityMap.getCurrent().put(
                     enrolment.getId(),
                     enrolment
                 );
@@ -54,6 +57,21 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         }
     }
 
+    /**
+     * Retrieve the Enrolment with the given relation IDs.
+     *
+     * @param studentId ID of the student
+     * @param subjectId ID of the subject
+     * @return the Enrolment with the specified relation IDs
+     * @throws SQLException if unable to retrieve the Enrolment
+     */
+    public Enrolment findByRelationIds(
+        UUID studentId,
+        UUID subjectId
+    ) throws SQLException {
+        return findByRelationIds(studentId, subjectId, false);
+    }
+
     @Override
     public void insert(
         Enrolment enrolment
@@ -61,7 +79,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         String query = "INSERT INTO " + tableName +
             " (id, user_id, subject_id) VALUES (?,?,?)";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -80,7 +98,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         String query = "UPDATE " + tableName +
             " SET user_id = ?, subject_id = ? WHERE id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -106,7 +124,7 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
         String query = "DELETE FROM " + tableName +
             " WHERE user_id = ? AND subject_id = ?";
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -120,6 +138,12 @@ public class EnrolmentMapper extends Mapper<Enrolment> {
     @Override
     protected Enrolment load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Enrolment enrolment = (Enrolment) IdentityMap
+            .getCurrent()
+            .get(id);
+        if (enrolment != null) {
+            return enrolment;
+        }
         UUID studentId = rs.getObject("user_id", java.util.UUID.class);
         UUID subjectId = rs.getObject("subject_id", java.util.UUID.class);
         return new Enrolment(id, studentId, subjectId);

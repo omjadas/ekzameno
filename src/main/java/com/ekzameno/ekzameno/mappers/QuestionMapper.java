@@ -21,14 +21,19 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
     /**
      * Retrieve all questions for a given exam ID.
      *
-     * @param id ID of the exam to retrieve questions for
+     * @param id        ID of the exam to retrieve questions for
+     * @param forUpdate whether the rows should be updated
      * @return questions for the given exam
      * @throws SQLException if unable to retrieve the questions
      */
-    public List<Question> findAllForExam(UUID id) throws SQLException {
-        String query = "SELECT * FROM questions WHERE exam_id = ?";
+    public List<Question> findAllForExam(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
+        String query = "SELECT * FROM questions WHERE exam_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -40,12 +45,23 @@ public class QuestionMapper extends AbstractQuestionMapper<Question> {
 
             while (rs.next()) {
                 Question question = load(rs);
-                IdentityMap.getInstance().put(question.getId(), question);
+                IdentityMap.getCurrent().put(question.getId(), question);
                 questions.add(question);
             }
 
             return questions;
         }
+    }
+
+    /**
+     * Retrieve all questions for a given exam ID.
+     *
+     * @param id ID of the exam to retrieve questions for
+     * @return questions for the given exam
+     * @throws SQLException if unable to retrieve the questions
+     */
+    public List<Question> findAllForExam(UUID id) throws SQLException {
+        return findAllForExam(id, false);
     }
 
     @Override

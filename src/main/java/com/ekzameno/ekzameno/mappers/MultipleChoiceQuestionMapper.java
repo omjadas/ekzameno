@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 /**
  * Data Mapper for MultipleChoiceQuestions.
@@ -14,6 +15,13 @@ public class MultipleChoiceQuestionMapper
     @Override
     protected MultipleChoiceQuestion load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        MultipleChoiceQuestion multipleChoiceQuestion =
+            (MultipleChoiceQuestion) IdentityMap
+                .getCurrent()
+                .get(id);
+        if (multipleChoiceQuestion != null) {
+            return multipleChoiceQuestion;
+        }
         String question = rs.getString("question");
         int marks = rs.getInt("marks");
         UUID examId = rs.getObject("exam_id", java.util.UUID.class);

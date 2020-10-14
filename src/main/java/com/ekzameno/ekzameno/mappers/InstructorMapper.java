@@ -19,17 +19,22 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
     /**
      * Retrieve all instructors for a given subject ID.
      *
-     * @param id ID of the subject to retrieve instructors for
+     * @param id        ID of the subject to retrieve instructors for
+     * @param forUpdate whether the rows should be locked
      * @return instructors for the given subject
      * @throws SQLException if unable to retrieve the instructors
      */
-    public List<Instructor> findAllForSubject(UUID id) throws SQLException {
+    public List<Instructor> findAllForSubject(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
         String query = "SELECT users.* FROM users " +
             "JOIN instructor_subjects " +
             "ON users.id = instructor_subjects.user_id " +
-            "WHERE instructor_subjects.subject_id = ?";
+            "WHERE instructor_subjects.subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -41,7 +46,7 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
 
             while (rs.next()) {
                 Instructor instructor = load(rs);
-                IdentityMap.getInstance().put(instructor.getId(), instructor);
+                IdentityMap.getCurrent().put(instructor.getId(), instructor);
                 instructors.add(instructor);
             }
 
@@ -49,9 +54,24 @@ public class InstructorMapper extends AbstractUserMapper<Instructor> {
         }
     }
 
+    /**
+     * Retrieve all instructors for a given subject ID.
+     *
+     * @param id ID of the subject to retrieve instructors for
+     * @return instructors for the given subject
+     * @throws SQLException if unable to retrieve the instructors
+     */
+    public List<Instructor> findAllForSubject(UUID id) throws SQLException {
+        return findAllForSubject(id, false);
+    }
+
     @Override
     protected Instructor load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Instructor instructor = (Instructor) IdentityMap.getCurrent().get(id);
+        if (instructor != null) {
+            return instructor;
+        }
         String email = rs.getString("email");
         String name = rs.getString("name");
         String passwordHash = rs.getString("password_hash");

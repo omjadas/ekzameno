@@ -19,17 +19,22 @@ public class StudentMapper extends AbstractUserMapper<Student> {
     /**
      * Retrieve all students for a given subject ID.
      *
-     * @param id ID of the subject to retrieve students for
+     * @param id        ID of the subject to retrieve students for
+     * @param forUpdate whether the rows should be locked
      * @return students for the given subject
      * @throws SQLException if unable to retrieve the students
      */
-    public List<Student> findAllForSubject(UUID id) throws SQLException {
+    public List<Student> findAllForSubject(
+        UUID id,
+        boolean forUpdate
+    ) throws SQLException {
         String query = "SELECT users.* FROM users " +
             "JOIN enrolments " +
             "ON users.id = enrolments.user_id " +
-            "WHERE enrolments.subject_id = ?";
+            "WHERE enrolments.subject_id = ?" +
+            (forUpdate ? " FOR UPDATE" : "");
 
-        Connection connection = DBConnection.getInstance().getConnection();
+        Connection connection = DBConnection.getCurrent().getConnection();
 
         try (
             PreparedStatement statement = connection.prepareStatement(query);
@@ -41,7 +46,7 @@ public class StudentMapper extends AbstractUserMapper<Student> {
 
             while (rs.next()) {
                 Student student = load(rs);
-                IdentityMap.getInstance().put(student.getId(), student);
+                IdentityMap.getCurrent().put(student.getId(), student);
                 students.add(student);
             }
 
@@ -49,9 +54,24 @@ public class StudentMapper extends AbstractUserMapper<Student> {
         }
     }
 
+    /**
+     * Retrieve all students for a given subject ID.
+     *
+     * @param id ID of the subject to retrieve students for
+     * @return students for the given subject
+     * @throws SQLException if unable to retrieve the students
+     */
+    public List<Student> findAllForSubject(UUID id) throws SQLException {
+        return findAllForSubject(id, false);
+    }
+
     @Override
     protected Student load(ResultSet rs) throws SQLException {
         UUID id = rs.getObject("id", java.util.UUID.class);
+        Student student = (Student) IdentityMap.getCurrent().get(id);
+        if (student != null) {
+            return student;
+        }
         String email = rs.getString("email");
         String name = rs.getString("name");
         String passwordHash = rs.getString("password_hash");
