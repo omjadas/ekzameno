@@ -8,6 +8,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.InternalServerErrorException;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
+import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.QuestionMapper;
 import com.ekzameno.ekzameno.models.MultipleChoiceQuestion;
 import com.ekzameno.ekzameno.models.Option;
@@ -76,19 +77,26 @@ public class QuestionService {
      * @param questionId ID of the question
      * @param question   text of the question
      * @param marks      number of marks allocated to the question
+     * @param eTag       entity tag
      * @return created Question
      */
     public Question updateQuestion(
         String question,
         int marks,
-        UUID questionId
+        UUID questionId,
+        String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            Question questionReturn = questionMapper.findById(questionId, true);
-            questionReturn.setQuestion(question);
-            questionReturn.setMarks(marks);
+            Question questionModel = questionMapper.findById(questionId, true);
+
+            if (!String.valueOf(questionModel.hashCode()).equals(eTag)) {
+                throw new PreconditionFailedException();
+            }
+
+            questionModel.setQuestion(question);
+            questionModel.setMarks(marks);
             UnitOfWork.getCurrent().commit();
-            return questionReturn;
+            return questionModel;
         } catch (SQLException e) {
             try {
                 UnitOfWork.getCurrent().rollback();

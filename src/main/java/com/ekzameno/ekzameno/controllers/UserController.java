@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateUserDTO;
-import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.services.UserService;
@@ -45,26 +44,22 @@ public class UserController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(CreateUserDTO dto) {
-        try {
-            User user = userService.registerUser(
-                dto.name,
-                dto.email,
-                dto.password,
-                dto.type
-            );
+        User user = userService.registerUser(
+            dto.name,
+            dto.email,
+            dto.password,
+            dto.type
+        );
 
-            if (user != null) {
-                return Response
-                    .status(Response.Status.CREATED)
-                    .entity(user)
-                    .build();
-            } else {
-                return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR)
+        if (user != null) {
+            return Response
+                .status(Response.Status.CREATED)
+                .entity(user)
                 .build();
-            }
-        } catch (UserAlreadyExistsException e) {
-            return Response.status(Response.Status.CONFLICT).build();
+        } else {
+            return Response
+            .status(Response.Status.INTERNAL_SERVER_ERROR)
+            .build();
         }
     }
 }

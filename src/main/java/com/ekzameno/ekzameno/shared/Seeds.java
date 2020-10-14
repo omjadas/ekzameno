@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.ekzameno.ekzameno.exceptions.UserAlreadyExistsException;
+import com.ekzameno.ekzameno.exceptions.ConflictException;
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.services.ExamService;
@@ -120,7 +120,7 @@ public class Seeds {
                 new Date(new Date().getTime() + 604800000),
                 sda.getId()
             );
-        } catch (UserAlreadyExistsException e) {
+        } catch (ConflictException e) {
             System.out.println("Users already exist");
         }
     }

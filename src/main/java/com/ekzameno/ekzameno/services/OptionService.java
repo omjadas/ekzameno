@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.ws.rs.InternalServerErrorException;
 
+import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.OptionMapper;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.shared.DBConnection;
@@ -52,15 +53,22 @@ public class OptionService {
      * @param optionId ID of the option to update
      * @param answer   new answer for the option
      * @param correct  whether the option is correct
+     * @param eTag     entity tag
      * @return updated option
      */
     public Option updateOption(
         UUID optionId,
         String answer,
-        boolean correct
+        boolean correct,
+        String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
             Option option = optionMapper.findById(optionId, true);
+
+            if (!String.valueOf(option.hashCode()).equals(eTag)) {
+                throw new PreconditionFailedException();
+            }
+
             option.setAnswer(answer);
             option.setCorrect(correct);
             UnitOfWork.getCurrent().commit();

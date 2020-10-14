@@ -27,6 +27,9 @@ export interface QuestionState extends Question {
   id: string,
   examId: string,
   optionIds: string[],
+  meta: {
+    eTag: string,
+  },
 }
 
 const questionsAdapter = createEntityAdapter<QuestionState>();
@@ -65,12 +68,21 @@ export const addQuestion = createAsyncThunk(
 
 export const updateQuestion = createAsyncThunk(
   "questions/updateQuestion",
-  async ({ id, question }: { id: string, question: Question }) => {
+  async ({
+    id,
+    question,
+    eTag,
+  }: {
+    id: string,
+    question: Question,
+    eTag: string,
+  }) => {
     const res = await fetch(`/api/questions/${id}`, {
       method: "put",
       body: JSON.stringify(question),
       headers: {
         "content-type": "application/json",
+        "if-match": eTag,
       },
     });
 

@@ -82,7 +82,8 @@ export const Subject = (): JSX.Element => {
         name={subject.name}
         description={subject.description}
         instructors={subject.instructors}
-        students={subject.students} />
+        students={subject.students}
+        eTag={subject.meta.eTag} />
       <Exams subjectId={subject.id} />
       <ExamModal show={examModalShow} onHide={() => setExamModalShow(false)} subjectId={subject.id} />
     </Container>

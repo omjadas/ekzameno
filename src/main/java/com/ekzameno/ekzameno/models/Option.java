@@ -113,4 +113,48 @@ public class Option extends Model {
         this.question = null;
         UnitOfWork.getCurrent().registerDirty(this);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((answer == null) ? 0 : answer.hashCode());
+        result = prime * result + (correct ? 1231 : 1237);
+        result = prime * result + ((questionId == null)
+            ? 0
+            : questionId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Option other = (Option) obj;
+        if (answer == null) {
+            if (other.answer != null) {
+                return false;
+            }
+        } else if (!answer.equals(other.answer)) {
+            return false;
+        }
+        if (correct != other.correct) {
+            return false;
+        }
+        if (questionId == null) {
+            if (other.questionId != null) {
+                return false;
+            }
+        } else if (!questionId.equals(other.questionId)) {
+            return false;
+        }
+        return true;
+    }
 }

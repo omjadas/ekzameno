@@ -9,6 +9,7 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 
 import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
+import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.ExamMapper;
 import com.ekzameno.ekzameno.mappers.ExamSubmissionMapper;
 import com.ekzameno.ekzameno.models.DateRange;
@@ -114,6 +115,7 @@ public class ExamService {
      * @param startTime   publish date of the exam
      * @param finishTime  close date of the exam
      * @param examId      id of the exam
+     * @param eTag        entity tag
      * @return a new exam
      */
     public Exam updateExam(
@@ -121,10 +123,16 @@ public class ExamService {
         String description,
         Date startTime,
         Date finishTime,
-        UUID examId
+        UUID examId,
+        String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
             Exam exam = examMapper.findById(examId, true);
+
+            if (!String.valueOf(exam.hashCode()).equals(eTag)) {
+                throw new PreconditionFailedException();
+            }
+
             exam.setName(name);
             exam.setDescription(description);
             exam.setStartTime(startTime);
@@ -249,18 +257,24 @@ public class ExamService {
      * @param examId    ID of the exam
      * @param studentId ID of the student
      * @param marks     Number of marks assigned to the exam submission
+     * @param eTag      Entity tag
      * @return updated ExamSubmission
      */
     public ExamSubmission updateSubmission(
         UUID examId,
         UUID studentId,
-        Integer marks
+        Integer marks,
+        String eTag
     ) {
         try (
             DBConnection connection = DBConnection.getCurrent();
         ) {
             ExamSubmission examSubmission =
                 examSubmissionMapper.findByRelationIds(studentId, examId, true);
+
+            if (!String.valueOf(examSubmission.hashCode()).equals(eTag)) {
+                throw new PreconditionFailedException();
+            }
 
             examSubmission.setMarks(marks);
             UnitOfWork.getCurrent().commit();

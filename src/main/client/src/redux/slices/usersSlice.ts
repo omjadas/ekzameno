@@ -16,6 +16,9 @@ export interface CreateUser extends User {
 
 export interface UserState extends User {
   id: string,
+  meta: {
+    eTag: string,
+  },
 }
 
 interface UsersState extends State {

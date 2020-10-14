@@ -10,6 +10,9 @@ export interface Option {
 export interface OptionState extends Option {
   id: string,
   questionId: string,
+  meta: {
+    eTag: string,
+  },
 }
 
 const optionsAdapter = createEntityAdapter<OptionState>();
@@ -48,12 +51,21 @@ export const addOption = createAsyncThunk(
 
 export const updateOption = createAsyncThunk(
   "options/updateOption",
-  async ({ id, option }: { id: string, option: Option }) => {
+  async ({
+    id,
+    option,
+    eTag,
+  }: {
+    id: string,
+    option: Option,
+    eTag: string,
+  }) => {
     const res = await fetch(`/api/options/${id}`, {
       method: "put",
       body: JSON.stringify(option),
       headers: {
         "content-type": "application/json",
+        "if-match": eTag,
       },
     });
 

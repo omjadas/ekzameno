@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 
+import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.EnrolmentMapper;
 import com.ekzameno.ekzameno.mappers.InstructorSubjectMapper;
 import com.ekzameno.ekzameno.mappers.SubjectMapper;
@@ -88,9 +89,9 @@ public class SubjectService {
     /**
      * Adds given instructor to given subject.
      *
-     * @param subjectId subject's id
+     * @param subjectId    subject's id
      * @param instructorId instructor's id
-     * @throws NotFoundException not found exception
+     * @throws NotFoundException            not found exception
      * @throws InternalServerErrorException internal error exception
      */
     public void addInstructorToSubject(UUID subjectId, UUID instructorId) {
@@ -118,7 +119,7 @@ public class SubjectService {
      *
      * @param subjectId subject's id
      * @param studentId student's id
-     * @throws NotFoundException not found exception
+     * @throws NotFoundException            not found exception
      * @throws InternalServerErrorException internal error exception
      */
     public void addStudentToSubject(UUID subjectId, UUID studentId) {
@@ -144,7 +145,7 @@ public class SubjectService {
     /**
      * Deletes given instructor from given subject.
      *
-     * @param subjectId subject's id
+     * @param subjectId    subject's id
      * @param instructorId instructor's id
      */
     public void deleteInstructorFromSubject(
@@ -175,15 +176,9 @@ public class SubjectService {
      * @param subjectId subject's id
      * @param studentId student's id
      */
-    public void deleteStudentFromSubject(
-        UUID subjectId,
-        UUID studentId
-    ) {
+    public void deleteStudentFromSubject(UUID subjectId, UUID studentId) {
         try (DBConnection connection = DBConnection.getCurrent()) {
-            enrolmentMapper.deleteByRelationIds(
-                studentId,
-                subjectId
-            );
+            enrolmentMapper.deleteByRelationIds(studentId, subjectId);
             UnitOfWork.getCurrent().commit();
         } catch (SQLException e) {
             try {
@@ -200,10 +195,10 @@ public class SubjectService {
     /**
      * Create a new subject.
      *
-     * @param name name of the subject to create
+     * @param name        name of the subject to create
      * @param description description of the subject to create
      * @param instructors instructors assigned to the new subject
-     * @param students students enrolled in the subject
+     * @param students    students enrolled in the subject
      * @return the new subject
      */
     public Subject createSubject(
@@ -240,18 +235,25 @@ public class SubjectService {
     /**
      * Updates a subject.
      *
-     * @param name new name of the subject
+     * @param name        new name of the subject
      * @param description new description of the subject
-     * @param subjectId subject id
+     * @param subjectId   subject id
+     * @param eTag        entity tag
      * @return returns the updated subject
      */
     public Subject updateSubject(
         String name,
         String description,
-        UUID subjectId
+        UUID subjectId,
+        String eTag
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
             Subject subject = subjectMapper.findById(subjectId, true);
+
+            if (!String.valueOf(subject.hashCode()).equals(eTag)) {
+                throw new PreconditionFailedException();
+            }
+
             subject.setName(name);
             subject.setDescription(description);
             UnitOfWork.getCurrent().commit();

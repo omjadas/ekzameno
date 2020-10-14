@@ -22,6 +22,7 @@ interface UpdateExamModalProps extends ExamModalProps {
   startTime: string,
   finishTime: string,
   description: string,
+  eTag: string,
 }
 
 interface FormValues {
@@ -50,6 +51,7 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
           startTime: new Date(values.startTime).toISOString(),
           finishTime: new Date(values.finishTime).toISOString(),
         },
+        eTag: props.eTag,
       }))
         .then(unwrapResult)
         .then(() => {

@@ -33,6 +33,10 @@ public abstract class Model {
         return id;
     }
 
+    public Meta getMeta() {
+        return new Meta(String.valueOf(hashCode()));
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

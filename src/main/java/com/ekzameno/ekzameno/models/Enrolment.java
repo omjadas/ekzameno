@@ -120,4 +120,46 @@ public class Enrolment extends Model {
         this.subjectId = subject.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((studentId == null)
+            ? 0
+            : studentId.hashCode());
+        result = prime * result + ((subjectId == null)
+            ? 0
+            : subjectId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Enrolment other = (Enrolment) obj;
+        if (studentId == null) {
+            if (other.studentId != null) {
+                return false;
+            }
+        } else if (!studentId.equals(other.studentId)) {
+            return false;
+        }
+        if (subjectId == null) {
+            if (other.subjectId != null) {
+                return false;
+            }
+        } else if (!subjectId.equals(other.subjectId)) {
+            return false;
+        }
+        return true;
+    }
 }
