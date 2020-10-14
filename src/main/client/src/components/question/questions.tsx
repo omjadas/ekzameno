@@ -65,7 +65,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
 
   if (me === undefined || (exam?.questionIds !== undefined && exam.questionIds.length !== questions.length)) {
     return (
-      <Spinner animation="border" role="status" className={styles.spinner}>
+      <Spinner animation="border" role="status" className=`d-flex mx-auto ${styles.spinner}`>
         <span className="sr-only">Loading...</span>
       </Spinner>
     );
