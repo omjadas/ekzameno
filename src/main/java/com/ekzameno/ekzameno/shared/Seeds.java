@@ -111,7 +111,7 @@ public class Seeds {
                 }
             );
 
-            Exam sdaMidSemExam = examService.createExam(
+            final Exam sdaMidSemExam = examService.createExam(
                 "Mid-Sem (35 Marks)",
                 "This exam contains multiple choice and short answer" +
                 "questions. The exam is for 35 marks. The exam will " +
