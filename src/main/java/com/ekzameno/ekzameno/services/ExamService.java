@@ -26,8 +26,8 @@ public class ExamService {
     private ExamMapper examMapper = new ExamMapper();
     private ExamSubmissionMapper examSubmissionMapper =
         new ExamSubmissionMapper();
-    // private QuestionSubmissionMapper questionSubmissionMapper =
-    //     new QuestionSubmissionMapper();
+    private QuestionSubmissionMapper questionSubmissionMapper =
+        new QuestionSubmissionMapper();
 
     /**
      * Fetches an exam for a given slug.
