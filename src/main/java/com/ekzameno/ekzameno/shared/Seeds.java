@@ -430,7 +430,7 @@ public class Seeds {
             );
 
             Exam dbmsFinalExam = examService.createExam(
-                "Final Exam (25 Marks)",
+                "Final Exam (50 Marks)",
                 "Final Exam:\n" +
                 "Hurdle requirement: 50%",
                 new Date(),
