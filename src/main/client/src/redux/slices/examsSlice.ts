@@ -14,7 +14,7 @@ export interface QuestionSubmission {
   id: string,
   answer: string,
   questionId: string,
-  mark: number,
+  marks: number,
   meta: {
     eTag: string,
   },
@@ -166,7 +166,7 @@ export const updateExamSubmission = createAsyncThunk(
   }) => {
     const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
       method: "put",
-      body: JSON.stringify({ marks, answers }),
+      body: JSON.stringify({ marks }),
       headers: {
         "content-type": "application/json",
         "if-match": eTag,

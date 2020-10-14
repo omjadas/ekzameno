@@ -5,7 +5,7 @@ import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Answer, ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
-import { QuestionState, selectQuestionsForExam, updateQuestion } from "../../redux/slices/questionsSlice";
+import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 
@@ -95,12 +95,13 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         </Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={{ marks: [],
-          submissionMark: questions.map(question => ({
-            questionId: question.id,
-            answer: questionSubmissions[question.id]?.answer,
-            mark: questionSubmissions[question.id]?.mark === undefined ? 0 : questionSubmissions[question.id]?.mark,
-          })),
+        initialValues={{
+          answers: [],
+          // answers: questions.map(question => ({
+          //   questionId: question.id,
+          //   answer: questionSubmissions[question.id]?.answer,
+          //   marks: questionSubmissions[question.id]?.marks === undefined ? 0 : questionSubmissions[question.id]?.marks,
+          // })),
         }}
         onSubmit={handleSubmit}>
         {
@@ -125,7 +126,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                           label="Marks"
                           min="0"
                           max={question.marks}
-                          name={`submissionMark[${i}].mark`}
+                          name={`answers[${i}].mark`}
                           //value={questionSubmissions[question.id]?.mark}
                           type="number"/>
                         <br />
