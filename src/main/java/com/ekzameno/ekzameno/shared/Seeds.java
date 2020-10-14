@@ -312,7 +312,7 @@ public class Seeds {
                 }
             );
 
-            Exam dbmsQuiz = examService.createExam(
+            final Exam dbmsQuiz = examService.createExam(
                 "Quiz",
                 "The Quiz contains 5 questions of 2 marks each",
                 new Date(),
