@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
-import { Card, Container, Spinner } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchSubjects, selectAllSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
