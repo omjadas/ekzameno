@@ -16,7 +16,7 @@ export interface SubjectModalProps {
   onHide: () => any,
 }
 
-interface UpdateSubjectProps extends SubjectModalProps {
+interface UpdateSubjectModalProps extends SubjectModalProps {
   id: string,
   name: string,
   description: string,
@@ -45,7 +45,7 @@ const FormSchema = yup.object().shape({
   })).min(1, "At least one student must be assigned to the subject.").required(),
 });
 
-export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX.Element => {
+export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const usersStatus = useSelector(selectUsersStatus);
   const students = useSelector(selectStudents);
@@ -126,16 +126,16 @@ export const SubjectModal = (props: UpdateSubjectProps | SubjectModalProps): JSX
       </Modal.Header>
       <Formik
         initialValues={{
-          name: (props as UpdateSubjectProps).name ?? "",
-          description: (props as UpdateSubjectProps).description ?? "",
-          instructors: (props as UpdateSubjectProps).instructors?.map(i => {
+          name: (props as UpdateSubjectModalProps).name ?? "",
+          description: (props as UpdateSubjectModalProps).description ?? "",
+          instructors: (props as UpdateSubjectModalProps).instructors?.map(i => {
             const instructor = instructors.find(i2 => i2.id === i);
             return {
               label: instructor!.name,
               value: instructor!.id,
             };
           }) ?? [],
-          students: (props as UpdateSubjectProps).students?.map(s => {
+          students: (props as UpdateSubjectModalProps).students?.map(s => {
             const student = students.find(s2 => s2.id === s);
             return {
               label: student!.name,
