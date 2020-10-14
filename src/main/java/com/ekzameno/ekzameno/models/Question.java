@@ -144,4 +144,56 @@ public abstract class Question extends Model {
         this.examId = exam.getId();
         UnitOfWork.getCurrent().registerDirty(this);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((examId == null) ? 0 : examId.hashCode());
+        result = prime * result + marks;
+        result = prime * result + ((question == null)
+            ? 0
+            : question.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Question other = (Question) obj;
+        if (examId == null) {
+            if (other.examId != null) {
+                return false;
+            }
+        } else if (!examId.equals(other.examId)) {
+            return false;
+        }
+        if (marks != other.marks) {
+            return false;
+        }
+        if (question == null) {
+            if (other.question != null) {
+                return false;
+            }
+        } else if (!question.equals(other.question)) {
+            return false;
+        }
+        if (type == null) {
+            if (other.type != null) {
+                return false;
+            }
+        } else if (!type.equals(other.type)) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -45,9 +46,7 @@ public class SubjectController {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Subject> getSubjects(
-        @Context SecurityContext securityContext
-    ) {
+    public List<Subject> getSubjects(@Context SecurityContext securityContext) {
         if (securityContext.isUserInRole("student")) {
             return subjectService.getSubjectsForStudent(
                 UUID.fromString(
@@ -104,7 +103,7 @@ public class SubjectController {
      * Handles the fetching of all exams from the database.
      *
      * @param securityContext User details
-     * @param subjectId ID of the subject to create the exam for
+     * @param subjectId       ID of the subject to create the exam for
      * @return list of all exams for the subject
      */
     @Path("/{subjectId}/exams")
@@ -127,7 +126,7 @@ public class SubjectController {
      * Create an exam.
      *
      * @param subjectId ID of the subject to create the exam for
-     * @param dto Exam DTO
+     * @param dto       Exam DTO
      * @return Response to the client
      */
     @Path("/{subjectId}/exams")
@@ -150,8 +149,9 @@ public class SubjectController {
     /**
      * Update a subject.
      *
-     * @param subjectId subject's id
-     * @param dto subject DTO
+     * @param subjectId ID of the subject to update
+     * @param headers   request headers
+     * @param dto       subject DTO
      * @return response to the client
      */
     @Path("/{subjectId}")
@@ -160,19 +160,21 @@ public class SubjectController {
     @Produces(MediaType.APPLICATION_JSON)
     public Subject updateSubject(
         @PathParam("subjectId") String subjectId,
+        @Context HttpHeaders headers,
         CreateSubjectDTO dto
     ) {
         return subjectService.updateSubject(
             dto.name,
             dto.description,
-            UUID.fromString(subjectId)
+            UUID.fromString(subjectId),
+            headers.getRequestHeader("if-match").get(0)
         );
     }
 
     /**
      * Fetch instructors for a given subject.
      *
-     * @param subjectId subject's id
+     * @param subjectId ID of the subject to retrieve instructors for
      * @return list of instructors
      */
     @Path("/{subjectId}/instructors")
@@ -187,8 +189,8 @@ public class SubjectController {
     /**
      * Adds given instructor to given subject.
      *
-     * @param subjectId subject's id
-     * @param instructorId instructor's id
+     * @param subjectId    ID of the subject to add the instructor to
+     * @param instructorId ID of the instructor to add to the subject
      * @return response to client
      */
     @Path("/{subjectId}/instructors/{instructorId}")
@@ -209,8 +211,8 @@ public class SubjectController {
     /**
      * Adds given student to given subject.
      *
-     * @param subjectId subject's id
-     * @param studentId student's id
+     * @param subjectId ID of the subject to add the student to
+     * @param studentId ID of the student to add to the subject
      * @return response to client
      */
     @Path("/{subjectId}/students/{studentId}")
@@ -231,8 +233,8 @@ public class SubjectController {
     /**
      * Delete given instructor from given subject.
      *
-     * @param subjectId subject's id
-     * @param instructorId instructor's id
+     * @param subjectId    ID of the subject to remove the instructor from
+     * @param instructorId ID of the instructor to remove from the subject
      * @return response to the client
      */
     @Path("/{subjectId}/instructors/{instructorId}")
@@ -251,15 +253,13 @@ public class SubjectController {
     /**
      * Fetch students for a given subject.
      *
-     * @param subjectId subject's id
+     * @param subjectId ID of the subject to retrieve students for
      * @return list of students
      */
     @Path("/{subjectId}/students")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Student> getStudents(
-        @PathParam("subjectId") String subjectId
-    ) {
+    public List<Student> getStudents(@PathParam("subjectId") String subjectId) {
         return userService.getStudentsForSubject(UUID.fromString(subjectId));
     }
 

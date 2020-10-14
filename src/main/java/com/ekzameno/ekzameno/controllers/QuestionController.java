@@ -11,6 +11,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -34,7 +36,8 @@ public class QuestionController {
     /**
      * Update a question.
      *
-     * @param questionId Id of th exam
+     * @param questionId ID of the exam
+     * @param headers    Request headers
      * @param dto        Question DTO
      * @return Response to the client
      */
@@ -44,12 +47,14 @@ public class QuestionController {
     @Produces(MediaType.APPLICATION_JSON)
     public Question updateQuestion(
         @PathParam("questionId") String questionId,
+        @Context HttpHeaders headers,
         CreateQuestionDTO dto
     ) {
         return questionService.updateQuestion(
             dto.question,
             dto.marks,
-            UUID.fromString(questionId)
+            UUID.fromString(questionId),
+            headers.getRequestHeader("if-match").get(0)
         );
     }
 

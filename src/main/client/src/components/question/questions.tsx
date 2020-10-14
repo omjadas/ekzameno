@@ -137,7 +137,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                     question={question.question}
                     marks={question.marks}
                     type={question.type}
-                    optionIds={question.optionIds} />
+                    optionIds={question.optionIds}
+                    eTag={question.meta.eTag} />
                 </Card.Body>
               </Card>
             );

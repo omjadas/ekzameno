@@ -4,7 +4,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Button, Form, Spinner, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
-import { ExamState, fetchSubmissions, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
+import { ExamState, ExamSubmission, fetchSubmissions, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
 import { fetchQuestions, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectSubjectById, SubjectState } from "../../redux/slices/subjectsSlice";
 import { fetchUsers, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
@@ -54,11 +54,11 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     students = students.filter(s => s.id === me.id);
   }
 
-  const submissions: Record<string, number | undefined> = {};
+  const submissions: Record<string, ExamSubmission | undefined> = {};
 
   exam?.submissions?.forEach(submission => {
     if (submission.marks !== undefined) {
-      submissions[submission.studentId] = submission.marks;
+      submissions[submission.studentId] = submission;
     }
   });
 
@@ -111,6 +111,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           studentId: mark.studentId,
           marks: mark.marks,
           answers: [],
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          eTag: submissions[mark.studentId]!.meta.eTag,
         }))
           .then(unwrapResult)
           .catch(e => {
@@ -135,7 +137,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
       initialValues={{ marks: students.map(s => ({
         studentId: s.id,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        marks: submissions[s.id] === undefined ? undefined : (submissions[s.id]! < 0 ? undefined : submissions[s.id]),
+        marks: submissions[s.id]?.marks === undefined ? undefined : (submissions[s.id]!.marks! < 0 ? undefined : submissions[s.id]!.marks),
       })) }}
       onSubmit={handleSubmit}
       validationSchema={FormSchema}
@@ -196,7 +198,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
                         show={submissionModalShow === student.id}
                         onHide={() => setSubmissionModalShow(null)}
                         examId={props.examId}
-                        studentId={student.id} />
+                        studentId={student.id}
+                        eTag={submissions[student.id]?.meta.eTag} />
                     </Fragment>
                   ))
                 }

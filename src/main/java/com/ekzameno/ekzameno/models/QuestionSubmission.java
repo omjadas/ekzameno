@@ -31,11 +31,12 @@ public class QuestionSubmission extends Model {
      * @param mark             Mark for the question
      */
     public QuestionSubmission(
-            UUID id,
-            String answer,
-            UUID questionId,
-            UUID examSubmissionId,
-            int mark) {
+        UUID id,
+        String answer,
+        UUID questionId,
+        UUID examSubmissionId,
+        int mark
+    ) {
         super(id);
         this.answer = answer;
         this.questionId = questionId;
@@ -172,5 +173,55 @@ public class QuestionSubmission extends Model {
         this.examSubmission = examSubmission;
         this.examSubmissionId = examSubmission.getId();
         UnitOfWork.getCurrent().registerDirty(this);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((answer == null) ? 0 : answer.hashCode());
+        result = prime * result + ((examSubmissionId == null)
+            ? 0
+            : examSubmissionId.hashCode());
+        result = prime * result + ((questionId == null)
+            ? 0
+            : questionId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        QuestionSubmission other = (QuestionSubmission) obj;
+        if (answer == null) {
+            if (other.answer != null) {
+                return false;
+            }
+        } else if (!answer.equals(other.answer)) {
+            return false;
+        }
+        if (examSubmissionId == null) {
+            if (other.examSubmissionId != null) {
+                return false;
+            }
+        } else if (!examSubmissionId.equals(other.examSubmissionId)) {
+            return false;
+        }
+        if (questionId == null) {
+            if (other.questionId != null) {
+                return false;
+            }
+        } else if (!questionId.equals(other.questionId)) {
+            return false;
+        }
+        return true;
     }
 }

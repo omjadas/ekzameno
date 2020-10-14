@@ -15,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -54,8 +55,9 @@ public class ExamController {
     /**
      * Update an exam.
      *
-     * @param examId Id of th exam
-     * @param dto Exam DTO
+     * @param examId  ID of the exam
+     * @param headers request headers
+     * @param dto     Exam DTO
      * @return Response to the client
      */
     @Path("/{examId}")
@@ -64,6 +66,7 @@ public class ExamController {
     @Produces(MediaType.APPLICATION_JSON)
     public Exam updateExam(
         @PathParam("examId") String examId,
+        @Context HttpHeaders headers,
         CreateExamDTO dto
     ) {
         return examService.updateExam(
@@ -71,7 +74,8 @@ public class ExamController {
             dto.description,
             dto.startTime,
             dto.finishTime,
-            UUID.fromString(examId)
+            UUID.fromString(examId),
+            headers.getRequestHeader("if-match").get(0)
         );
     }
 
@@ -96,7 +100,7 @@ public class ExamController {
      * Create a question for a given exam.
      *
      * @param examId ID of the exam to create the question for
-     * @param dto Question DTO
+     * @param dto    Question DTO
      * @return Response to the client
      */
     @Path("/{examId}/questions")
@@ -169,6 +173,7 @@ public class ExamController {
      * @param examId          ID of the exam
      * @param studentId       ID of the student
      * @param securityContext Security context for the request
+     * @param headers         Request headers
      * @param dto             DTO for the exam submission
      * @return the updated exam submission
      */
@@ -180,6 +185,7 @@ public class ExamController {
         @PathParam("examId") String examId,
         @PathParam("studentId") String studentId,
         @Context SecurityContext securityContext,
+        @Context HttpHeaders headers,
         CreateExamSubmissionDTO dto
     ) {
         if (securityContext.isUserInRole("student")) {
@@ -190,7 +196,8 @@ public class ExamController {
             UUID.fromString(examId),
             UUID.fromString(studentId),
             dto.marks,
-            dto.answers
+            dto.answers,
+            headers.getRequestHeader("if-match").get(0)
         );
     }
 

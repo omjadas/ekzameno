@@ -8,7 +8,7 @@ import { Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
-import { addOption, deleteOption, selectOptionsByIds, updateOption } from "../../redux/slices/optionsSlice";
+import { addOption, deleteOption, OptionState, selectOptionsByIds, updateOption } from "../../redux/slices/optionsSlice";
 import { addQuestion, questionLabels, QuestionType, updateQuestion } from "../../redux/slices/questionsSlice";
 import { useAppDispatch } from "../../redux/store";
 
@@ -27,6 +27,7 @@ interface UpdateQuestionModalProps extends QuestionModalProps {
   marks: number,
   type: QuestionType,
   optionIds: string[],
+  eTag: string,
 }
 
 interface FormValues {
@@ -36,10 +37,7 @@ interface FormValues {
     label: string,
     value: QuestionType,
   },
-  options: {
-    id?: string,
-    answer: string,
-  }[],
+  options: ({ answer: string } | OptionState)[],
   correctOption: number,
 }
 
@@ -110,7 +108,7 @@ export const QuestionModal = (
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
-      const deletedOptions = options.filter(o => !values.options.map(o => o.id).includes(o.id));
+      const deletedOptions = options.filter(o => !values.options.map((o: any) => o.id).includes(o.id));
 
       dispatch(updateQuestion({
         id: props.id,
@@ -119,27 +117,29 @@ export const QuestionModal = (
           marks: values.marks,
           type: values.type.value,
         },
+        eTag: props.eTag,
       }))
         .then(unwrapResult)
         .then(() => {
           const newPromises: Promise<any>[] = [];
           const updatedPromises: Promise<any>[] = [];
           values.options.forEach((option, i) => {
-            if (option.id === undefined) {
-              newPromises.push(
-                dispatch(addOption({
-                  questionId: props.id,
+            if ("id" in option) {
+              updatedPromises.push(
+                dispatch(updateOption({
+                  id: option.id,
                   option: {
                     answer: option.answer,
                     correct: values.correctOption === i + 1,
                   },
+                  eTag: option.meta.eTag,
                 }))
                   .then(unwrapResult)
               );
             } else {
-              updatedPromises.push(
-                dispatch(updateOption({
-                  id: option.id,
+              newPromises.push(
+                dispatch(addOption({
+                  questionId: props.id,
                   option: {
                     answer: option.answer,
                     correct: values.correctOption === i + 1,

@@ -14,6 +14,7 @@ interface SubmissionModalProps {
   onHide: () => any,
   examId: string,
   studentId: string,
+  eTag?: string,
 }
 
 interface FormValues {
@@ -28,14 +29,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
   );
   const me = useSelector(selectMe);
 
-  const marks = useSelector<RootState, ExamState | undefined>(
-    state => selectExamById(state, props.examId)
-  )
-    ?.submissions
-    ?.find(submission => submission.studentId === props.studentId)
-    ?.marks;
-
-  const questionSubmissions: Record<string, QuestionSubmission> = {};
+  const questionSubmissions: Record<string, QuestionSubmission | undefined> = {};
 
   useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
@@ -56,14 +50,10 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     });
 
   const handleSubmit = (values: FormValues): void => {
-    let count = 0;
-    let newMarks = 0;
-    for (let i = 0 ; i < values.submissionMark.length ; i++) {
-      count = values.submissionMark[i].mark;
-      newMarks += count;
-    }
-    if (marks === undefined) {
-      dispatch(submitExam1({
+    const newMarks = values.marks.reduce((a, b) => a + b, 0);
+
+    if (props.eTag === undefined) {
+      dispatch(submitExam({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
@@ -80,6 +70,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         studentId: props.studentId,
         marks: newMarks,
         answers: values.submissionMark,
+        eTag: props.eTag,
       }))
         .then(unwrapResult)
         .then(props.onHide)
