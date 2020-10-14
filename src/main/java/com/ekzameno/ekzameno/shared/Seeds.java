@@ -429,7 +429,7 @@ public class Seeds {
                 Arrays.asList(qQ5A, qQ5B, qQ5C, qQ5D)
             );
 
-            Exam dbmsFinalExam = examService.createExam(
+            final Exam dbmsFinalExam = examService.createExam(
                 "Final Exam (50 Marks)",
                 "Final Exam:\n" +
                 "Hurdle requirement: 50%",
