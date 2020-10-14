@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
-import { Button, Container, Jumbotron, Spinner } from "react-bootstrap";
+import { Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSubject, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
@@ -8,6 +8,7 @@ import { fetchInstructorsForSubject, fetchStudentsForSubject, selectMe } from ".
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
 import { Exams } from "../exam/exams";
+import { Loader } from "../loader/loader";
 import { SubjectModal } from "../subject/subjectModal";
 import styles from "./subject.module.scss";
 
@@ -45,17 +46,7 @@ export const Subject = (): JSX.Element => {
   }, [dispatch, subjectId, subjectsStatus]);
 
   if (subject === undefined) {
-    return (
-      <div>Unable to find subject</div>
-    );
-  }
-
-  if (subject === undefined) {
-    return (
-      <Spinner animation="border" role="status" className={styles.spinner}>
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
+    return <Loader />;
   }
 
   return (
