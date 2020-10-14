@@ -2,7 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form, Spinner } from "react-bootstrap";
+import { Button, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
@@ -10,6 +10,7 @@ import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice"
 import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
+import { Loader } from "../loader/loader";
 import { QuestionModal } from "./questionModal";
 import styles from "./questions.module.scss";
 
@@ -63,12 +64,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   }, [dispatch, props.examId]);
 
-  if (me === undefined || (exam !== undefined && exam.questionIds.length !== questions.length)) {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
+  if (me === undefined || (exam?.questionIds !== undefined && exam.questionIds.length !== questions.length)) {
+    return <Loader />;
   }
 
   const answers: Record<string, string> = {};

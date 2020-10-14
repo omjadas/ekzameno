@@ -1,10 +1,11 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
-import { Card, Container, Spinner } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchSubjects, selectAllSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
 import { useAppDispatch } from "../../redux/store";
+import { Loader } from "../loader/loader";
 import styles from "./subjects.module.scss";
 
 export const Subjects = (): JSX.Element => {
@@ -23,11 +24,7 @@ export const Subjects = (): JSX.Element => {
   }, [dispatch, subjectsStatus]);
 
   if (subjectsStatus !== "finished") {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
+    return <Loader />;
   }
 
   return (
