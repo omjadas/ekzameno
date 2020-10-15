@@ -10,33 +10,11 @@ export interface Exam {
   finishTime: string,
 }
 
-export interface QuestionSubmission {
-  id: string,
-  answer: string,
-  questionId: string,
-  marks: number,
-  meta: {
-    eTag: string,
-  },
-}
-
-export interface ExamSubmission {
-  id: string,
-  examId: string,
-  studentId: string,
-  marks?: number,
-  questionSubmissions: QuestionSubmission[],
-  meta: {
-    eTag: string,
-  },
-}
-
 export interface ExamState extends Exam {
   id: string,
   slug: string,
   subjectId: string,
   questionIds: string[],
-  submissions?: ExamSubmission[],
   meta: {
     eTag: string,
   },
@@ -126,68 +104,6 @@ export const deleteExam = createAsyncThunk(
   }
 );
 
-export const submitExam = createAsyncThunk(
-  "exams/submitExam",
-  async ({
-    examId,
-    studentId,
-    answers,
-    marks,
-  }: {
-    examId: string,
-    studentId: string,
-    answers: Answer[],
-    marks?: number,
-  }) => {
-    const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
-      method: "post",
-      body: JSON.stringify({ marks, answers }),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-
-    return res.json() as Promise<ExamSubmission>;
-  }
-);
-
-export const updateExamSubmission = createAsyncThunk(
-  "exams/updateSubmission",
-  async ({
-    examId,
-    studentId,
-    marks,
-    eTag,
-  }: {
-    examId: string,
-    studentId: string,
-    marks: number,
-    eTag: string,
-  }) => {
-    const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
-      method: "put",
-      body: JSON.stringify({ marks }),
-      headers: {
-        "content-type": "application/json",
-        "if-match": eTag,
-      },
-    });
-
-    return res.json() as Promise<ExamSubmission>;
-  }
-);
-
-export const fetchSubmissions = createAsyncThunk(
-  "exams/fetchSubmission",
-  async (examId: string) => {
-    const res = await fetch(`/api/exams/${examId}/submissions`);
-    return {
-      examId,
-      submissions: await res.json() as ExamSubmission[],
-    };
-  }
-);
-
 export const examsSlice = createSlice({
   name: "exams",
   initialState,
@@ -236,34 +152,6 @@ export const examsSlice = createSlice({
       if (exam !== undefined) {
         exam.questionIds === undefined && (exam.questionIds = []);
         exam.questionIds.push(action.payload.id);
-      }
-    });
-    builder.addCase(submitExam.fulfilled, (state, action) => {
-      const exam = state.entities[action.payload.examId];
-
-      if (exam !== undefined) {
-        exam.submissions = exam.submissions ?? [];
-        exam.submissions.push(action.payload);
-      }
-    });
-    builder.addCase(fetchSubmissions.fulfilled, (state, action) => {
-      const exam = state.entities[action.payload.examId];
-
-      if (exam !== undefined) {
-        exam.submissions = action.payload.submissions;
-      }
-    });
-    builder.addCase(updateExamSubmission.fulfilled, (state, action) => {
-      const exam = state.entities[action.payload.examId];
-
-      if (exam !== undefined) {
-        exam.submissions = exam.submissions?.map(submission => {
-          if (submission.id === action.payload.id) {
-            return action.payload;
-          } else {
-            return submission;
-          }
-        });
       }
     });
   },
