@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useState } from "react";
-import { Alert, Button, Container, Dropdown, DropdownButton, Form, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Dropdown, DropdownButton, Form, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { selectMe, signOut } from "../../redux/slices/usersSlice";
