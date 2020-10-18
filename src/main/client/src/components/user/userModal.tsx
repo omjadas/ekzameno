@@ -87,16 +87,14 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
       });
   };
 
-  if (errorMessage  !== null) {
-    return (
-      <Alert variant="danger">
-        {errorMessage}
-      </Alert>
-    );
-  }
-
   return (
     <Modal show={props.show} onHide={handleHide} centered>
+      {
+        errorMessage  !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Modal.Header closeButton>
         <Modal.Title>
           Create User

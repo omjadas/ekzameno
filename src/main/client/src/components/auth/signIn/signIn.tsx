@@ -37,7 +37,7 @@ export const SignIn = (props: Props): JSX.Element => {
         if (e.message === "400") {
           setErrorMessage("Bad Request");
         } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
+          setErrorMessage("Username and Password doesnt not match");
         } else if (e.message === "404") {
           setErrorMessage("User not found");
         } else if (e.message === "412") {

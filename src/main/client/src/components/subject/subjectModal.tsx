@@ -152,14 +152,6 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
     );
   }
 
-  if (errorMessage  !== null) {
-    return (
-      <Alert variant="danger">
-        {errorMessage}
-      </Alert>
-    );
-  }
-
   return (
     <Modal show={props.show} onHide={handleHide} centered>
       <Modal.Header closeButton>
@@ -171,6 +163,12 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           }
         </Modal.Title>
       </Modal.Header>
+      {
+        errorMessage  !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Formik
         initialValues={{
           name: (props as UpdateSubjectModalProps).name ?? "",

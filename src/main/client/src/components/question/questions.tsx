@@ -114,6 +114,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
           setErrorMessage("Bad Request");
         } else if (e.message === "401") {
           setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("The exam not found");
         } else if (e.message === "412") {
           setErrorMessage("Client Error");
         } else if (e.message === "500") {

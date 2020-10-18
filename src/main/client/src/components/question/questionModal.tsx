@@ -207,14 +207,6 @@ export const QuestionModal = (
     }
   };
 
-  if (errorMessage  !== null) {
-    return (
-      <Alert variant="danger">
-        {errorMessage}
-      </Alert>
-    );
-  }
-
   return (
     <Modal show={props.show} onHide={handleHide} centered>
       <Modal.Header closeButton>
@@ -226,6 +218,12 @@ export const QuestionModal = (
           }
         </Modal.Title>
       </Modal.Header>
+      {
+        errorMessage  !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Formik
         initialValues={{
           question: (props as UpdateQuestionModalProps).question ?? "",
