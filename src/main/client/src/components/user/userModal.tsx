@@ -51,10 +51,10 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleHide = () => {
+  const handleHide = (): void => {
     setErrorMessage(null);
     props.onHide();
-  }
+  };
 
   const onSubmit = (values: FormValues): void => {
     dispatch(addUser({
@@ -80,14 +80,14 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
           setErrorMessage("Internal Server Error");
         } else if (e.message === "408") {
           setErrorMessage("Couldn't find the user in time");
-        }else if (e.message === "409") {
+        } else if (e.message === "409") {
           setErrorMessage("User already registered");
         }
         console.error(e);
       });
   };
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

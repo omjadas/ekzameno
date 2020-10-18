@@ -103,10 +103,10 @@ export const QuestionModal = (
   const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleHide = () => {
+  const handleHide = (): void => {
     setErrorMessage(null);
     props.onHide();
-  }
+  };
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
@@ -207,7 +207,7 @@ export const QuestionModal = (
     }
   };
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

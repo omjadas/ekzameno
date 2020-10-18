@@ -35,7 +35,7 @@ export const Exams = (props: ExamsProps): JSX.Element => {
       });
   }, [props.subjectId, dispatch]);
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

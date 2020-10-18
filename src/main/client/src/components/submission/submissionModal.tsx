@@ -29,10 +29,10 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
   const me = useSelector(selectMe);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleHide = () => {
+  const handleHide = (): void => {
     setErrorMessage(null);
     props.onHide();
-  }
+  };
 
   const questionSubmissions: Record<string, QuestionSubmission | undefined> = {};
 
@@ -106,7 +106,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     }
   };
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

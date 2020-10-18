@@ -42,11 +42,11 @@ const FormSchema = yup.object().shape({
 export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
-  const handleHide = () => {
+
+  const handleHide = (): void => {
     setErrorMessage(null);
     props.onHide();
-  }
+  };
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
@@ -105,7 +105,7 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
     }
   };
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

@@ -74,10 +74,10 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
     }
   }, [dispatch, usersStatus, me]);
 
-  const handleHide = () => {
+  const handleHide = (): void => {
     setErrorMessage(null);
     props.onHide();
-  }
+  };
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
@@ -152,7 +152,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
     );
   }
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

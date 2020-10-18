@@ -26,7 +26,7 @@ const FormSchema = yup.object().shape({
 export const SignIn = (props: Props): JSX.Element => {
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
+
   const onSubmit = (values: FormValues): void => {
     dispatch(signIn(values))
       .then(unwrapResult)
@@ -51,7 +51,7 @@ export const SignIn = (props: Props): JSX.Element => {
       });
   };
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

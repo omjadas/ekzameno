@@ -139,14 +139,14 @@ export const Exam = (): JSX.Element => {
       });
   };
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}
       </Alert>
     );
   }
-  
+
   return (
     <Container className={styles.margin}>
       <Jumbotron>

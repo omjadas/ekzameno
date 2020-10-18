@@ -123,7 +123,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   };
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

@@ -181,7 +181,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     return <Loader />;
   }
 
-  if (errorMessage  != null) {
+  if (errorMessage  !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}
