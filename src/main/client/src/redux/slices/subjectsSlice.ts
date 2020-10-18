@@ -39,7 +39,9 @@ export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async ()
       "content-type": "application/json",
     },
   });
-
+  if (!res.ok) {
+    throw new Error(res.status.toString());
+  }
   return res.json() as Promise<SubjectState[]>;
 });
 
@@ -49,7 +51,9 @@ export const fetchSubject = createAsyncThunk("subjects/fetchSubject", async (slu
       "content-type": "application/json",
     },
   });
-
+  if (!res.ok) {
+    throw new Error(res.status.toString());
+  }
   return res.json() as Promise<SubjectState>;
 });
 
@@ -61,7 +65,9 @@ export const addSubject = createAsyncThunk("subjects/addSubject", async (subject
       "content-type": "application/json",
     },
   });
-
+  if (!res.ok) {
+    throw new Error(res.status.toString());
+  }
   return res.json() as Promise<SubjectState>;
 });
 

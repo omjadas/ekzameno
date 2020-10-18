@@ -66,6 +66,10 @@ export const fetchExams = createAsyncThunk(
       },
     });
 
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+  
     return res.json() as Promise<ExamState[]>;
   }
 );
@@ -76,6 +80,10 @@ export const fetchExam = createAsyncThunk("exams/fetchExam", async (slug: string
       "content-type": "application/json",
     },
   });
+
+  if (!res.ok) {
+    throw new Error(res.status.toString());
+  }
 
   return res.json() as Promise<ExamState>;
 });
@@ -90,6 +98,10 @@ export const addExam = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return res.json() as Promise<ExamState>;
   }
@@ -106,6 +118,10 @@ export const updateExam = createAsyncThunk(
         "if-match": eTag,
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return res.json() as Promise<ExamState>;
   }

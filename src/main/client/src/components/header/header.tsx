@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useState } from "react";
-import { Button, Container, Dropdown, DropdownButton, Form, Nav, Navbar } from "react-bootstrap";
+import { Alert, Button, Container, Dropdown, DropdownButton, Form, Nav, Navbar } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { selectMe, signOut } from "../../redux/slices/usersSlice";
@@ -15,6 +15,7 @@ export const Header = (): JSX.Element => {
   const [userModalShow, setUserModalShow] = useState(false);
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const me = useSelector(selectMe);
 
   const onSignOut = (): void => {
@@ -22,10 +23,27 @@ export const Header = (): JSX.Element => {
       .then(unwrapResult)
       .then(() => history.push("/"))
       .then(() => dispatch({ type: "RESET" }))
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   };
+
+  if (errorMessage  != null) {
+    return (
+      <Alert variant="danger">
+        {errorMessage}
+      </Alert>
+    );
+  }
 
   return (
     <Navbar bg="dark" variant="dark" fixed="top">

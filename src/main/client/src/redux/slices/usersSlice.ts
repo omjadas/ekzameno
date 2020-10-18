@@ -38,6 +38,10 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
     },
   });
 
+  if (!res.ok) {
+    throw new Error(res.status.toString());
+  }
+
   return res.json() as Promise<UserState[]>;
 });
 
@@ -49,6 +53,10 @@ export const fetchInstructorsForSubject = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return { instructors: await res.json() as UserState[], subjectId };
   }
@@ -63,6 +71,10 @@ export const fetchStudentsForSubject = createAsyncThunk(
       },
     });
 
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return { students: await res.json() as UserState[], subjectId };
   }
 );
@@ -75,6 +87,10 @@ export const addUser = createAsyncThunk("users/addUser", async (user: CreateUser
       "content-type": "application/json",
     },
   });
+
+  if (!res.ok) {
+    throw new Error(res.status.toString());
+  }
 
   return res.json() as Promise<UserState>;
 });
@@ -92,6 +108,10 @@ export const signIn = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return res.json() as Promise<UserState>;
   }

@@ -2,8 +2,8 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useEffect } from "react";
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
@@ -50,17 +50,34 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
   const usersStatus = useSelector(selectUsersStatus);
   const students = useSelector(selectStudents);
   const instructors = useSelector(selectInstructors);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const me = useSelector(selectMe);
 
   useEffect(() => {
     if (usersStatus === "idle" && me !== undefined) {
       dispatch(fetchUsers())
         .then(unwrapResult)
-        .catch(e => {
+        .catch((e: Error) => {
+          if (e.message === "400") {
+            setErrorMessage("Bad Request");
+          } else if (e.message === "401") {
+            setErrorMessage("Unauthorized Request");
+          } else if (e.message === "404") {
+            setErrorMessage("Failed to fetch Users");
+          } else if (e.message === "412") {
+            setErrorMessage("Client Error");
+          } else if (e.message === "500") {
+            setErrorMessage("Internal Server Error");
+          }
           console.error(e);
         });
     }
   }, [dispatch, usersStatus, me]);
+
+  const handleHide = () => {
+    setErrorMessage(null);
+    props.onHide();
+  }
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
@@ -83,9 +100,20 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
       }))
         .then(unwrapResult)
         .then(() => {
-          props.onHide();
+          handleHide();
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          if (e.message === "400") {
+            setErrorMessage("Bad Request");
+          } else if (e.message === "401") {
+            setErrorMessage("Unauthorized Request");
+          } else if (e.message === "404") {
+            setErrorMessage("The subject not found");
+          } else if (e.message === "412") {
+            setErrorMessage("Client Error");
+          } else if (e.message === "500") {
+            setErrorMessage("Internal Server Error");
+          }
           console.error(e);
         });
     } else {
@@ -97,9 +125,20 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
       }))
         .then(unwrapResult)
         .then(() => {
-          props.onHide();
+          handleHide();
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          if (e.message === "400") {
+            setErrorMessage("Bad Request");
+          } else if (e.message === "401") {
+            setErrorMessage("Unauthorized Request");
+          } else if (e.message === "404") {
+            setErrorMessage("The subject not found");
+          } else if (e.message === "412") {
+            setErrorMessage("Client Error");
+          } else if (e.message === "500") {
+            setErrorMessage("Internal Server Error");
+          }
           console.error(e);
         });
     }
@@ -113,8 +152,16 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
     );
   }
 
+  if (errorMessage  != null) {
+    return (
+      <Alert variant="danger">
+        {errorMessage}
+      </Alert>
+    );
+  }
+
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal show={props.show} onHide={handleHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           {

@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { FieldArray, Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React from "react";
-import { Button, Form, InputGroup, Modal } from "react-bootstrap";
+import React, { useState } from "react";
+import { Alert, Button, Form, InputGroup, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
@@ -101,10 +101,12 @@ export const QuestionModal = (
 ): JSX.Element => {
   const dispatch = useAppDispatch();
   const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const onHide = (): void => {
+  const handleHide = () => {
+    setErrorMessage(null);
     props.onHide();
-  };
+  }
 
   const onSubmit = (values: FormValues): void => {
     if ("id" in props) {
@@ -157,9 +159,20 @@ export const QuestionModal = (
           return Promise.all([...deletedPromises, ...newPromises, ...updatedPromises]);
         })
         .then(() => {
-          props.onHide();
+          handleHide();
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          if (e.message === "400") {
+            setErrorMessage("Bad Request");
+          } else if (e.message === "401") {
+            setErrorMessage("Unauthorized Request");
+          } else if (e.message === "404") {
+            setErrorMessage("The question not found");
+          } else if (e.message === "412") {
+            setErrorMessage("Client Error");
+          } else if (e.message === "500") {
+            setErrorMessage("Internal Server Error");
+          }
           console.error(e);
         });
     } else {
@@ -176,15 +189,34 @@ export const QuestionModal = (
         },
       }))
         .then(unwrapResult)
-        .then(props.onHide)
-        .catch(e => {
+        .then(handleHide)
+        .catch((e: Error) => {
+          if (e.message === "400") {
+            setErrorMessage("Bad Request");
+          } else if (e.message === "401") {
+            setErrorMessage("Unauthorized Request");
+          } else if (e.message === "404") {
+            setErrorMessage("The exam not found");
+          } else if (e.message === "412") {
+            setErrorMessage("Client Error");
+          } else if (e.message === "500") {
+            setErrorMessage("Internal Server Error");
+          }
           console.error(e);
         });
     }
   };
 
+  if (errorMessage  != null) {
+    return (
+      <Alert variant="danger">
+        {errorMessage}
+      </Alert>
+    );
+  }
+
   return (
-    <Modal show={props.show} onHide={onHide} centered>
+    <Modal show={props.show} onHide={handleHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           {

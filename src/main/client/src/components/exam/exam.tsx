@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
-import { Button, Container, Jumbotron } from "react-bootstrap";
+import { Alert, Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { deleteExam, fetchExam, selectExamBySlug, updateExam } from "../../redux/slices/examsSlice";
@@ -19,12 +19,24 @@ export const Exam = (): JSX.Element => {
   const [examModalShow, setExamModalShow] = useState(false);
   const [questionModalShow, setQuestionModalShow] = useState(false);
   const history = useHistory();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const me = useSelector(selectMe);
 
   useEffect(() => {
     dispatch(fetchExam(slug))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("Failed to fetch Exams");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   }, [dispatch, slug]);
@@ -41,7 +53,18 @@ export const Exam = (): JSX.Element => {
       .then(() => {
         history.goBack();
       })
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("The exam not found");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   };
@@ -72,7 +95,18 @@ export const Exam = (): JSX.Element => {
       eTag: exam.meta.eTag,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("The exam not found");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   };
@@ -89,11 +123,30 @@ export const Exam = (): JSX.Element => {
       eTag: exam.meta.eTag,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("The exam not found");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   };
 
+  if (errorMessage  != null) {
+    return (
+      <Alert variant="danger">
+        {errorMessage}
+      </Alert>
+    );
+  }
+  
   return (
     <Container className={styles.margin}>
       <Jumbotron>

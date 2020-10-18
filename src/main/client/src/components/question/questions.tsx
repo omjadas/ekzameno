@@ -2,7 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
+import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
@@ -36,6 +36,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     .map(q => q.id);
 
   const joinedMultipleChoiceQuestionIds = multipleChoiceQuestionIds.join("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchQuestions(props.examId))
@@ -85,7 +86,18 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       questionId: id,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("The question not found");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   };
@@ -97,10 +109,27 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       answers: values.answers,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   };
+
+  if (errorMessage  != null) {
+    return (
+      <Alert variant="danger">
+        {errorMessage}
+      </Alert>
+    );
+  }
 
   if (me?.type === "INSTRUCTOR" && exam !== undefined) {
     return (

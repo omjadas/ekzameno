@@ -46,7 +46,9 @@ export const fetchQuestions = createAsyncThunk(
         "content-type": "application/json",
       },
     });
-
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
     return res.json() as Promise<QuestionState[]>;
   }
 );
@@ -61,7 +63,9 @@ export const addQuestion = createAsyncThunk(
         "content-type": "application/json",
       },
     });
-
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
     return res.json() as Promise<QuestionState>;
   }
 );
@@ -85,7 +89,9 @@ export const updateQuestion = createAsyncThunk(
         "if-match": eTag,
       },
     });
-
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
     return res.json() as Promise<QuestionState>;
   }
 );

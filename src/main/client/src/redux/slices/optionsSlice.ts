@@ -29,7 +29,9 @@ export const fetchOptions = createAsyncThunk(
         "content-type": "application/json",
       },
     });
-
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
     return res.json() as Promise<OptionState[]>;
   }
 );
@@ -44,7 +46,9 @@ export const addOption = createAsyncThunk(
         "content-type": "application/json",
       },
     });
-
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
     return res.json() as Promise<OptionState>;
   }
 );
@@ -68,7 +72,9 @@ export const updateOption = createAsyncThunk(
         "if-match": eTag,
       },
     });
-
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
     return res.json() as Promise<OptionState>;
   }
 );
