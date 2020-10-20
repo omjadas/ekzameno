@@ -40,6 +40,10 @@ export const fetchExams = createAsyncThunk(
       },
     });
 
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return res.json() as Promise<ExamState[]>;
   }
 );
@@ -50,6 +54,10 @@ export const fetchExam = createAsyncThunk("exams/fetchExam", async (slug: string
       "content-type": "application/json",
     },
   });
+
+  if (!res.ok) {
+    throw new Error(res.status.toString());
+  }
 
   return res.json() as Promise<ExamState>;
 });
@@ -64,6 +72,10 @@ export const addExam = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return res.json() as Promise<ExamState>;
   }
@@ -81,6 +93,10 @@ export const updateExam = createAsyncThunk(
       },
     });
 
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return res.json() as Promise<ExamState>;
   }
 );
@@ -88,12 +104,17 @@ export const updateExam = createAsyncThunk(
 export const deleteExam = createAsyncThunk(
   "exams/deleteExam",
   async (examId: string) => {
-    await fetch(`/api/exams/${examId}`, {
+    const res = await fetch(`/api/exams/${examId}`, {
       method: "delete",
       headers: {
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return examId;
   }
 );

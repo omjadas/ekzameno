@@ -1,7 +1,7 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import React, { Fragment, useEffect, useState } from "react";
-import { Button, Form, Table } from "react-bootstrap";
+import { Alert, Button, Form, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
 import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
@@ -39,6 +39,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     state => selectExamById(state, props.examId)
   );
   const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const questions = useSelector(selectQuestionsForExam(props.examId));
   const subject = useSelector<RootState, SubjectState | undefined>(
     state => selectSubjectById(state, exam?.subjectId ?? "")
@@ -71,7 +72,18 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
       .then(() => {
         setExamSubmissionsLoading(false);
       })
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("Failed to fetch exam submissions");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   }, [dispatch, props.examId]);
@@ -80,7 +92,16 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     if (usersStatus === "idle" && me !== undefined) {
       dispatch(fetchUsers())
         .then(unwrapResult)
-        .catch(e => {
+        .catch((e: Error) => {
+          if (e.message === "400") {
+            setErrorMessage("Bad Request");
+          } else if (e.message === "401") {
+            setErrorMessage("Unauthorized Request");
+          } else if (e.message === "412") {
+            setErrorMessage("Client Error");
+          } else if (e.message === "500") {
+            setErrorMessage("Internal Server Error");
+          }
           console.error(e);
         });
     }
@@ -92,7 +113,18 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
       .then(() => {
         setQuestionsLoading(false);
       })
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "400") {
+          setErrorMessage("Bad Request");
+        } else if (e.message === "401") {
+          setErrorMessage("Unauthorized Request");
+        } else if (e.message === "404") {
+          setErrorMessage("Failed to fetch questions");
+        } else if (e.message === "412") {
+          setErrorMessage("Client Error");
+        } else if (e.message === "500") {
+          setErrorMessage("Internal Server Error");
+        }
         console.error(e);
       });
   }, [props.examId, dispatch]);
@@ -111,7 +143,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           answers: [],
         }))
           .then(unwrapResult)
-          .catch(e => {
+          .catch((e: Error) => {
+            setErrorMessage("Failed to submit marks");
             console.error(e);
           });
       } else {
@@ -123,7 +156,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           eTag: submissions[mark.studentId]!.meta.eTag,
         }))
           .then(unwrapResult)
-          .catch(e => {
+          .catch((e: Error) => {
+            setErrorMessage("Failed to submit marks");
             console.error(e);
           });
       }
@@ -134,6 +168,14 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
 
   if (usersStatus !== "finished" || examSubmissionsLoading || questionsLoading) {
     return <Loader />;
+  }
+
+  if (errorMessage !== null) {
+    return (
+      <Alert variant="danger">
+        {errorMessage}
+      </Alert>
+    );
   }
 
   return (

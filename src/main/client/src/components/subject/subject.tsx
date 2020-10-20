@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
-import { Button, Container, Jumbotron } from "react-bootstrap";
+import { Alert, Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSubject, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
@@ -21,11 +21,13 @@ export const Subject = (): JSX.Element => {
   const [subjectModalShow, setSubjectModalShow] = useState(false);
   const me = useSelector(selectMe);
   const subjectId = subject?.id;
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchSubject(slug))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        setErrorMessage("Failed to retrieve exam");
         console.error(e);
       });
   }, [dispatch, slug]);
@@ -34,16 +36,28 @@ export const Subject = (): JSX.Element => {
     if (subjectId !== undefined) {
       dispatch(fetchInstructorsForSubject(subjectId))
         .then(unwrapResult)
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to retrieve instructors");
           console.error(e);
         });
       dispatch(fetchStudentsForSubject(subjectId))
         .then(unwrapResult)
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to retrieve students");
           console.error(e);
         });
     }
   }, [dispatch, subjectId, subjectsStatus]);
+
+  if (errorMessage !== null) {
+    return (
+      <Container className={styles.margin}>
+        <Alert variant="danger">
+          {errorMessage}
+        </Alert>
+      </Container>
+    );
+  }
 
   if (subject === undefined) {
     return <Loader />;

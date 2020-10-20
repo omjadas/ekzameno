@@ -2,8 +2,8 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React, { useEffect } from "react";
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
@@ -50,26 +50,33 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
   const usersStatus = useSelector(selectUsersStatus);
   const students = useSelector(selectStudents);
   const instructors = useSelector(selectInstructors);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const me = useSelector(selectMe);
 
   useEffect(() => {
     if (usersStatus === "idle" && me !== undefined) {
       dispatch(fetchUsers())
         .then(unwrapResult)
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to retrieve users");
           console.error(e);
         });
     }
   }, [dispatch, usersStatus, me]);
 
-  const onSubmit = (values: FormValues): void => {
+  const handleHide = (): void => {
+    setErrorMessage(null);
+    props.onHide();
+  };
+
+  const handleSubmit = (values: FormValues): Promise<void> => {
     if ("id" in props) {
       const deletedInstructors = props.instructors.filter(i => !values.instructors.map(i => i.value).includes(i));
       const newInstructors = values.instructors.map(i => i.value).filter(i => !props.instructors.includes(i));
       const deletedStudents = props.students.filter(s => !values.students.map(s => s.value).includes(s));
       const newStudents = values.students.map(s => s.value).filter(s => !props.students.includes(s));
 
-      dispatch(updateSubject({
+      return dispatch(updateSubject({
         id: props.id,
         deletedInstructors,
         newInstructors,
@@ -83,13 +90,14 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
       }))
         .then(unwrapResult)
         .then(() => {
-          props.onHide();
+          handleHide();
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to update subject");
           console.error(e);
         });
     } else {
-      dispatch(addSubject({
+      return dispatch(addSubject({
         name: values.name,
         description: values.description,
         instructors: values.instructors.map(i => i.value),
@@ -97,24 +105,17 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
       }))
         .then(unwrapResult)
         .then(() => {
-          props.onHide();
+          handleHide();
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to create subject");
           console.error(e);
         });
     }
   };
 
-  if (usersStatus === "loading") {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
-  }
-
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal show={props.show} onHide={handleHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           {
@@ -124,6 +125,12 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           }
         </Modal.Title>
       </Modal.Header>
+      {
+        errorMessage !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Formik
         initialValues={{
           name: (props as UpdateSubjectModalProps).name ?? "",
@@ -144,7 +151,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           }) ?? [],
         }}
         validationSchema={FormSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {
           ({

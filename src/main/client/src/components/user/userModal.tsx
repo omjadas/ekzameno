@@ -1,8 +1,8 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import React, { useState } from "react";
+import { Alert, Button, Form, Modal } from "react-bootstrap";
 import Select from "react-select";
 import * as yup from "yup";
 import { addUser, UserType } from "../../redux/slices/usersSlice";
@@ -49,9 +49,15 @@ const FormSchema = yup.object().shape({
 
 export const UserModal = (props: UserModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const onSubmit = (values: FormValues): void => {
-    dispatch(addUser({
+  const handleHide = (): void => {
+    setErrorMessage(null);
+    props.onHide();
+  };
+
+  const handleSubmit = (values: FormValues): Promise<void> => {
+    return dispatch(addUser({
       name: values.name,
       email: values.email,
       password: values.password,
@@ -59,15 +65,27 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
     }))
       .then(unwrapResult)
       .then(() => {
-        props.onHide();
+        handleHide();
       })
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "409") {
+          setErrorMessage("User already exists");
+        } else {
+          setErrorMessage("Failed to create user");
+        }
+
         console.error(e);
       });
   };
 
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal show={props.show} onHide={handleHide} centered>
+      {
+        errorMessage !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Modal.Header closeButton>
         <Modal.Title>
           Create User
@@ -82,7 +100,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
           type: { label: "Student", value: "STUDENT" },
         }}
         validationSchema={FormSchema}
-        onSubmit={onSubmit}>
+        onSubmit={handleSubmit}>
         {
           ({
             handleSubmit,
