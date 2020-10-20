@@ -10,7 +10,6 @@ import * as yup from "yup";
 import { addSubject, updateSubject } from "../../redux/slices/subjectsSlice";
 import { fetchUsers, selectInstructors, selectMe, selectStudents, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
-import { Loader } from "../loader/loader";
 
 export interface SubjectModalProps {
   show: boolean,
