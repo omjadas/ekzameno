@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
-import { Button, Container, Jumbotron } from "react-bootstrap";
+import { Alert, Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { deleteExam, fetchExam, selectExamBySlug, updateExam } from "../../redux/slices/examsSlice";
@@ -19,29 +19,47 @@ export const Exam = (): JSX.Element => {
   const [examModalShow, setExamModalShow] = useState(false);
   const [questionModalShow, setQuestionModalShow] = useState(false);
   const history = useHistory();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const me = useSelector(selectMe);
 
   useEffect(() => {
     dispatch(fetchExam(slug))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        if (e.message === "404") {
+          setErrorMessage("Exam does not exist");
+        } else {
+          setErrorMessage("Unable to retrieve exam");
+        }
+
         console.error(e);
       });
   }, [dispatch, slug]);
 
-  if (exam === undefined) {
+  if (errorMessage !== null) {
     return (
-      <div>Unable to find exam</div>
+      <Container className={styles.margin}>
+        <Alert variant="danger">
+          {errorMessage}
+        </Alert>
+      </Container>
     );
   }
 
-  const onClick = (): void => {
-    dispatch(deleteExam(exam.id))
+  if (exam === undefined) {
+    return (
+      <div>Unable to retrieve exam</div>
+    );
+  }
+
+  const handleDelete = (): Promise<void> => {
+    return dispatch(deleteExam(exam.id))
       .then(unwrapResult)
       .then(() => {
         history.goBack();
       })
-      .catch(e => {
+      .catch((e: Error) => {
+        setErrorMessage("Failed to delete exam");
         console.error(e);
       });
   };
@@ -60,8 +78,8 @@ export const Exam = (): JSX.Element => {
     state = "published";
   }
 
-  const publishNow = (): void => {
-    dispatch(updateExam({
+  const handlePublish = (): Promise<unknown> => {
+    return dispatch(updateExam({
       id: exam.id,
       exam: {
         name: exam.name,
@@ -72,13 +90,14 @@ export const Exam = (): JSX.Element => {
       eTag: exam.meta.eTag,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        setErrorMessage("Failed to publish exam");
         console.error(e);
       });
   };
 
-  const closeNow = (): void => {
-    dispatch(updateExam({
+  const handleClose = (): Promise<unknown> => {
+    return dispatch(updateExam({
       id: exam.id,
       exam: {
         name: exam.name,
@@ -89,7 +108,8 @@ export const Exam = (): JSX.Element => {
       eTag: exam.meta.eTag,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        setErrorMessage("Failed to close exam");
         console.error(e);
       });
   };
@@ -105,7 +125,7 @@ export const Exam = (): JSX.Element => {
               <Button className="mr-2" onClick={() => setExamModalShow(true)}>
                 Edit Exam
               </Button>
-              <Button className="mr-2" onClick={onClick}>
+              <Button className="mr-2" onClick={handleDelete}>
                 Delete Exam
               </Button>
               {
@@ -114,14 +134,14 @@ export const Exam = (): JSX.Element => {
                     <Button className="mr-2" onClick={() => setQuestionModalShow(true)}>
                       Add Question
                     </Button>
-                    <Button className="mr-2" onClick={publishNow}>
+                    <Button className="mr-2" onClick={handlePublish}>
                       Publish Exam
                     </Button>
                   </>
               }
               {
                 state === "published" &&
-                  <Button onClick={closeNow}>
+                  <Button onClick={handleClose}>
                     Close Exam
                   </Button>
               }

@@ -1,8 +1,8 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import React, { useState } from "react";
+import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
 import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
@@ -27,6 +27,12 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     state => selectUserById(state, props.studentId)
   );
   const me = useSelector(selectMe);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleHide = (): void => {
+    setErrorMessage(null);
+    props.onHide();
+  };
 
   const questionSubmissions: Record<string, QuestionSubmission | undefined> = {};
 
@@ -48,38 +54,40 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
       questionMap[question.id] = question;
     });
 
-  const handleSubmit = (values: FormValues): void => {
+  const handleSubmit = (values: FormValues): Promise<void> => {
     const newMarks = values.marks.reduce((a, b) => a + b, 0);
 
     if (props.eTag === undefined) {
-      dispatch(submitExam({
+      return dispatch(submitExam({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
         answers: [],
       }))
         .then(unwrapResult)
-        .then(props.onHide)
-        .catch(e => {
+        .then(handleHide)
+        .catch((e: Error) => {
+          setErrorMessage("Failed to mark submission");
           console.error(e);
         });
     } else {
-      dispatch(updateExamSubmission({
+      return dispatch(updateExamSubmission({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
         eTag: props.eTag,
       }))
         .then(unwrapResult)
-        .then(props.onHide)
-        .catch(e => {
+        .then(handleHide)
+        .catch((e: Error) => {
+          setErrorMessage("Failed to mark submission");
           console.error(e);
         });
     }
   };
 
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal show={props.show} onHide={handleHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           {
@@ -88,6 +96,12 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
           }&apos;s Exam
         </Modal.Title>
       </Modal.Header>
+      {
+        errorMessage !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Formik
         initialValues={{ marks: [] }}
         onSubmit={handleSubmit}>

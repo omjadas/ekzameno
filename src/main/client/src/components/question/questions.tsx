@@ -2,7 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
+import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
@@ -36,6 +36,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     .map(q => q.id);
 
   const joinedMultipleChoiceQuestionIds = multipleChoiceQuestionIds.join("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchQuestions(props.examId))
@@ -80,27 +81,37 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     });
   }
 
-  const onClick = (id: string): void => {
-    dispatch(deleteQuestion({
+  const handleDelete = (id: string): Promise<unknown> => {
+    return dispatch(deleteQuestion({
       questionId: id,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        setErrorMessage("Failed to delete question");
         console.error(e);
       });
   };
 
-  const onSubmit = (values: FormValues): void => {
-    dispatch(submitExam({
+  const handleSubmit = (values: FormValues): Promise<unknown> => {
+    return dispatch(submitExam({
       examId: props.examId,
       studentId: me.id,
       answers: values.answers,
     }))
       .then(unwrapResult)
-      .catch(e => {
+      .catch((e: Error) => {
+        setErrorMessage("Failed to submit exam");
         console.error(e);
       });
   };
+
+  if (errorMessage !== null) {
+    return (
+      <Alert variant="danger">
+        {errorMessage}
+      </Alert>
+    );
+  }
 
   if (me?.type === "INSTRUCTOR" && exam !== undefined) {
     return (
@@ -122,7 +133,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                         <Button className="mr-2" onClick={() => setQuestionModalShow(question.id)}>
                           Edit
                         </Button>
-                        <Button className="mr-2" onClick={() => onClick(question.id)}>
+                        <Button className="mr-2" onClick={() => handleDelete(question.id)}>
                           Delete
                         </Button>
                       </>
@@ -153,7 +164,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
             answer: answers[question.id] ?? "",
           })),
         }}
-        onSubmit={onSubmit}>
+        onSubmit={handleSubmit}>
         {
           ({
             handleSubmit,

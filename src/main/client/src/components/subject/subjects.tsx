@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
-import React, { useEffect } from "react";
-import { Card, Container } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Alert, Card, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchSubjects, selectAllSubjects, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
@@ -12,12 +12,14 @@ export const Subjects = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const subjectsStatus = useSelector(selectSubjectsStatus);
   const subjects = useSelector(selectAllSubjects);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (subjectsStatus === "idle") {
       dispatch(fetchSubjects())
         .then(unwrapResult)
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to retrieve subjects");
           console.error(e);
         });
     }
@@ -25,6 +27,16 @@ export const Subjects = (): JSX.Element => {
 
   if (subjectsStatus !== "finished") {
     return <Loader />;
+  }
+
+  if (errorMessage !== null) {
+    return (
+      <Container className={styles.wrapper}>
+        <Alert variant="danger">
+          {errorMessage}
+        </Alert>
+      </Container>
+    );
   }
 
   return (

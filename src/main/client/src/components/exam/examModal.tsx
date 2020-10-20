@@ -1,8 +1,8 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
-import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import React, { useState } from "react";
+import { Alert, Button, Form, Modal } from "react-bootstrap";
 import * as yup from "yup";
 import { updateExam, addExam } from "../../redux/slices/examsSlice";
 import { useAppDispatch } from "../../redux/store";
@@ -41,10 +41,16 @@ const FormSchema = yup.object().shape({
 
 export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const onSubmit = (values: FormValues): void => {
+  const handleHide = (): void => {
+    setErrorMessage(null);
+    props.onHide();
+  };
+
+  const handleSubmit = (values: FormValues): Promise<void> => {
     if ("id" in props) {
-      dispatch(updateExam({
+      return dispatch(updateExam({
         id: props.id,
         exam: {
           ...values,
@@ -55,13 +61,14 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
       }))
         .then(unwrapResult)
         .then(() => {
-          props.onHide();
+          handleHide();
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to update exam");
           console.error(e);
         });
     } else {
-      dispatch(addExam({
+      return dispatch(addExam({
         subjectId: props.subjectId,
         exam: {
           ...values,
@@ -71,16 +78,17 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
       }))
         .then(unwrapResult)
         .then(() => {
-          props.onHide();
+          handleHide();
         })
-        .catch(e => {
+        .catch((e: Error) => {
+          setErrorMessage("Failed to create exam");
           console.error(e);
         });
     }
   };
 
   return (
-    <Modal show={props.show} onHide={props.onHide} centered>
+    <Modal show={props.show} onHide={handleHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           {
@@ -90,6 +98,12 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
           }
         </Modal.Title>
       </Modal.Header>
+      {
+        errorMessage !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Formik
         initialValues={{
           name: (props as any).name ?? "",
@@ -98,7 +112,7 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
           finishTime: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
         }}
         validationSchema={FormSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {
           ({
