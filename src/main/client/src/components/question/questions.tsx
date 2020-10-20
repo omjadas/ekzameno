@@ -5,9 +5,11 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import { Answer, ExamState, fetchSubmissions, selectExamById, submitExam } from "../../redux/slices/examsSlice";
+import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
+import { createExamSubmission, fetchExamSubmissions, selectExamSubmissionsForExam } from "../../redux/slices/examSubmissionsSlice";
 import { fetchOptions, selectAllOptions } from "../../redux/slices/optionsSlice";
 import { deleteQuestion, fetchQuestions, questionLabels, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
+import { selectQuestionSubmissionsForExamSubmission } from "../../redux/slices/questionSubmissionsSlice";
 import { selectMe } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { Loader } from "../loader/loader";
@@ -18,6 +20,12 @@ interface QuestionProps {
   examId: string,
 }
 
+interface Answer {
+  answer: string,
+  questionId: string,
+  marks?: number,
+}
+
 interface FormValues {
   answers: Answer[],
 }
@@ -26,6 +34,10 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const exam = useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
+  );
+  const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
+  const questionSubmissions = useSelector(
+    selectQuestionSubmissionsForExamSubmission(examSubmissions[0]?.id)
   );
   const questions = useSelector(selectQuestionsForExam(props.examId));
   const [questionModalShow, setQuestionModalShow] = useState<string | null>(null);
@@ -57,7 +69,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   }, [dispatch, joinedMultipleChoiceQuestionIds]);
 
   useEffect(() => {
-    dispatch(fetchSubmissions(props.examId))
+    dispatch(fetchExamSubmissions(props.examId))
       .then(unwrapResult)
       .catch(e => {
         console.error(e);
@@ -71,12 +83,10 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   const answers: Record<string, string> = {};
 
   if (
-    me?.type === "STUDENT" &&
-    exam?.submissions !== undefined &&
-    exam.submissions.length > 0
+    me?.type === "STUDENT"
   ) {
-    exam.submissions[0].questionSubmissions.forEach(q => {
-      answers[q.questionId] = q.answer;
+    questionSubmissions.forEach(q => {
+      answers[q.questionId] = q.answer ?? "";
     });
   }
 
@@ -91,7 +101,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   };
 
   const onSubmit = (values: FormValues): void => {
-    dispatch(submitExam({
+    dispatch(createExamSubmission({
       examId: props.examId,
       studentId: me.id,
       answers: values.answers,
@@ -143,8 +153,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
         }
       </div>
     );
-  } else if (me?.type === "STUDENT" && exam?.submissions !== undefined) {
-    const disabled = exam.submissions.length > 0 || new Date(exam.finishTime) < new Date();
+  } else if (me?.type === "STUDENT" && exam !== undefined) {
+    const disabled = examSubmissions.length > 0 || new Date(exam.finishTime) < new Date();
     return (
       <Formik
         initialValues={{

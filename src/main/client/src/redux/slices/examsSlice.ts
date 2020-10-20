@@ -20,12 +20,6 @@ export interface ExamState extends Exam {
   },
 }
 
-export interface Answer {
-  questionId: string,
-  answer?: string,
-  marks?: number,
-}
-
 interface ExamsState extends State {
   slugs: Record<string, string>,
 }

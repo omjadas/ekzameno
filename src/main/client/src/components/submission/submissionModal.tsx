@@ -4,8 +4,10 @@ import { FormikControl } from "formik-react-bootstrap";
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Answer, ExamState, QuestionSubmission, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
+import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
+import { createExamSubmission, selectExamSubmissionsForExam, updateExamSubmission } from "../../redux/slices/examSubmissionsSlice";
 import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
+import { QuestionSubmission, QuestionSubmissionState, selectQuestionSubmissionsForExamSubmission } from "../../redux/slices/questionSubmissionsSlice";
 import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 
@@ -18,7 +20,7 @@ interface SubmissionModalProps {
 }
 
 interface FormValues {
-  answers: Answer[],
+  answers: Omit<QuestionSubmission, "examSubmissionId">[],
 }
 
 export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
@@ -27,18 +29,19 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     state => selectUserById(state, props.studentId)
   );
   const me = useSelector(selectMe);
-
-  const questionSubmissions: Record<string, QuestionSubmission | undefined> = {};
-
-  useSelector<RootState, ExamState | undefined>(
+  const exam = useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
-  )
-    ?.submissions
-    ?.find(submission => submission.studentId === props.studentId)
-    ?.questionSubmissions
-    .forEach(questionSubmission => {
-      questionSubmissions[questionSubmission.questionId] = questionSubmission;
-    });
+  );
+  const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
+  const questionSubmissions = useSelector(
+    selectQuestionSubmissionsForExamSubmission(examSubmissions[0]?.id)
+  );
+
+  const qSubmissions: Record<string, QuestionSubmissionState | undefined> = {};
+
+  questionSubmissions.forEach(q => {
+    qSubmissions[q.questionId] = q;
+  });
 
   const questionMap: Record<string, QuestionState> = {};
   const questions = useSelector(selectQuestionsForExam(props.examId));
@@ -52,7 +55,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     const newMarks = values.answers.reduce((a, b) => a + (b.marks ?? 0), 0);
 
     if (props.eTag === undefined) {
-      dispatch(submitExam({
+      dispatch(createExamSubmission({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
@@ -101,7 +104,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
           answers: questions.map(question => ({
             questionId: question.id,
             answer: "",
-            marks: questionSubmissions[question.id]?.marks === undefined ? 0 : questionSubmissions[question.id]?.marks,
+            marks: qSubmissions[question.id]?.marks === undefined ? 0 : qSubmissions[question.id]?.marks,
           })),
         }}
         onSubmit={handleSubmit}>
@@ -120,7 +123,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                           <Form.Label>{question.question}</Form.Label>
                           <Form.Control
                             type="text"
-                            placeholder={questionSubmissions[question.id]?.answer ?? ""}
+                            placeholder={qSubmissions[question.id]?.answer ?? ""}
                             readOnly />
                         </Form.Group>
                         <FormikControl

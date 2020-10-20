@@ -3,8 +3,8 @@ import { State } from "../state";
 import { RootState } from "../store";
 
 export interface QuestionSubmission {
-  answer: string,
-  marks: number,
+  answer?: string,
+  marks?: number,
   examSubmissionId: string,
   questionId: string,
 }

@@ -40,7 +40,7 @@ export const createExamSubmission = createAsyncThunk(
   }: {
     examId: string,
     studentId: string,
-    answers: QuestionSubmission[],
+    answers: Omit<QuestionSubmission, "examSubmissionId">[],
     marks?: number,
   }) => {
     const res = await fetch(`/api/exams/${examId}/submissions/${studentId}`, {
@@ -107,7 +107,7 @@ export const {
   selectIds: selectExamSubmissionIds,
 } = examSubmissionsAdapter.getSelectors<RootState>(state => state.examSubmissions);
 
-export const selectExamSubmissionsForExam = (examId: string) => {
+export const selectExamSubmissionsForExam = (examId?: string) => {
   return (state: RootState): ExamSubmissionState[] => {
     return selectAllExamSubmissions(state)
       .filter(examSubmission => examSubmission.examId === examId);
