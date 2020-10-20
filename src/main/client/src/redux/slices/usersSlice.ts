@@ -120,9 +120,13 @@ export const signIn = createAsyncThunk(
 export const signOut = createAsyncThunk(
   "users/signOut",
   async () => {
-    await fetch("/api/auth/signout", {
+    const res = await fetch("/api/auth/signout", {
       method: "post",
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
   }
 );
 

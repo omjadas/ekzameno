@@ -108,11 +108,11 @@ export const QuestionModal = (
     props.onHide();
   };
 
-  const onSubmit = (values: FormValues): void => {
+  const handleSubmit = (values: FormValues): Promise<void> => {
     if ("id" in props) {
       const deletedOptions = options.filter(o => !values.options.map((o: any) => o.id).includes(o.id));
 
-      dispatch(updateQuestion({
+      return dispatch(updateQuestion({
         id: props.id,
         question: {
           question: values.question,
@@ -162,21 +162,11 @@ export const QuestionModal = (
           handleHide();
         })
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("The question not found");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to update question");
           console.error(e);
         });
     } else {
-      dispatch(addQuestion({
+      return dispatch(addQuestion({
         examId: props.examId,
         question: {
           question: values.question,
@@ -191,17 +181,7 @@ export const QuestionModal = (
         .then(unwrapResult)
         .then(handleHide)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("The exam not found");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to create question");
           console.error(e);
         });
     }
@@ -219,7 +199,7 @@ export const QuestionModal = (
         </Modal.Title>
       </Modal.Header>
       {
-        errorMessage  !== null &&
+        errorMessage !== null &&
           <Alert variant="danger">
             {errorMessage}
           </Alert>
@@ -239,7 +219,7 @@ export const QuestionModal = (
             : 1,
         }}
         validationSchema={FormSchema}
-        onSubmit={onSubmit}>
+        onSubmit={handleSubmit}>
         {
           ({
             handleSubmit,

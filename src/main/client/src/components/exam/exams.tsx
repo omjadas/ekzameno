@@ -20,22 +20,12 @@ export const Exams = (props: ExamsProps): JSX.Element => {
     dispatch(fetchExams(props.subjectId))
       .then(unwrapResult)
       .catch(e => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
-        } else if (e.message === "404") {
-          setErrorMessage("Failed to fetch Exams");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        }
+        setErrorMessage("Failed to retrieve exams");
         console.error(e);
       });
   }, [props.subjectId, dispatch]);
 
-  if (errorMessage  !== null) {
+  if (errorMessage !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}

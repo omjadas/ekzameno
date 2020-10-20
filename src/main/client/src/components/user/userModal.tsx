@@ -56,8 +56,8 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
     props.onHide();
   };
 
-  const onSubmit = (values: FormValues): void => {
-    dispatch(addUser({
+  const handleSubmit = (values: FormValues): Promise<void> => {
+    return dispatch(addUser({
       name: values.name,
       email: values.email,
       password: values.password,
@@ -68,21 +68,12 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
         handleHide();
       })
       .catch((e: Error) => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
-        } else if (e.message === "404") {
-          setErrorMessage("User not found");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        } else if (e.message === "408") {
-          setErrorMessage("Couldn't find the user in time");
-        } else if (e.message === "409") {
-          setErrorMessage("User already registered");
+        if (e.message === "409") {
+          setErrorMessage("User already exists");
+        } else {
+          setErrorMessage("Failed to create user");
         }
+
         console.error(e);
       });
   };
@@ -90,7 +81,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
   return (
     <Modal show={props.show} onHide={handleHide} centered>
       {
-        errorMessage  !== null &&
+        errorMessage !== null &&
           <Alert variant="danger">
             {errorMessage}
           </Alert>
@@ -109,7 +100,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
           type: { label: "Student", value: "STUDENT" },
         }}
         validationSchema={FormSchema}
-        onSubmit={onSubmit}>
+        onSubmit={handleSubmit}>
         {
           ({
             handleSubmit,

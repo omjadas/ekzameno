@@ -3,13 +3,14 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Formik } from "formik";
 import { FormikControl } from "formik-react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
+import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
 import { addSubject, updateSubject } from "../../redux/slices/subjectsSlice";
 import { fetchUsers, selectInstructors, selectMe, selectStudents, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
+import { Loader } from "../loader/loader";
 
 export interface SubjectModalProps {
   show: boolean,
@@ -58,17 +59,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
       dispatch(fetchUsers())
         .then(unwrapResult)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("Failed to fetch Users");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to retrieve users");
           console.error(e);
         });
     }
@@ -79,14 +70,14 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
     props.onHide();
   };
 
-  const onSubmit = (values: FormValues): void => {
+  const handleSubmit = (values: FormValues): Promise<void> => {
     if ("id" in props) {
       const deletedInstructors = props.instructors.filter(i => !values.instructors.map(i => i.value).includes(i));
       const newInstructors = values.instructors.map(i => i.value).filter(i => !props.instructors.includes(i));
       const deletedStudents = props.students.filter(s => !values.students.map(s => s.value).includes(s));
       const newStudents = values.students.map(s => s.value).filter(s => !props.students.includes(s));
 
-      dispatch(updateSubject({
+      return dispatch(updateSubject({
         id: props.id,
         deletedInstructors,
         newInstructors,
@@ -103,21 +94,11 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           handleHide();
         })
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("The subject not found");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to update subject");
           console.error(e);
         });
     } else {
-      dispatch(addSubject({
+      return dispatch(addSubject({
         name: values.name,
         description: values.description,
         instructors: values.instructors.map(i => i.value),
@@ -128,29 +109,11 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           handleHide();
         })
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("The subject not found");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to create subject");
           console.error(e);
         });
     }
   };
-
-  if (usersStatus === "loading") {
-    return (
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    );
-  }
 
   return (
     <Modal show={props.show} onHide={handleHide} centered>
@@ -164,7 +127,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
         </Modal.Title>
       </Modal.Header>
       {
-        errorMessage  !== null &&
+        errorMessage !== null &&
           <Alert variant="danger">
             {errorMessage}
           </Alert>
@@ -189,7 +152,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           }) ?? [],
         }}
         validationSchema={FormSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {
           ({

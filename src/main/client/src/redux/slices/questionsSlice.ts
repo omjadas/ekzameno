@@ -46,9 +46,11 @@ export const fetchQuestions = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
     if (!res.ok) {
       throw new Error(res.status.toString());
     }
+
     return res.json() as Promise<QuestionState[]>;
   }
 );
@@ -63,9 +65,11 @@ export const addQuestion = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
     if (!res.ok) {
       throw new Error(res.status.toString());
     }
+
     return res.json() as Promise<QuestionState>;
   }
 );
@@ -89,9 +93,11 @@ export const updateQuestion = createAsyncThunk(
         "if-match": eTag,
       },
     });
+
     if (!res.ok) {
       throw new Error(res.status.toString());
     }
+
     return res.json() as Promise<QuestionState>;
   }
 );
@@ -99,12 +105,17 @@ export const updateQuestion = createAsyncThunk(
 export const deleteQuestion = createAsyncThunk(
   "questions/deleteQuestion",
   async ({ questionId }: { questionId: string }) => {
-    await fetch(`/api/questions/${questionId}`, {
+    const res = await fetch(`/api/questions/${questionId}`, {
       method: "delete",
       headers: {
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return questionId;
   }
 );

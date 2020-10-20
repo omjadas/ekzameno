@@ -29,9 +29,11 @@ export const fetchOptions = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
     if (!res.ok) {
       throw new Error(res.status.toString());
     }
+
     return res.json() as Promise<OptionState[]>;
   }
 );
@@ -46,9 +48,11 @@ export const addOption = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
     if (!res.ok) {
       throw new Error(res.status.toString());
     }
+
     return res.json() as Promise<OptionState>;
   }
 );
@@ -72,9 +76,11 @@ export const updateOption = createAsyncThunk(
         "if-match": eTag,
       },
     });
+
     if (!res.ok) {
       throw new Error(res.status.toString());
     }
+
     return res.json() as Promise<OptionState>;
   }
 );
@@ -82,12 +88,17 @@ export const updateOption = createAsyncThunk(
 export const deleteOption = createAsyncThunk(
   "options/deleteOption",
   async (optionId: string) => {
-    await fetch(`/api/options/${optionId}`, {
+    const res = await fetch(`/api/options/${optionId}`, {
       method: "delete",
       headers: {
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return optionId;
   }
 );

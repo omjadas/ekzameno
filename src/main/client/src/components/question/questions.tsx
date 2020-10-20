@@ -81,51 +81,31 @@ export const Questions = (props: QuestionProps): JSX.Element => {
     });
   }
 
-  const onClick = (id: string): void => {
-    dispatch(deleteQuestion({
+  const handleDelete = (id: string): Promise<unknown> => {
+    return dispatch(deleteQuestion({
       questionId: id,
     }))
       .then(unwrapResult)
       .catch((e: Error) => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
-        } else if (e.message === "404") {
-          setErrorMessage("The question not found");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        }
+        setErrorMessage("Failed to delete question");
         console.error(e);
       });
   };
 
-  const onSubmit = (values: FormValues): void => {
-    dispatch(submitExam({
+  const handleSubmit = (values: FormValues): Promise<unknown> => {
+    return dispatch(submitExam({
       examId: props.examId,
       studentId: me.id,
       answers: values.answers,
     }))
       .then(unwrapResult)
       .catch((e: Error) => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
-        } else if (e.message === "404") {
-          setErrorMessage("The exam not found");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        }
+        setErrorMessage("Failed to submit exam");
         console.error(e);
       });
   };
 
-  if (errorMessage  !== null) {
+  if (errorMessage !== null) {
     return (
       <Alert variant="danger">
         {errorMessage}
@@ -153,7 +133,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                         <Button className="mr-2" onClick={() => setQuestionModalShow(question.id)}>
                           Edit
                         </Button>
-                        <Button className="mr-2" onClick={() => onClick(question.id)}>
+                        <Button className="mr-2" onClick={() => handleDelete(question.id)}>
                           Delete
                         </Button>
                       </>
@@ -184,7 +164,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
             answer: answers[question.id] ?? "",
           })),
         }}
-        onSubmit={onSubmit}>
+        onSubmit={handleSubmit}>
         {
           ({
             handleSubmit,

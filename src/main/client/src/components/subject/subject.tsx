@@ -27,17 +27,7 @@ export const Subject = (): JSX.Element => {
     dispatch(fetchSubject(slug))
       .then(unwrapResult)
       .catch((e: Error) => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
-        } else if (e.message === "404") {
-          setErrorMessage("Failed to fetch Subject");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        }
+        setErrorMessage("Failed to retrieve exam");
         console.error(e);
       });
   }, [dispatch, slug]);
@@ -47,48 +37,30 @@ export const Subject = (): JSX.Element => {
       dispatch(fetchInstructorsForSubject(subjectId))
         .then(unwrapResult)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("Failed to fetch Instructors");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to retrieve instructors");
           console.error(e);
         });
       dispatch(fetchStudentsForSubject(subjectId))
         .then(unwrapResult)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("Failed to fetch Students");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to retrieve students");
           console.error(e);
         });
     }
   }, [dispatch, subjectId, subjectsStatus]);
 
-  if (subject === undefined) {
-    return <Loader />;
+  if (errorMessage !== null) {
+    return (
+      <Container className={styles.margin}>
+        <Alert variant="danger">
+          {errorMessage}
+        </Alert>
+      </Container>
+    );
   }
 
-  if (errorMessage  !== null) {
-    return (
-      <Alert variant="danger">
-        {errorMessage}
-      </Alert>
-    );
+  if (subject === undefined) {
+    return <Loader />;
   }
 
   return (

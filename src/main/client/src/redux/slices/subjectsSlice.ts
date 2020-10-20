@@ -39,9 +39,11 @@ export const fetchSubjects = createAsyncThunk("subjects/fetchSubjects", async ()
       "content-type": "application/json",
     },
   });
+
   if (!res.ok) {
     throw new Error(res.status.toString());
   }
+
   return res.json() as Promise<SubjectState[]>;
 });
 
@@ -51,9 +53,11 @@ export const fetchSubject = createAsyncThunk("subjects/fetchSubject", async (slu
       "content-type": "application/json",
     },
   });
+
   if (!res.ok) {
     throw new Error(res.status.toString());
   }
+
   return res.json() as Promise<SubjectState>;
 });
 
@@ -65,9 +69,11 @@ export const addSubject = createAsyncThunk("subjects/addSubject", async (subject
       "content-type": "application/json",
     },
   });
+
   if (!res.ok) {
     throw new Error(res.status.toString());
   }
+
   return res.json() as Promise<SubjectState>;
 });
 
@@ -99,7 +105,7 @@ export const updateSubject = createAsyncThunk(
 
     await Promise.all(promises);
 
-    const subjectUpdate = await fetch(`/api/subjects/${id}`, {
+    const res = await fetch(`/api/subjects/${id}`, {
       method: "put",
       body: JSON.stringify(subject),
       headers: {
@@ -108,8 +114,12 @@ export const updateSubject = createAsyncThunk(
       },
     });
 
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return {
-      subject: await subjectUpdate.json() as SubjectState,
+      subject: await res.json() as SubjectState,
       deletedInstructors,
       newInstructors,
       deletedStudents,

@@ -27,40 +27,33 @@ export const SignIn = (props: Props): JSX.Element => {
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const onSubmit = (values: FormValues): void => {
-    dispatch(signIn(values))
+  const onSubmit = (values: FormValues): Promise<void> => {
+    return dispatch(signIn(values))
       .then(unwrapResult)
       .then(() => {
         props.onHide();
       })
       .catch((e: Error) => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Username and Password doesnt not match");
+        if (e.message === "401") {
+          setErrorMessage("Email and Password don't not match");
         } else if (e.message === "404") {
-          setErrorMessage("User not found");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        } else if (e.message === "408") {
-          setErrorMessage("Couldn't find the user in time");
+          setErrorMessage("User does not exist");
+        } else {
+          setErrorMessage("Unable to sign in");
         }
+
         console.error(e);
       });
   };
 
-  if (errorMessage  !== null) {
-    return (
-      <Alert variant="danger">
-        {errorMessage}
-      </Alert>
-    );
-  }
-
   return (
     <Tab.Pane eventKey="signIn">
+      {
+        errorMessage !== null &&
+          <Alert variant="danger">
+            {errorMessage}
+          </Alert>
+      }
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={onSubmit}

@@ -54,11 +54,11 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
       questionMap[question.id] = question;
     });
 
-  const handleSubmit = (values: FormValues): void => {
+  const handleSubmit = (values: FormValues): Promise<void> => {
     const newMarks = values.marks.reduce((a, b) => a + b, 0);
 
     if (props.eTag === undefined) {
-      dispatch(submitExam({
+      return dispatch(submitExam({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
@@ -67,21 +67,11 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         .then(unwrapResult)
         .then(handleHide)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("The exam not found");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to mark submission");
           console.error(e);
         });
     } else {
-      dispatch(updateExamSubmission({
+      return dispatch(updateExamSubmission({
         examId: props.examId,
         studentId: props.studentId,
         marks: newMarks,
@@ -90,17 +80,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         .then(unwrapResult)
         .then(handleHide)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("The exam not found");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to mark submission");
           console.error(e);
         });
     }
@@ -117,7 +97,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         </Modal.Title>
       </Modal.Header>
       {
-        errorMessage  !== null &&
+        errorMessage !== null &&
           <Alert variant="danger">
             {errorMessage}
           </Alert>

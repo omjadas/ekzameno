@@ -48,9 +48,9 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
     props.onHide();
   };
 
-  const onSubmit = (values: FormValues): void => {
+  const handleSubmit = (values: FormValues): Promise<void> => {
     if ("id" in props) {
-      dispatch(updateExam({
+      return dispatch(updateExam({
         id: props.id,
         exam: {
           ...values,
@@ -64,21 +64,11 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
           handleHide();
         })
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("The exam not found");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to update exam");
           console.error(e);
         });
     } else {
-      dispatch(addExam({
+      return dispatch(addExam({
         subjectId: props.subjectId,
         exam: {
           ...values,
@@ -91,15 +81,7 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
           handleHide();
         })
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to create exam");
           console.error(e);
         });
     }
@@ -117,7 +99,7 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
         </Modal.Title>
       </Modal.Header>
       {
-        errorMessage  !== null &&
+        errorMessage !== null &&
           <Alert variant="danger">
             {errorMessage}
           </Alert>
@@ -130,7 +112,7 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
           finishTime: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
         }}
         validationSchema={FormSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {
           ({

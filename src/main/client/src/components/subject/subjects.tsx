@@ -19,17 +19,7 @@ export const Subjects = (): JSX.Element => {
       dispatch(fetchSubjects())
         .then(unwrapResult)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "404") {
-            setErrorMessage("Failed to fetch Subjects");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to retrieve subjects");
           console.error(e);
         });
     }
@@ -39,11 +29,13 @@ export const Subjects = (): JSX.Element => {
     return <Loader />;
   }
 
-  if (errorMessage  !== null) {
+  if (errorMessage !== null) {
     return (
-      <Alert variant="danger">
-        {errorMessage}
-      </Alert>
+      <Container className={styles.wrapper}>
+        <Alert variant="danger">
+          {errorMessage}
+        </Alert>
+      </Container>
     );
   }
 
