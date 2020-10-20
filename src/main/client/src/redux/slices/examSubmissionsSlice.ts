@@ -26,6 +26,11 @@ export const fetchExamSubmissions = createAsyncThunk(
   "exams/fetchSubmission",
   async (examId: string) => {
     const res = await fetch(`/api/exams/${examId}/submissions`);
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return res.json() as Promise<ExamSubmissionState[]>;
   }
 );
@@ -50,6 +55,10 @@ export const createExamSubmission = createAsyncThunk(
         "content-type": "application/json",
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return res.json() as Promise<ExamSubmissionState>;
   }
@@ -76,6 +85,10 @@ export const updateExamSubmission = createAsyncThunk(
         "if-match": eTag,
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return res.json() as Promise<ExamSubmissionState>;
   }

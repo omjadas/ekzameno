@@ -43,6 +43,10 @@ export const createQuestionSubmission = createAsyncThunk(
       },
     });
 
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
+
     return res.json() as Promise<QuestionSubmissionState>;
   }
 );
@@ -68,6 +72,10 @@ export const updateQuestionSubmission = createAsyncThunk(
         "if-match": eTag,
       },
     });
+
+    if (!res.ok) {
+      throw new Error(res.status.toString());
+    }
 
     return res.json() as Promise<QuestionSubmissionState>;
   }
