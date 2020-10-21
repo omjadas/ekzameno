@@ -183,6 +183,7 @@ public class QuestionSubmission extends Model {
         result = prime * result + ((examSubmissionId == null)
             ? 0
             : examSubmissionId.hashCode());
+        result = prime * result + ((marks == null) ? 0 : marks.hashCode());
         result = prime * result + ((questionId == null)
             ? 0
             : questionId.hashCode());
@@ -213,6 +214,13 @@ public class QuestionSubmission extends Model {
                 return false;
             }
         } else if (!examSubmissionId.equals(other.examSubmissionId)) {
+            return false;
+        }
+        if (marks == null) {
+            if (other.marks != null) {
+                return false;
+            }
+        } else if (!marks.equals(other.marks)) {
             return false;
         }
         if (questionId == null) {

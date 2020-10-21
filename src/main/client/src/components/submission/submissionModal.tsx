@@ -6,7 +6,7 @@ import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
 import { createExamSubmission, selectExamSubmissionsForExam, updateExamSubmission } from "../../redux/slices/examSubmissionsSlice";
-import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
+import { selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { createQuestionSubmission, QuestionSubmission, QuestionSubmissionState, selectQuestionSubmissionsForExamSubmission, updateQuestionSubmission } from "../../redux/slices/questionSubmissionsSlice";
 import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
@@ -33,33 +33,25 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
     state => selectExamById(state, props.examId)
   );
   const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
-  const questionSubmissions = useSelector(
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const questionSubmissions: Record<string, QuestionSubmissionState | undefined> = {};
+
+  useSelector(
     selectQuestionSubmissionsForExamSubmission(
       examSubmissions
         .find(submission => submission.studentId === props.studentId)
         ?.id
     )
-  );
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  ).forEach(q => {
+    questionSubmissions[q.questionId] = q;
+  });
+
+  const questions = useSelector(selectQuestionsForExam(props.examId));
 
   const handleHide = (): void => {
     setErrorMessage(null);
     props.onHide();
   };
-
-  const qSubmissions: Record<string, QuestionSubmissionState | undefined> = {};
-
-  questionSubmissions.forEach(q => {
-    qSubmissions[q.questionId] = q;
-  });
-
-  const questionMap: Record<string, QuestionState> = {};
-  const questions = useSelector(selectQuestionsForExam(props.examId));
-
-  questions
-    .forEach(question => {
-      questionMap[question.id] = question;
-    });
 
   const handleSubmit = (values: FormValues): Promise<void> => {
     const newMarks = values.answers.reduce((a, b) => a + (b.marks ?? 0), 0);
@@ -89,7 +81,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
           return Promise.all(values.answers
             .filter(answer => answer.marks !== undefined)
             .map(answer => {
-              if (qSubmissions[answer.questionId] === undefined) {
+              if (questionSubmissions[answer.questionId] === undefined) {
                 return dispatch(createQuestionSubmission({
                   questionId: answer.questionId,
                   marks: answer.marks,
@@ -103,7 +95,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                   marks: answer.marks!,
                   examSubmissionId: examSubmissions[0].id,
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  eTag: qSubmissions[answer.questionId]!.meta.eTag,
+                  eTag: questionSubmissions[answer.questionId]!.meta.eTag,
                 })).then(unwrapResult);
               }
             })
@@ -138,7 +130,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
           answers: questions.map(question => ({
             questionId: question.id,
             answer: "",
-            marks: qSubmissions[question.id]?.marks === null ? undefined : qSubmissions[question.id]?.marks,
+            marks: questionSubmissions[question.id]?.marks === null ? undefined : questionSubmissions[question.id]?.marks,
           })),
         }}
         onSubmit={handleSubmit}
@@ -158,7 +150,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                           <Form.Label>{question.question}</Form.Label>
                           <Form.Control
                             type="text"
-                            placeholder={qSubmissions[question.id]?.answer ?? ""}
+                            placeholder={questionSubmissions[question.id]?.answer ?? ""}
                             readOnly />
                         </Form.Group>
                         <FormikControl
