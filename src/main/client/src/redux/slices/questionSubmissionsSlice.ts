@@ -1,7 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State } from "../state";
 import { RootState } from "../store";
-import { fetchExamSubmissions } from "./examSubmissionsSlice";
+import { createExamSubmission, fetchExamSubmissions } from "./examSubmissionsSlice";
 
 export interface QuestionSubmission {
   answer?: string,
@@ -24,7 +24,7 @@ const initialState = questionSubmissionsAdapter.getInitialState({
 } as State);
 
 export const createQuestionSubmission = createAsyncThunk(
-  "exams/submitExam",
+  "questions/createSubmission",
   async ({
     questionId,
     examSubmissionId,
@@ -53,7 +53,7 @@ export const createQuestionSubmission = createAsyncThunk(
 );
 
 export const updateQuestionSubmission = createAsyncThunk(
-  "exams/updateSubmission",
+  "questions/updateSubmission",
   async ({
     questionId,
     examSubmissionId,
@@ -83,7 +83,7 @@ export const updateQuestionSubmission = createAsyncThunk(
 );
 
 export const questionSubmissionsSlice = createSlice({
-  name: "examSubmissions",
+  name: "questionSubmissions",
   initialState,
   reducers: {},
   extraReducers: builder => {
@@ -93,6 +93,11 @@ export const questionSubmissionsSlice = createSlice({
         // @ts-ignore
         questionSubmissionsAdapter.upsertMany(state, submission.questionSubmissions);
       });
+    });
+    builder.addCase(createExamSubmission.fulfilled, (state, action) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      questionSubmissionsAdapter.upsertMany(state, action.payload.questionSubmissions);
     });
     builder.addCase(createQuestionSubmission.fulfilled, (state, action) => {
       questionSubmissionsAdapter.addOne(state, action.payload);

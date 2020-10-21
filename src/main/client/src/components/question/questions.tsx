@@ -46,6 +46,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   const multipleChoiceQuestionIds = questions
     .filter(q => q.type === "MULTIPLE_CHOICE")
     .map(q => q.id);
+  const [loadingSubmissions, setLoadingSubmissions] = useState(true);
 
   const joinedMultipleChoiceQuestionIds = multipleChoiceQuestionIds.join("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -72,12 +73,15 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   useEffect(() => {
     dispatch(fetchExamSubmissions(props.examId))
       .then(unwrapResult)
+      .then(() => {
+        setLoadingSubmissions(false);
+      })
       .catch(e => {
         console.error(e);
       });
   }, [dispatch, props.examId]);
 
-  if (me === undefined || (exam?.questionIds !== undefined && exam.questionIds.length !== questions.length)) {
+  if (me === undefined || exam?.questionIds === undefined || loadingSubmissions) {
     return <Loader />;
   }
 
@@ -174,7 +178,8 @@ export const Questions = (props: QuestionProps): JSX.Element => {
             answer: answers[question.id] ?? "",
           })),
         }}
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+        enableReinitialize>
         {
           ({
             handleSubmit,

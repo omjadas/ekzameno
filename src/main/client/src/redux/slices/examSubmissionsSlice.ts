@@ -23,7 +23,7 @@ const initialState = examSubmissionsAdapter.getInitialState({
 } as State);
 
 export const fetchExamSubmissions = createAsyncThunk(
-  "exams/fetchSubmission",
+  "exams/fetchSubmissions",
   async (examId: string) => {
     const res = await fetch(`/api/exams/${examId}/submissions`);
 
@@ -36,7 +36,7 @@ export const fetchExamSubmissions = createAsyncThunk(
 );
 
 export const createExamSubmission = createAsyncThunk(
-  "exams/submitExam",
+  "exams/createSubmission",
   async ({
     examId,
     studentId,
