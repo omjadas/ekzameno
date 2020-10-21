@@ -134,10 +134,11 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
           answers: questions.map(question => ({
             questionId: question.id,
             answer: "",
-            marks: qSubmissions[question.id]?.marks === undefined ? 0 : qSubmissions[question.id]?.marks,
+            marks: qSubmissions[question.id]?.marks,
           })),
         }}
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+        enableReinitialize>
         {
           ({
             isSubmitting,
