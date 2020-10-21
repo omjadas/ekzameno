@@ -23,6 +23,7 @@ import javax.ws.rs.core.SecurityContext;
 import com.ekzameno.ekzameno.dtos.CreateExamDTO;
 import com.ekzameno.ekzameno.dtos.CreateExamSubmissionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
+import com.ekzameno.ekzameno.dtos.UpdateExamSubmissionDTO;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
@@ -186,7 +187,7 @@ public class ExamController {
         @PathParam("studentId") String studentId,
         @Context SecurityContext securityContext,
         @Context HttpHeaders headers,
-        CreateExamSubmissionDTO dto
+        UpdateExamSubmissionDTO dto
     ) {
         if (securityContext.isUserInRole("student")) {
             throw new ForbiddenException();

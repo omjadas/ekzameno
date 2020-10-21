@@ -195,7 +195,6 @@ public class QuestionService {
      * @param questionId       ID of the question the submission belongs to
      * @param examSubmissionId ID of the exam submission the submission belongs
      *                         to
-     * @param answer           answer for the submission
      * @param marks            number of marks for the submission
      * @param eTag             entity tag
      * @return the updated question submission
@@ -203,7 +202,6 @@ public class QuestionService {
     public QuestionSubmission updateSubmission(
         UUID questionId,
         UUID examSubmissionId,
-        String answer,
         Integer marks,
         String eTag
     ) {
@@ -215,7 +213,6 @@ public class QuestionService {
                 throw new PreconditionFailedException();
             }
 
-            questionSubmission.setAnswer(answer);
             questionSubmission.setMarks(marks);
 
             UnitOfWork.getCurrent().commit();

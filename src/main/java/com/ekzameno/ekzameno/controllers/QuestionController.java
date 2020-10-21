@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
+import com.ekzameno.ekzameno.dtos.UpdateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.Question;
@@ -158,12 +159,11 @@ public class QuestionController {
         @PathParam("questionId") String questionId,
         @PathParam("examSubmissionId") String examSubmissionId,
         @Context HttpHeaders headers,
-        CreateQuestionSubmissionDTO dto
+        UpdateQuestionSubmissionDTO dto
     ) {
         return questionService.updateSubmission(
             UUID.fromString(questionId),
             UUID.fromString(examSubmissionId),
-            dto.answer,
             dto.marks,
             headers.getHeaderString("if-match")
         );
