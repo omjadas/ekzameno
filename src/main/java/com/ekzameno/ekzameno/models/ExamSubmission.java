@@ -170,10 +170,12 @@ public class ExamSubmission extends Model {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((examId == null) ? 0 : examId.hashCode());
-        result = prime * result + marks;
-        result = prime * result + ((studentId == null)
-            ? 0
-            : studentId.hashCode());
+        result = prime * result + ((marks == null) ? 0 : marks.hashCode());
+        result = prime * result + (
+            (studentId == null)
+                ? 0
+                : studentId.hashCode()
+            );
         return result;
     }
 
@@ -196,7 +198,11 @@ public class ExamSubmission extends Model {
         } else if (!examId.equals(other.examId)) {
             return false;
         }
-        if (marks != other.marks) {
+        if (marks == null) {
+            if (other.marks != null) {
+                return false;
+            }
+        } else if (!marks.equals(other.marks)) {
             return false;
         }
         if (studentId == null) {
