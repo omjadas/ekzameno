@@ -183,7 +183,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
       initialValues={{ marks: students.map(s => ({
         studentId: s.id,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        marks: submissions[s.id]?.marks === undefined ? undefined : (submissions[s.id]!.marks! === null ? undefined : submissions[s.id]!.marks),
+        marks: submissions[s.id] === undefined ? undefined : (submissions[s.id]!.marks ?? undefined),
       })) }}
       onSubmit={handleSubmit}
       validationSchema={FormSchema}
