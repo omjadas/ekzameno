@@ -37,8 +37,6 @@ package "models" #DDDDDD {
     + void setEmail(String email)
     + void setName(String name)
     + void setPasswordHash(String passwordHash)
-    + int hashcode()
-    + boolean equals(Object obj)
   }
 
   class Administrator {
@@ -299,7 +297,7 @@ package "proxies" #DDDDDD {
     + int size()
     + remove(T obj)
     + List<T> getRawList()
-    # {abstarct} void init() 
+    # {abstract} void init() 
   }
 
   class ExamProxyList {
