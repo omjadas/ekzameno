@@ -32,19 +32,18 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
   const exam = useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
   );
-  const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
+  const examSubmission = useSelector(selectExamSubmissionsForExam(exam?.id))
+    .find(submission => submission.studentId === props.studentId);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const questionSubmissions: Record<string, QuestionSubmissionState | undefined> = {};
 
-  useSelector(
-    selectQuestionSubmissionsForExamSubmission(
-      examSubmissions
-        .find(submission => submission.studentId === props.studentId)
-        ?.id
-    )
-  ).forEach(q => {
-    questionSubmissions[q.questionId] = q;
-  });
+  useSelector(selectQuestionSubmissionsForExamSubmission(examSubmission?.id))
+    .forEach(q => {
+      questionSubmissions[q.questionId] = q;
+    });
+
+  console.log(props.studentId);
+  console.log(questionSubmissions);
 
   const questions = useSelector(selectQuestionsForExam(props.examId));
 
@@ -86,14 +85,16 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                   questionId: answer.questionId,
                   marks: answer.marks,
                   answer: "",
-                  examSubmissionId: examSubmissions[0].id,
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  examSubmissionId: examSubmission!.id,
                 })).then(unwrapResult);
               } else {
                 return dispatch(updateQuestionSubmission({
                   questionId: answer.questionId,
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   marks: answer.marks!,
-                  examSubmissionId: examSubmissions[0].id,
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  examSubmissionId: examSubmission!.id,
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   eTag: questionSubmissions[answer.questionId]!.meta.eTag,
                 })).then(unwrapResult);
