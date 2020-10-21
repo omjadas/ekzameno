@@ -197,8 +197,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             statement.setObject(1, questionSubmission.getId());
             statement.setString(2, questionSubmission.getAnswer());
             statement.setObject(3, questionSubmission.getExamSubmissionId());
-            statement.setObject(4, questionSubmission.getMarks());
-            statement.setObject(5, questionSubmission.getQuestionId());
+            statement.setObject(4, questionSubmission.getQuestionId());
+            statement.setObject(5, questionSubmission.getMarks());
             statement.executeUpdate();
         }
     }
