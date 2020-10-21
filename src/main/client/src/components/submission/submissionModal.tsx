@@ -34,7 +34,11 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
   );
   const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
   const questionSubmissions = useSelector(
-    selectQuestionSubmissionsForExamSubmission(examSubmissions[0]?.id)
+    selectQuestionSubmissionsForExamSubmission(
+      examSubmissions
+        .find(submission => submission.studentId === props.studentId)
+        ?.id
+    )
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 

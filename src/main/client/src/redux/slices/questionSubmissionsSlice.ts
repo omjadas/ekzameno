@@ -116,7 +116,7 @@ export const {
   state => state.questionSubmissions
 );
 
-export const selectQuestionSubmissionsForExamSubmission = (examSubmissionId: string) => {
+export const selectQuestionSubmissionsForExamSubmission = (examSubmissionId?: string) => {
   return (state: RootState): QuestionSubmissionState[] => {
     return selectAllQuestionSubmissions(state)
       .filter(QuestionSubmission => QuestionSubmission.examSubmissionId === examSubmissionId);
