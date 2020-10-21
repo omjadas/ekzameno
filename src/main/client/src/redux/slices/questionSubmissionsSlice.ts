@@ -27,17 +27,17 @@ export const createQuestionSubmission = createAsyncThunk(
   async ({
     questionId,
     examSubmissionId,
-    answers,
+    answer,
     marks,
   }: {
     questionId: string,
     examSubmissionId: string,
-    answers: QuestionSubmission[],
+    answer: string,
     marks?: number,
   }) => {
     const res = await fetch(`/api/questions/${questionId}/submissions/${examSubmissionId}`, {
       method: "post",
-      body: JSON.stringify({ marks, answers }),
+      body: JSON.stringify({ marks, answer }),
       headers: {
         "content-type": "application/json",
       },

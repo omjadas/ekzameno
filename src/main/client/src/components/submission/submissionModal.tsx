@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
 import { createExamSubmission, selectExamSubmissionsForExam, updateExamSubmission } from "../../redux/slices/examSubmissionsSlice";
 import { QuestionState, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
-import { QuestionSubmission, QuestionSubmissionState, selectQuestionSubmissionsForExamSubmission } from "../../redux/slices/questionSubmissionsSlice";
+import { createQuestionSubmission, QuestionSubmission, QuestionSubmissionState, selectQuestionSubmissionsForExamSubmission, updateQuestionSubmission } from "../../redux/slices/questionSubmissionsSlice";
 import { selectMe, selectUserById, UserState } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 
@@ -81,14 +81,30 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         eTag: props.eTag,
       }))
         .then(unwrapResult)
-        // .then(()=> {
-        //   return Promise.all(values.answers.map(answer => {
-        //     dispatch(updateQuestionSubmission(
-        //           questionId: answer.questionId,
-        //           marks: answer.marks,
-        //       ))
-        //   }));
-        // })
+        .then(() => {
+          return Promise.all(values.answers
+            .filter(answer => answer.marks !== undefined)
+            .map(answer => {
+              if (qSubmissions[answer.questionId] === undefined) {
+                return dispatch(createQuestionSubmission({
+                  questionId: answer.questionId,
+                  marks: answer.marks,
+                  answer: "",
+                  examSubmissionId: examSubmissions[0].id,
+                })).then(unwrapResult);
+              } else {
+                return dispatch(updateQuestionSubmission({
+                  questionId: answer.questionId,
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  marks: answer.marks!,
+                  examSubmissionId: examSubmissions[0].id,
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  eTag: qSubmissions[answer.questionId]!.meta.eTag,
+                })).then(unwrapResult);
+              }
+            })
+          );
+        })
         .then(handleHide)
         .catch((e: Error) => {
           setErrorMessage("Failed to mark submission");
