@@ -233,6 +233,7 @@ package "models" #DDDDDD {
     + String answer
     + UUID questionId
     + UUID examSubmissionId
+    - Integer marks
     + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId)
     + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId)
     + String getAnswer()
@@ -252,7 +253,7 @@ package "models" #DDDDDD {
   ExamSubmission o-- Exam : - exam
 
   class ExamSubmission {
-    - int marks
+    - Integer marks
     - UUID studentId
     - UUID examId
     + ExamSubmission(UUID id, int marks, UUID studentId, UUID examId)
@@ -379,7 +380,7 @@ package "controllers" #DDDDDD {
     + Subject createSubject(CreateSubjectDTO dto)
     + List<Exam> getExamsForSubject(SecurityContext securityContext)
     + Exam createExam(String subjectId, CreateExamDTO dto)
-    + Subject updateSubject(String subjectId, CreateSubjectDTO dto)
+    + Subject updateSubject(String subjectId, HttpHeaders headers, CreateSubjectDTO dto)
     + List<Instructor> getInstructors(String subjectId)
     + Response addInstructorToSubject(String subjectId, String instructorId)
     + Response addStudentToSubject(String subjectId, String studentId)
@@ -401,19 +402,19 @@ package "controllers" #DDDDDD {
 
   class ExamController {
     + Exam getExam(String slug)
-    + Exam updateExam(String examId, CreateExamDTO dto)
+    + Exam updateExam(String examId, HttpHeaders headers, CreateExamDTO dto)
     + Response deletExam(String examId)
     + Question createQuestion(String examId, CreateQuestionDTO dto)
     + List<Question> getQuestions(String examId)
     + ExamSubmission submitExam(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
-    + ExamSubmission updateExamSubmission(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
+    + ExamSubmission updateExamSubmission(String examId, String studentId, SecurityContext securityContext, HttpHeaders headers, CreateExamSubmissionDTO dto)
     + List<ExamSubmission> getSubmissions(String examId, SecurityContext securityContext)
   }
 
   OptionController o-- services.OptionService : - optionService
 
   class OptionController {
-    + Option updateOption(String optionId, CreateOptionDTO dto)
+    + Option updateOption(String optionId, HttpHeaders headers, CreateOptionDTO dto)
     + Response deleteOption(String optionId)
   }
 
@@ -421,10 +422,19 @@ package "controllers" #DDDDDD {
   QuestionController o-- services.OptionService : - optionService
 
   class QuestionController {
-    + Question updateQuestion(String questionId, CreateQuestionDTO dto)
+    + Question updateQuestion(String questionId, HttpHeaders headers, CreateQuestionDTO dto)
     + Response deleteExam(String questionId)
     + List<Option> getOptions(String questionId)
     + Option createOption(String questionId, CreateOptionDTO dto)
+    + QuestionSubmission createSubmission(
+        String questionId,
+        String examSubmissionId,
+        CreateQuestionSubmissionDTO dto)
+    + QuestionSubmission updateSubmission(
+        String questionId,
+        String examSubmissionId,
+        HttpHeaders headers,
+        UpdateQuestionSubmissionDTO dto)
   }
 }
 
@@ -458,6 +468,7 @@ package "dtos" #DDDDDD {
   class CreateQuestionSubmissionDTO {
     + String questionId
     + String answer
+    + Integer marks
   }
 
   class CreateSubjectDTO {
@@ -477,6 +488,15 @@ package "dtos" #DDDDDD {
   class SignInUserDTO {
     + String email
     + String password
+  }
+  
+  class UpdateExamSubmissionDTO {
+    + Integer marks
+  }
+
+  class UpdateQuestionSubmissionDTO {
+    + String questionId
+    + Integer marks
   }
 }
 
@@ -531,6 +551,7 @@ package "services" #DDDDDD {
     + void deleteExam(UUID examId)
     + ExamSubmission createSubmission(UUID examId,
         UUID studentId,
+        Integer marks,
         List<CreateQuestionSubmissionDTO> answers)
     + List<ExamSubmission> getSubmissions(UUID examId)
     + ExamSubmission getSubmissionForUser(UUID examId, UUID userId)
@@ -555,6 +576,16 @@ package "services" #DDDDDD {
         String eTag)
     + void deleteQuestion(UUID questionId)
     + List<Question> getQuestionsForExam(UUID examId)
+    + QuestionSubmission createSubmission(
+        UUID questionId,
+        UUID examSubmissionId,
+        String answer,
+        Integer marks)
+    + QuestionSubmission updateSubmission(
+        UUID questionId,
+        UUID examSubmissionId,
+        Integer marks,
+        String eTag)
   }
 
   SubjectService o-- mappers.SubjectMapper : - subjectMapper
@@ -748,10 +779,12 @@ package "shared" #DDDDDD {
     - {static} IdentityMap identityMap
     - Map<UUID, Model> map
     - IdentityMap()
+    + static void newCurrent()
     + {static} IdentityMap getCurrent()
     + Model get(UUID id)
     + void put(UUID id, Model obj)
     + void remove(UUID id)
+    + static void reset()
   }
 
   class Seeds {
@@ -765,8 +798,11 @@ package "shared" #DDDDDD {
 
   class UnitOfWork {
     - {static} ThreadLocal<UnitOfWork> current
+    - List<Model> newObjects
+    - List<Model> dirtyObjects
+    - List<Model> deletedObjects
     + {static} void newCurrent()
-    + {static} void setCurrent(UnitOfWork uow)
+    + {static} void getCurrent()
     + {static} UnitOfWork getCurrent()
     - boolean objectInAnyList(Model obj)
     + void registerNew(Model obj)
@@ -774,7 +810,33 @@ package "shared" #DDDDDD {
     + void registerDeleted(Model obj)
     + void rollback() 
     + void commit()
+    + {static} void reset()
   }
+}
+
+package "exceptions" #DDDDDD {
+  RuntimeException <|-- ConflictException
+  RuntimeException <|-- PreconditionFailedException
+
+  class ConflictException {
+    - {static} long serialVersionUID
+  }
+
+  class PreconditionFailedException {
+    - {static} long serialVersionUID
+  }
+  
+  ConflictExceptionMapper o-- exceptions.ConflictException
+  PreconditionFailedExceptionMapper o-- exceptions.PreconditionFailedException
+  
+  class ConflictExceptionMapper {
+
+  }
+  
+  class PreconditionFailedExceptionMapper {
+
+  }
+    
 }
 
 @enduml
