@@ -151,6 +151,16 @@ public class QuestionService {
         }
     }
 
+    /**
+     * Create a question submission.
+     *
+     * @param questionId       ID of the question the submission belongs to
+     * @param examSubmissionId ID of the exam submission the submission belongs
+     *                         to
+     * @param answer           answer for the submission
+     * @param marks            number of marks for the submission
+     * @return the created question submission
+     */
     public QuestionSubmission createSubmission(
         UUID questionId,
         UUID examSubmissionId,
@@ -179,6 +189,17 @@ public class QuestionService {
         }
     }
 
+    /**
+     * Update a question submission.
+     *
+     * @param questionId       ID of the question the submission belongs to
+     * @param examSubmissionId ID of the exam submission the submission belongs
+     *                         to
+     * @param answer           answer for the submission
+     * @param marks            number of marks for the submission
+     * @param eTag             entity tag
+     * @return the updated question submission
+     */
     public QuestionSubmission updateSubmission(
         UUID questionId,
         UUID examSubmissionId,

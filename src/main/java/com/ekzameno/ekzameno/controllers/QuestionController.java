@@ -114,6 +114,15 @@ public class QuestionController {
         );
     }
 
+    /**
+     * Create a question submission.
+     *
+     * @param questionId       ID of the question the submission belongs to
+     * @param examSubmissionId ID of the exam submission the submission belongs
+     *                         to
+     * @param dto              question submission DTO
+     * @return created question submission
+     */
     @Path("/{questionId}/submissions/{examSubmissionId}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -131,6 +140,16 @@ public class QuestionController {
         );
     }
 
+    /**
+     * Update a question submission.
+     *
+     * @param questionId       ID of the question the submission belongs to
+     * @param examSubmissionId ID of the exam submission the submission belongs
+     *                         to
+     * @param headers          headers for the request
+     * @param dto              question submission DTO
+     * @return updated question submission
+     */
     @Path("/{questionId}/submissions/{examSubmissionId}")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
