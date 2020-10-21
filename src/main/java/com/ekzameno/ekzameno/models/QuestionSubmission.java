@@ -28,7 +28,7 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
-     * @param marks             Mark for the question
+     * @param marks            mark for the question
      */
     public QuestionSubmission(
         UUID id,
@@ -50,7 +50,7 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
-     * @param marks             Mark for the question
+     * @param marks            mark for the question
      */
     public QuestionSubmission(
         String answer,

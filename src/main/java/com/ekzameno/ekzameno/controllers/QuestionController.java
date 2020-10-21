@@ -155,7 +155,7 @@ public class QuestionController {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public QuestionSubmission createSubmission(
+    public QuestionSubmission updateSubmission(
         @PathParam("questionId") String questionId,
         @PathParam("examSubmissionId") String examSubmissionId,
         @Context HttpHeaders headers,
