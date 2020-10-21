@@ -186,7 +186,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     public void insert(QuestionSubmission questionSubmission)
             throws SQLException {
         String query = "INSERT INTO " + tableName +
-            " (id, answer, exam_submission_id, question_id) VALUES (?,?,?,?)";
+            " (id, answer, exam_submission_id, question_id, marks) " +
+            "VALUES (?,?,?,?,?)";
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -197,6 +198,7 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             statement.setString(2, questionSubmission.getAnswer());
             statement.setObject(3, questionSubmission.getExamSubmissionId());
             statement.setObject(4, questionSubmission.getQuestionId());
+            statement.setObject(5, questionSubmission.getMarks());
             statement.executeUpdate();
         }
     }
@@ -205,8 +207,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
     public void update(QuestionSubmission questionSubmission)
             throws SQLException {
         String query = "UPDATE " + tableName +
-            " SET answer = ?, exam_submission_id = ?, question_id = ? " +
-            "WHERE id = ?";
+            " SET answer = ?, exam_submission_id = ?, question_id = ?, " +
+            "marks = ? WHERE id = ?";
 
         Connection connection = DBConnection.getCurrent().getConnection();
 
@@ -216,7 +218,8 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             statement.setString(1, questionSubmission.getAnswer());
             statement.setObject(2, questionSubmission.getExamSubmissionId());
             statement.setObject(3, questionSubmission.getQuestionId());
-            statement.setObject(4, questionSubmission.getId());
+            statement.setObject(4, questionSubmission.getMarks());
+            statement.setObject(5, questionSubmission.getId());
             statement.executeUpdate();
         }
     }
@@ -237,7 +240,10 @@ public class QuestionSubmissionMapper extends Mapper<QuestionSubmission> {
             "exam_submission_id",
             java.util.UUID.class
         );
-        return new QuestionSubmission(id, answer, questionId, examSubmissionId);
+        Integer marks = rs.getInt("marks");
+        marks = rs.wasNull() ? null : marks;
+        return new QuestionSubmission(id, answer, questionId,
+        examSubmissionId, marks);
     }
 
     @Override

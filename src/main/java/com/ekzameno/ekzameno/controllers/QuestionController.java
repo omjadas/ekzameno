@@ -18,9 +18,12 @@ import javax.ws.rs.core.Response;
 
 import com.ekzameno.ekzameno.dtos.CreateOptionDTO;
 import com.ekzameno.ekzameno.dtos.CreateQuestionDTO;
+import com.ekzameno.ekzameno.dtos.CreateQuestionSubmissionDTO;
+import com.ekzameno.ekzameno.dtos.UpdateQuestionSubmissionDTO;
 import com.ekzameno.ekzameno.filters.Protected;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.models.Question;
+import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.services.OptionService;
 import com.ekzameno.ekzameno.services.QuestionService;
 
@@ -54,7 +57,7 @@ public class QuestionController {
             dto.question,
             dto.marks,
             UUID.fromString(questionId),
-            headers.getRequestHeader("if-match").get(0)
+            headers.getHeaderString("if-match")
         );
     }
 
@@ -109,6 +112,60 @@ public class QuestionController {
             dto.answer,
             dto.correct,
             UUID.fromString(questionId)
+        );
+    }
+
+    /**
+     * Create a question submission.
+     *
+     * @param questionId       ID of the question the submission belongs to
+     * @param examSubmissionId ID of the exam submission the submission belongs
+     *                         to
+     * @param dto              question submission DTO
+     * @return created question submission
+     */
+    @Path("/{questionId}/submissions/{examSubmissionId}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public QuestionSubmission createSubmission(
+        @PathParam("questionId") String questionId,
+        @PathParam("examSubmissionId") String examSubmissionId,
+        CreateQuestionSubmissionDTO dto
+    ) {
+        return questionService.createSubmission(
+            UUID.fromString(questionId),
+            UUID.fromString(examSubmissionId),
+            dto.answer,
+            dto.marks
+        );
+    }
+
+    /**
+     * Update a question submission.
+     *
+     * @param questionId       ID of the question the submission belongs to
+     * @param examSubmissionId ID of the exam submission the submission belongs
+     *                         to
+     * @param headers          headers for the request
+     * @param dto              question submission DTO
+     * @return updated question submission
+     */
+    @Path("/{questionId}/submissions/{examSubmissionId}")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public QuestionSubmission updateSubmission(
+        @PathParam("questionId") String questionId,
+        @PathParam("examSubmissionId") String examSubmissionId,
+        @Context HttpHeaders headers,
+        UpdateQuestionSubmissionDTO dto
+    ) {
+        return questionService.updateSubmission(
+            UUID.fromString(questionId),
+            UUID.fromString(examSubmissionId),
+            dto.marks,
+            headers.getHeaderString("if-match")
         );
     }
 }

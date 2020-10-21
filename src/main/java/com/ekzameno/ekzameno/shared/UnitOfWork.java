@@ -20,11 +20,7 @@ public class UnitOfWork {
      * Create a new thread local UnitOfWork.
      */
     public static void newCurrent() {
-        setCurrent(new UnitOfWork());
-    }
-
-    private static void setCurrent(UnitOfWork uow) {
-        current.set(uow);
+        current.set(new UnitOfWork());
     }
 
     /**
@@ -33,12 +29,11 @@ public class UnitOfWork {
      * @return thread local UnitOfWork
      */
     public static UnitOfWork getCurrent() {
-        UnitOfWork uow = current.get();
-        if (uow == null) {
-            uow = new UnitOfWork();
-            setCurrent(uow);
+        if (current.get() == null) {
+            newCurrent();
         }
-        return uow;
+
+        return current.get();
     }
 
     private boolean objectInAnyList(Model obj) {
@@ -94,7 +89,13 @@ public class UnitOfWork {
      * @throws SQLException if unable to rollback the transaction
      */
     public void rollback() throws SQLException {
-        DBConnection.getCurrent().getConnection().rollback();
+        try {
+            DBConnection.getCurrent().getConnection().rollback();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            reset();
+        }
     }
 
     /**
@@ -103,19 +104,32 @@ public class UnitOfWork {
      * @throws SQLException if unable to commit changes
      */
     public void commit() throws SQLException {
-        for (Model obj : newObjects) {
-            Mapper.getMapper(obj.getClass()).insert(obj);
-        }
+        try {
+            for (Model obj : newObjects) {
+                Mapper.getMapper(obj.getClass()).insert(obj);
+            }
 
-        for (Model obj : dirtyObjects) {
-            Mapper.getMapper(obj.getClass()).update(obj);
-        }
+            for (Model obj : dirtyObjects) {
+                Mapper.getMapper(obj.getClass()).update(obj);
+            }
 
-        for (Model obj : deletedObjects) {
-            Mapper.getMapper(obj.getClass()).delete(obj);
-        }
+            for (Model obj : deletedObjects) {
+                Mapper.getMapper(obj.getClass()).delete(obj);
+            }
 
-        DBConnection.getCurrent().getConnection().commit();
+            DBConnection.getCurrent().getConnection().commit();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            reset();
+        }
+    }
+
+    /**
+     * Reset the unit of work.
+     */
+    public static void reset() {
         current.set(null);
+        IdentityMap.reset();
     }
 }

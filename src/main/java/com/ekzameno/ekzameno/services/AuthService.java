@@ -6,6 +6,8 @@ import javax.ws.rs.InternalServerErrorException;
 
 import com.ekzameno.ekzameno.mappers.UserMapper;
 import com.ekzameno.ekzameno.models.User;
+import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -23,7 +25,7 @@ public class AuthService {
      * @return whether the user is authenticated
      */
     public User authenticateUser(String email, String password) {
-        try {
+        try (DBConnection connection = DBConnection.getCurrent()) {
             User user = userMapper.findByEmail(email);
             boolean authenticated = BCrypt
                 .verifyer()
@@ -33,6 +35,8 @@ public class AuthService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 }

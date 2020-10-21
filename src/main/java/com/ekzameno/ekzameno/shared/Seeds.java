@@ -113,11 +113,10 @@ public class Seeds {
 
             final Exam sdaMidSemExam = examService.createExam(
                 "Mid-Sem (35 Marks)",
-                "This exam contains multiple choice and short answer" +
-                "questions. The exam is for 35 marks. The exam will " +
-                "count towards final marks for the subject (10%). " +
-                "There is a hurdle for the exam and student should " +
-                "score more than 50%.",
+                "This exam contains multiple choice and short answer " +
+                "questions. The exam is for 35 marks. The exam will count " +
+                "towards final marks for the subject (10%). There is a hurdle" +
+                "for the exam and student should score more than 50%",
                 new Date(),
                 new Date(new Date().getTime() + 604800000),
                 sda.getId()
@@ -146,7 +145,7 @@ public class Seeds {
             msQ2B.answer = "Unit of Work";
             msQ2B.correct = true;
             CreateOptionDTO msQ2C = new CreateOptionDTO();
-            msQ2C.answer = "Lazy Laod";
+            msQ2C.answer = "Lazy Load";
             msQ2C.correct = false;
             CreateOptionDTO msQ2D = new CreateOptionDTO();
             msQ2D.answer = "Data Mapper";
@@ -154,8 +153,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "The _____ pattern describes a way to keep track of " +
-                "which domain objects have changed (or new object created)",
+                "The _____ pattern describes a way to keep track of which " +
+                "domain objects have changed (or new object created)",
                 3,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(msQ2A, msQ2B, msQ2C, msQ2D)
@@ -170,8 +169,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "Transaction Script pattern follows a procedural" +
-                "style of development: True or False",
+                "Transaction Script pattern follows a procedural style of " +
+                "development: True or False",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(msQ3A, msQ3B)
@@ -189,8 +188,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "Layering is an important technique," +
-                " but there are downsides:",
+                "Layering is an important technique, but there are downsides:",
                 3,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(msQ4A, msQ4B, msq4C)
@@ -206,8 +204,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "In regards to symptoms of bad desgin, " +
-                "immobility means ? Explain ?",
+                "In regards to symptoms of bad design, immobility means? " +
+                "Explain?",
                 4,
                 "SHORT_ANSWER",
                 null
@@ -215,8 +213,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "Explain the main three types of design " +
-                "pattern with suitable example.",
+                "Explain the main three types of design pattern with " +
+                "suitable example.",
                 6,
                 "SHORT_ANSWER",
                 null
@@ -224,8 +222,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "What is the difference between " +
-                "identity map and identity field?",
+                "What is the difference between identity map and identity " +
+                "field?",
                 4,
                 "SHORT_ANSWER",
                 null
@@ -240,9 +238,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "The pattern aims to reduce the amount of" +
-                "data read from database by only reading " +
-                "what it needs",
+                "The pattern aims to reduce the amount of data read from " +
+                "database by only reading what it needs",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(msQ5A, msQ5B)
@@ -250,9 +247,9 @@ public class Seeds {
 
             Exam sdaFinalExam = examService.createExam(
                 "Final Exam (30 Marks)",
-                "The exam contains 4 questions with 3 short" +
-                "answers and 1 multiple choice question. This" +
-                " exam contributes 50% of the final marks.",
+                "The exam contains 4 questions with 3 short answers and 1 " +
+                "multiple choice question. This exam contributes 50% of the " +
+                "final marks.",
                 new Date(),
                 new Date(new Date().getTime() + 604800000),
                 sda.getId()
@@ -275,8 +272,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaFinalExam.getId(),
-                "Idenitty map and Identity field are" +
-                "almost similar ? True or False",
+                "Identity map and Identity field are almost similar? True or " +
+                "False",
                 3,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(fQ1A, fQ1B)
@@ -292,7 +289,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaFinalExam.getId(),
-                "Why do we use unit of work ?",
+                "Why do we use unit of work?",
                 10,
                 "SHORT_ANSWER",
                 null
@@ -335,21 +332,21 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsQuiz.getId(),
-                "What do you mean by one to many relationship" +
-                "between Teacher and Class table?",
+                "What do you mean by one to many relationship between " +
+                "Teacher and Class table?",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(qQ1A, qQ1B, qQ1C, qQ1D)
             );
 
             CreateOptionDTO qQ2A = new CreateOptionDTO();
-            qQ2A.answer = "Datasheet View ";
+            qQ2A.answer = "Data View ";
             qQ2A.correct = false;
             CreateOptionDTO qQ2B = new CreateOptionDTO();
             qQ2B.answer = "Design View";
             qQ2B.correct = false;
             CreateOptionDTO qQ2C = new CreateOptionDTO();
-            qQ2C.answer = "Pivote TableView";
+            qQ2C.answer = "Pivot TableView";
             qQ2C.correct = false;
             CreateOptionDTO qQ2D = new CreateOptionDTO();
             qQ2D.answer = "All Of Above";
@@ -357,7 +354,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsQuiz.getId(),
-                "What are the different view to present a Table ?",
+                "What are the different view to present a Table?",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(qQ2A, qQ2B, qQ2C, qQ2D)
@@ -378,8 +375,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsQuiz.getId(),
-                "In one-to-many relationship the table on 'many'" +
-                " side is called _______",
+                "In one-to-many relationship the table on 'many' side is " +
+                "called _______",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(qQ3A, qQ3B, qQ3C, qQ3D)
@@ -400,8 +397,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsQuiz.getId(),
-                "In which state one gathers and list all the" +
-                " necessary fields for the database design project",
+                "In which state one gathers and list all the necessary " +
+                "fields for the database design project",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(qQ4A, qQ4B, qQ4C, qQ4D)
@@ -422,8 +419,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsQuiz.getId(),
-                "Which of the following enables us to view " +
-                "data from a table based on a specific criterion",
+                "Which of the following enables us to view data from a table " +
+                "based on a specific criterion",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(qQ5A, qQ5B, qQ5C, qQ5D)
@@ -431,8 +428,7 @@ public class Seeds {
 
             final Exam dbmsFinalExam = examService.createExam(
                 "Final Exam (50 Marks)",
-                "Final Exam:\n" +
-                "Hurdle requirement: 50%",
+                "Final Exam:\nHurdle requirement: 50%",
                 new Date(),
                 new Date(new Date().getTime() + 604800000),
                 dbms.getId()
@@ -453,8 +449,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsFinalExam.getId(),
-                "Which data type allows alphanumeric characters " +
-                "and special symbols to be entered?",
+                "Which data type allows alphanumeric characters and special " +
+                "symbols to be entered?",
                 3,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(fsQ1A, fsQ1B, fsQ1C, fsQ1D)
@@ -470,7 +466,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsFinalExam.getId(),
-                "What is Data Redundancy ?",
+                "What is Data Redundancy?",
                 10,
                 "SHORT_ANSWER",
                 null
@@ -491,8 +487,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsFinalExam.getId(),
-                "It is used to establish an association" +
-                "between related tables.",
+                "It is used to establish an association between related " +
+                "tables.",
                 3,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(fsQ2A, fsQ2B, fsQ2C, fsQ2D)
@@ -500,7 +496,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsFinalExam.getId(),
-                "What is DBMS (Database Management System) ?",
+                "What is DBMS (Database Management System)?",
                 6,
                 "SHORT_ANSWER",
                 null
@@ -529,8 +525,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsFinalExam.getId(),
-                "This key that uniquely identifies each" +
-                "record is called : ",
+                "This key that uniquely identifies each record is called : ",
                 3,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(fsQ3A, fsQ3B, fsQ3C, fsQ3D)
@@ -538,7 +533,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsFinalExam.getId(),
-                "What is the need of DBMS ?",
+                "What is the need of DBMS?",
                 10,
                 "SHORT_ANSWER",
                 null

@@ -17,6 +17,7 @@ import com.ekzameno.ekzameno.models.Exam;
 import com.ekzameno.ekzameno.models.ExamSubmission;
 import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -33,13 +34,14 @@ public class ExamService {
      * @param slug exam's slug
      * @return exam
      */
-    public Exam getExam(String slug)
-        throws NotFoundException, InternalServerErrorException {
+    public Exam getExam(String slug) {
         try (DBConnection connection = DBConnection.getCurrent()) {
             return examMapper.findBySlug(slug);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -55,6 +57,8 @@ public class ExamService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -70,6 +74,8 @@ public class ExamService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -191,7 +197,7 @@ public class ExamService {
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
             ExamSubmission examSubmission = new ExamSubmission(
-                marks == null ? -1 : marks,
+                marks,
                 studentId,
                 examId
             );
@@ -200,7 +206,8 @@ public class ExamService {
                 new QuestionSubmission(
                     answer.answer,
                     UUID.fromString(answer.questionId),
-                    examSubmission.getId()
+                    examSubmission.getId(),
+                    answer.marks
                 );
             }
 
@@ -230,6 +237,8 @@ public class ExamService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -248,6 +257,8 @@ public class ExamService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
