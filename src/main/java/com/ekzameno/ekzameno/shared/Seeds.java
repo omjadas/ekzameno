@@ -204,8 +204,8 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaMidSemExam.getId(),
-                "In regards to symptoms of bad design, immobility means ? " +
-                "Explain ?",
+                "In regards to symptoms of bad design, immobility means? " +
+                "Explain?",
                 4,
                 "SHORT_ANSWER",
                 null
@@ -289,7 +289,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 sdaFinalExam.getId(),
-                "Why do we use unit of work ?",
+                "Why do we use unit of work?",
                 10,
                 "SHORT_ANSWER",
                 null
@@ -354,7 +354,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsQuiz.getId(),
-                "What are the different view to present a Table ?",
+                "What are the different view to present a Table?",
                 2,
                 "MULTIPLE_CHOICE",
                 Arrays.asList(qQ2A, qQ2B, qQ2C, qQ2D)
@@ -466,7 +466,7 @@ public class Seeds {
 
             questionService.createQuestion(
                 dbmsFinalExam.getId(),
-                "What is Data Redundancy ?",
+                "What is Data Redundancy?",
                 10,
                 "SHORT_ANSWER",
                 null
