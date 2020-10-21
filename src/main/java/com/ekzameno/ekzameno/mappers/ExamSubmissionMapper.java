@@ -222,7 +222,8 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         if (examSubmission != null) {
             return examSubmission;
         }
-        int marks = rs.getInt("marks");
+        Integer marks = rs.getInt("marks");
+        marks = rs.wasNull() ? null : marks;
         UUID studentId = rs.getObject("user_id", java.util.UUID.class);
         UUID examId = rs.getObject("exam_id", java.util.UUID.class);
         return new ExamSubmission(id, marks, studentId, examId);
