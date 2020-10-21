@@ -188,7 +188,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, examSubmission.getId());
-            statement.setInt(2, examSubmission.getMarks());
+            statement.setObject(2, examSubmission.getMarks());
             statement.setObject(3, examSubmission.getStudentId());
             statement.setObject(4, examSubmission.getExamId());
             statement.executeUpdate();
@@ -205,7 +205,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setInt(1, examSubmission.getMarks());
+            statement.setObject(1, examSubmission.getMarks());
             statement.setObject(2, examSubmission.getStudentId());
             statement.setObject(3, examSubmission.getExamId());
             statement.setObject(4, examSubmission.getId());
@@ -222,7 +222,8 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         if (examSubmission != null) {
             return examSubmission;
         }
-        int marks = rs.getInt("marks");
+        Integer marks = rs.getInt("marks");
+        marks = rs.wasNull() ? null : marks;
         UUID studentId = rs.getObject("user_id", java.util.UUID.class);
         UUID examId = rs.getObject("exam_id", java.util.UUID.class);
         return new ExamSubmission(id, marks, studentId, examId);

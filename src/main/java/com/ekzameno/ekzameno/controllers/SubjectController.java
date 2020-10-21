@@ -167,7 +167,7 @@ public class SubjectController {
             dto.name,
             dto.description,
             UUID.fromString(subjectId),
-            headers.getRequestHeader("if-match").get(0)
+            headers.getHeaderString("if-match")
         );
     }
 

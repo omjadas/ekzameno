@@ -19,6 +19,7 @@ public class QuestionSubmission extends Model {
     private Question question = null;
     @JsonIgnore
     private ExamSubmission examSubmission = null;
+    private Integer marks;
 
     /**
      * Create a QuestionSubmission with an ID.
@@ -27,17 +28,20 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
+     * @param marks            mark for the question
      */
     public QuestionSubmission(
         UUID id,
         String answer,
         UUID questionId,
-        UUID examSubmissionId
+        UUID examSubmissionId,
+        Integer marks
     ) {
         super(id);
         this.answer = answer;
         this.questionId = questionId;
         this.examSubmissionId = examSubmissionId;
+        this.marks = marks;
     }
 
     /**
@@ -46,19 +50,36 @@ public class QuestionSubmission extends Model {
      * @param answer           answer for the QuestionSubmission
      * @param questionId       ID of the related question
      * @param examSubmissionId ID of the related examSubmission
+     * @param marks            mark for the question
      */
     public QuestionSubmission(
         String answer,
         UUID questionId,
-        UUID examSubmissionId
+        UUID examSubmissionId,
+        Integer marks
     ) {
         this.answer = answer;
         this.questionId = questionId;
         this.examSubmissionId = examSubmissionId;
+        this.marks = marks;
     }
 
     public String getAnswer() {
         return answer;
+    }
+
+    public Integer getMarks() {
+        return marks;
+    }
+
+    /**
+     * Set the mark for the question.
+     *
+     * @param marks Mark for the question
+     */
+    public void setMarks(Integer marks) {
+        this.marks = marks;
+        UnitOfWork.getCurrent().registerDirty(this);
     }
 
     /**
@@ -162,6 +183,7 @@ public class QuestionSubmission extends Model {
         result = prime * result + ((examSubmissionId == null)
             ? 0
             : examSubmissionId.hashCode());
+        result = prime * result + ((marks == null) ? 0 : marks.hashCode());
         result = prime * result + ((questionId == null)
             ? 0
             : questionId.hashCode());
@@ -192,6 +214,13 @@ public class QuestionSubmission extends Model {
                 return false;
             }
         } else if (!examSubmissionId.equals(other.examSubmissionId)) {
+            return false;
+        }
+        if (marks == null) {
+            if (other.marks != null) {
+                return false;
+            }
+        } else if (!marks.equals(other.marks)) {
             return false;
         }
         if (questionId == null) {

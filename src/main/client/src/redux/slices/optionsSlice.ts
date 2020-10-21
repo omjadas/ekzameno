@@ -131,7 +131,7 @@ export const optionsSlice = createSlice({
   },
 });
 
-export const selectQuestionsStatus = (state: RootState): Status => state.options.status;
+export const selectOptionsStatus = (state: RootState): Status => state.options.status;
 
 export const {
   selectAll: selectAllOptions,

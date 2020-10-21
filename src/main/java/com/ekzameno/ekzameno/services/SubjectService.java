@@ -16,6 +16,7 @@ import com.ekzameno.ekzameno.models.Enrolment;
 import com.ekzameno.ekzameno.models.InstructorSubject;
 import com.ekzameno.ekzameno.models.Subject;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -38,6 +39,8 @@ public class SubjectService {
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -53,6 +56,8 @@ public class SubjectService {
             return subjectMapper.findBySlug(slug);
         } catch (SQLException e) {
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -68,6 +73,8 @@ public class SubjectService {
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -83,6 +90,8 @@ public class SubjectService {
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        } finally {
+            IdentityMap.reset();
         }
     }
 

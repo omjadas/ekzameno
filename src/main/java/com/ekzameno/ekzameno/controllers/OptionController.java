@@ -47,7 +47,7 @@ public class OptionController {
             UUID.fromString(optionId),
             dto.answer,
             dto.correct,
-            headers.getRequestHeader("if-match").get(0)
+            headers.getHeaderString("if-match")
         );
     }
 

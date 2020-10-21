@@ -10,11 +10,17 @@ import com.ekzameno.ekzameno.models.Model;
  * IdentityMap used to cache models in memory.
  */
 public class IdentityMap {
-    private static final ThreadLocal<IdentityMap> identityMap =
-        new ThreadLocal<>();
+    private static final ThreadLocal<IdentityMap> current = new ThreadLocal<>();
     private final Map<UUID, Model> map = new HashMap<>();
 
     private IdentityMap() { }
+
+    /**
+     * Create a new thread local UnitOfWork.
+     */
+    public static void newCurrent() {
+        current.set(new IdentityMap());
+    }
 
     /**
      * Retrieve thread local IdentityMap.
@@ -22,14 +28,11 @@ public class IdentityMap {
      * @return thread local IdentityMap
      */
     public static IdentityMap getCurrent() {
-        IdentityMap im = identityMap.get();
-
-        if (im == null) {
-            im = new IdentityMap();
-            identityMap.set(im);
+        if (current.get() == null) {
+            newCurrent();
         }
 
-        return im;
+        return current.get();
     }
 
     /**
@@ -59,5 +62,12 @@ public class IdentityMap {
      */
     public void remove(UUID id) {
         map.remove(id);
+    }
+
+    /**
+     * Reset the identity map.
+     */
+    public static void reset() {
+        current.set(null);
     }
 }

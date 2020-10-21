@@ -3,10 +3,12 @@ import { useDispatch } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import examsReducer from "./slices/examsSlice";
+import examSubmissionsReducer from "./slices/examSubmissionsSlice";
 import optionsReducer from "./slices/optionsSlice";
 import questionsReducer from "./slices/questionsSlice";
 import subjectsReducer from "./slices/subjectsSlice";
 import usersReducer from "./slices/usersSlice";
+import questionSubmissionsReducer from "./slices/questionSubmissionsSlice";
 
 const reducers = combineReducers({
   users: usersReducer,
@@ -14,6 +16,8 @@ const reducers = combineReducers({
   subjects: subjectsReducer,
   questions: questionsReducer,
   options: optionsReducer,
+  examSubmissions: examSubmissionsReducer,
+  questionSubmissions: questionSubmissionsReducer,
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

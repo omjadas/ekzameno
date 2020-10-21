@@ -4,7 +4,8 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Alert, Button, Form, Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
-import { ExamState, ExamSubmission, fetchSubmissions, selectExamById, submitExam, updateExamSubmission } from "../../redux/slices/examsSlice";
+import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
+import { createExamSubmission, ExamSubmissionState, fetchExamSubmissions, selectExamSubmissionsForExam, updateExamSubmission } from "../../redux/slices/examSubmissionsSlice";
 import { fetchQuestions, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectSubjectById, SubjectState } from "../../redux/slices/subjectsSlice";
 import { fetchUsers, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
@@ -37,12 +38,14 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   const exam = useSelector<RootState, ExamState | undefined>(
     state => selectExamById(state, props.examId)
   );
+  const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const questions = useSelector(selectQuestionsForExam(props.examId));
-
   const subject = useSelector<RootState, SubjectState | undefined>(
     state => selectSubjectById(state, exam?.subjectId ?? "")
   );
+  const [examSubmissionsLoading, setExamSubmissionsLoading] = useState(true);
+  const [questionsLoading, setQuestionsLoading] = useState(true);
 
   let students = useSelector(selectUsersByIds(subject?.students ?? []));
 
@@ -55,17 +58,20 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     students = students.filter(s => s.id === me.id);
   }
 
-  const submissions: Record<string, ExamSubmission | undefined> = {};
+  const submissions: Record<string, ExamSubmissionState | undefined> = {};
 
-  exam?.submissions?.forEach(submission => {
+  examSubmissions.forEach(submission => {
     if (submission.marks !== undefined) {
       submissions[submission.studentId] = submission;
     }
   });
 
   useEffect(() => {
-    dispatch(fetchSubmissions(props.examId))
+    dispatch(fetchExamSubmissions(props.examId))
       .then(unwrapResult)
+      .then(() => {
+        setExamSubmissionsLoading(false);
+      })
       .catch((e: Error) => {
         if (e.message === "400") {
           setErrorMessage("Bad Request");
@@ -104,6 +110,9 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   useEffect(() => {
     dispatch(fetchQuestions(props.examId))
       .then(unwrapResult)
+      .then(() => {
+        setQuestionsLoading(false);
+      })
       .catch((e: Error) => {
         if (e.message === "400") {
           setErrorMessage("Bad Request");
@@ -127,7 +136,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
       }
 
       if (submissions[mark.studentId] === undefined) {
-        return dispatch(submitExam({
+        return dispatch(createExamSubmission({
           examId: props.examId,
           studentId: mark.studentId,
           marks: mark.marks,
@@ -157,7 +166,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
     return Promise.all(promises);
   };
 
-  if (exam?.submissions === undefined || usersStatus !== "finished") {
+  if (usersStatus !== "finished" || examSubmissionsLoading || questionsLoading) {
     return <Loader />;
   }
 
@@ -174,7 +183,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
       initialValues={{ marks: students.map(s => ({
         studentId: s.id,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        marks: submissions[s.id]?.marks === undefined ? undefined : (submissions[s.id]!.marks! < 0 ? undefined : submissions[s.id]!.marks),
+        marks: submissions[s.id] === undefined ? undefined : (submissions[s.id]!.marks ?? undefined),
       })) }}
       onSubmit={handleSubmit}
       validationSchema={FormSchema}

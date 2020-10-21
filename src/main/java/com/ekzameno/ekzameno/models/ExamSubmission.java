@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * Submission for an Exam.
  */
 public class ExamSubmission extends Model {
-    private int marks;
+    private Integer marks;
     private ProxyList<QuestionSubmission> questionSubmissions;
     private UUID studentId;
     private UUID examId;
@@ -33,7 +33,7 @@ public class ExamSubmission extends Model {
      * @param studentId ID of the related student
      * @param examId    ID of the related exam
      */
-    public ExamSubmission(UUID id, int marks, UUID studentId, UUID examId) {
+    public ExamSubmission(UUID id, Integer marks, UUID studentId, UUID examId) {
         super(id);
         this.marks = marks;
         this.studentId = studentId;
@@ -49,7 +49,7 @@ public class ExamSubmission extends Model {
      * @param studentId ID of the related student
      * @param examId    ID of the related exam
      */
-    public ExamSubmission(int marks, UUID studentId, UUID examId) {
+    public ExamSubmission(Integer marks, UUID studentId, UUID examId) {
         this.marks = marks;
         this.studentId = studentId;
         this.examId = examId;
@@ -57,7 +57,7 @@ public class ExamSubmission extends Model {
             new QuestionSubmissionExamSubmissionProxyList(getId());
     }
 
-    public int getMarks() {
+    public Integer getMarks() {
         return marks;
     }
 
@@ -82,7 +82,7 @@ public class ExamSubmission extends Model {
      *
      * @param marks number of marks earned
      */
-    public void setMarks(int marks) {
+    public void setMarks(Integer marks) {
         this.marks = marks;
         UnitOfWork.getCurrent().registerDirty(this);
     }
@@ -170,7 +170,7 @@ public class ExamSubmission extends Model {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((examId == null) ? 0 : examId.hashCode());
-        result = prime * result + marks;
+        result = prime * result + ((marks == null) ? 0 : marks.hashCode());
         result = prime * result + ((studentId == null)
             ? 0
             : studentId.hashCode());
@@ -196,7 +196,11 @@ public class ExamSubmission extends Model {
         } else if (!examId.equals(other.examId)) {
             return false;
         }
-        if (marks != other.marks) {
+        if (marks == null) {
+            if (other.marks != null) {
+                return false;
+            }
+        } else if (!marks.equals(other.marks)) {
             return false;
         }
         if (studentId == null) {
