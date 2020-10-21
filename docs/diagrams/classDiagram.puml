@@ -824,19 +824,13 @@ package "exceptions" #DDDDDD {
 
   class PreconditionFailedException {
     - {static} long serialVersionUID
+  }    
+  
+  class ConflictExceptionMapper implements ExceptionMapper<ConflictException> {
   }
   
-  ConflictExceptionMapper o-- exceptions.ConflictException
-  PreconditionFailedExceptionMapper o-- exceptions.PreconditionFailedException
-  
-  class ConflictExceptionMapper {
-
+  class PreconditionFailedExceptionMapper implements ExceptionMapper<PreconditionFailedException> {
   }
-  
-  class PreconditionFailedExceptionMapper {
-
-  }
-    
 }
 
 @enduml
