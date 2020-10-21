@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Image } from "react-bootstrap";
-import ekzamenoLogo from "/app/src/assets/ekzamenoLogo.jpg";
+import ekzamenoLogo from "../../assets/ekzamenoLogo.jpg";
 import styles from "./home.module.scss";
 import { useSelector } from "react-redux";
 import { selectMe } from "../../redux/slices/usersSlice";
