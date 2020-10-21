@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -189,7 +188,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
             statement.setObject(1, examSubmission.getId());
-            statement.setObject(2, examSubmission.getMarks(), Types.INTEGER);
+            statement.setObject(2, examSubmission.getMarks());
             statement.setObject(3, examSubmission.getStudentId());
             statement.setObject(4, examSubmission.getExamId());
             statement.executeUpdate();
@@ -206,7 +205,7 @@ public class ExamSubmissionMapper extends Mapper<ExamSubmission> {
         try (
             PreparedStatement statement = connection.prepareStatement(query);
         ) {
-            statement.setObject(1, examSubmission.getMarks(), Types.INTEGER);
+            statement.setObject(1, examSubmission.getMarks());
             statement.setObject(2, examSubmission.getStudentId());
             statement.setObject(3, examSubmission.getExamId());
             statement.setObject(4, examSubmission.getId());
