@@ -10,6 +10,7 @@ import com.ekzameno.ekzameno.exceptions.PreconditionFailedException;
 import com.ekzameno.ekzameno.mappers.OptionMapper;
 import com.ekzameno.ekzameno.models.Option;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -118,6 +119,8 @@ public class OptionService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 }

@@ -17,6 +17,7 @@ import com.ekzameno.ekzameno.models.Instructor;
 import com.ekzameno.ekzameno.models.Student;
 import com.ekzameno.ekzameno.models.User;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -40,6 +41,8 @@ public class UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -106,6 +109,8 @@ public class UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
@@ -121,6 +126,8 @@ public class UserService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 }

@@ -17,6 +17,7 @@ import com.ekzameno.ekzameno.models.Question;
 import com.ekzameno.ekzameno.models.QuestionSubmission;
 import com.ekzameno.ekzameno.models.ShortAnswerQuestion;
 import com.ekzameno.ekzameno.shared.DBConnection;
+import com.ekzameno.ekzameno.shared.IdentityMap;
 import com.ekzameno.ekzameno.shared.UnitOfWork;
 
 /**
@@ -148,6 +149,8 @@ public class QuestionService {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new InternalServerErrorException();
+        } finally {
+            IdentityMap.reset();
         }
     }
 
