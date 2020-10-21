@@ -191,7 +191,7 @@ public class ExamService {
     ) {
         try (DBConnection connection = DBConnection.getCurrent()) {
             ExamSubmission examSubmission = new ExamSubmission(
-                marks == null ? -1 : marks,
+                marks,
                 studentId,
                 examId
             );

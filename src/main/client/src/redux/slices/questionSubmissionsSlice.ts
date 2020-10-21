@@ -1,6 +1,7 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { State } from "../state";
 import { RootState } from "../store";
+import { fetchExamSubmissions } from "./examSubmissionsSlice";
 
 export interface QuestionSubmission {
   answer?: string,
@@ -86,6 +87,13 @@ export const questionSubmissionsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: builder => {
+    builder.addCase(fetchExamSubmissions.fulfilled, (state, action) => {
+      action.payload.forEach(submission => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        questionSubmissionsAdapter.upsertMany(state, submission.questionSubmissions);
+      });
+    });
     builder.addCase(createQuestionSubmission.fulfilled, (state, action) => {
       questionSubmissionsAdapter.addOne(state, action.payload);
     });
