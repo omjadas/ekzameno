@@ -29,11 +29,11 @@ public class UnitOfWork {
      * @return thread local UnitOfWork
      */
     public static UnitOfWork getCurrent() {
-        UnitOfWork uow = current.get();
-        if (uow == null) {
+        if (current.get() == null) {
             newCurrent();
         }
-        return uow;
+
+        return current.get();
     }
 
     private boolean objectInAnyList(Model obj) {

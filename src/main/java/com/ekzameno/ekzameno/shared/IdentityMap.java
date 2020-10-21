@@ -28,13 +28,11 @@ public class IdentityMap {
      * @return thread local IdentityMap
      */
     public static IdentityMap getCurrent() {
-        IdentityMap im = current.get();
-
-        if (im == null) {
+        if (current.get() == null) {
             newCurrent();
         }
 
-        return im;
+        return current.get();
     }
 
     /**
