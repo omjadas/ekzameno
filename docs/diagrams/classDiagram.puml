@@ -232,8 +232,8 @@ package "models" #DDDDDD {
     + UUID questionId
     + UUID examSubmissionId
     - Integer marks
-    + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId, Integer marks)
-    + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId, Integer marks)
+    + QuestionSubmission(UUID id, String answer, UUID questionId, UUID examSubmissionId, Integer marks)
+    + QuestionSubmission(String answer, UUID questionId, UUID examSubmissionId, Integer marks)
     + String getAnswer()
     + Integer getMarks()
     + void setMarks(Integer marks)
@@ -407,7 +407,7 @@ package "controllers" #DDDDDD {
     + Question createQuestion(String examId, CreateQuestionDTO dto)
     + List<Question> getQuestions(String examId)
     + ExamSubmission createSubmission(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
-    + ExamSubmission updateSubmission(String examId, String studentId, SecurityContext securityContext, HttpHeaders headers, CreateExamSubmissionDTO dto)
+    + ExamSubmission updateSubmission(String examId, String studentId, SecurityContext securityContext, HttpHeaders headers, UpdateExamSubmissionDTO dto)
     + List<ExamSubmission> getSubmissions(String examId, SecurityContext securityContext)
   }
 
@@ -802,7 +802,6 @@ package "shared" #DDDDDD {
     - List<Model> dirtyObjects
     - List<Model> deletedObjects
     + {static} void newCurrent()
-    + {static} void getCurrent()
     + {static} UnitOfWork getCurrent()
     - boolean objectInAnyList(Model obj)
     + void registerNew(Model obj)
@@ -819,24 +818,20 @@ package "exceptions" #DDDDDD {
   RuntimeException <|-- PreconditionFailedException
 
   class ConflictException {
-    - {static} long serialVersionUID
   }
 
   class PreconditionFailedException {
-    - {static} long serialVersionUID
   }    
 
-  class ConflictExceptionMapper implements ExceptionMapper {
+  class ConflictExceptionMapper {
   }
   
-  class PreconditionFailedExceptionMapper implements ExceptionMapper {
+  class PreconditionFailedExceptionMapper {
   }
 }
 
-package "ekzameno" #DDDDDD {
-  class Application extends ResourceConfig {
-    + Application()
-  }
+class Application {
+  + Application()
 }
 
 @enduml
