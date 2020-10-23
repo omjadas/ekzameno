@@ -62,6 +62,8 @@ package "models" #DDDDDD {
     + {static} String TYPE
     + Student(UUID id, String email, String name, String passwordHash)
     + Student(String email, String name, String passwordHash)
+    + ProxyList<Subject> getSubjects()
+    + ProxyList<ExamSubmission> getExamSubmissions()
   }
 
   class DateRange {
@@ -79,14 +81,15 @@ package "models" #DDDDDD {
     + Model()
     + Model(UUID id)
     + UUID getId()
-    + int hashCode()
-    + boolean equals(Object obj)
+    + Meta getMeta()
   }
 
   Enrolment o-- Student : - student
   Enrolment o-- Subject : - subject
 
   class Enrolment {
+    - UUID studentId
+    - UUID subjectId
     + Enrolment(UUID id, UUID studentId, UUID subjectId)
     + Enrolment(UUID studentId, UUID subjectId)
     + UUID getStudentId()
@@ -228,9 +231,12 @@ package "models" #DDDDDD {
     + String answer
     + UUID questionId
     + UUID examSubmissionId
-    + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId)
-    + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId)
+    - Integer marks
+    + QuestionSubmission(UUID id, String answer, UUID questionId, UUID examSubmissionId, Integer marks)
+    + QuestionSubmission(String answer, UUID questionId, UUID examSubmissionId, Integer marks)
     + String getAnswer()
+    + Integer getMarks()
+    + void setMarks(Integer marks)
     + void setAnswer(String answer)
     + UUID getQuestionId()
     + UUID getExamSubmissionId()
@@ -247,14 +253,15 @@ package "models" #DDDDDD {
   ExamSubmission o-- Exam : - exam
 
   class ExamSubmission {
-    - int marks
+    - Integer marks
     - UUID studentId
     - UUID examId
-    + ExamSubmission(UUID id, int marks, UUID studentId, UUID examId)
-    + ExamSubmission(int marks, UUID studentId, UUID examId)
-    + int getMarks()
+    + ExamSubmission(UUID id, Integer marks, UUID studentId, UUID examId)
+    + ExamSubmission(Integer marks, UUID studentId, UUID examId)
+    + Integer getMarks()
     + ProxyList<QuestionSubmission> getQuestionSubmissions()
-    + void setMarks(int marks)
+    - List<QuestionSubmission> getRawQuestionSubmissions()
+    + void setMarks(Integer marks)
     + UUID getStudentId()
     + UUID getExamId()
     + Student getStudent()
@@ -263,6 +270,11 @@ package "models" #DDDDDD {
     + void setExamId(UUID examId)
     + void setStudent(Student student)
     + void setExam(Exam exam)
+  }
+
+  class meta {
+    + String eTag
+    + Meta(String eTag)
   }
 }
 
@@ -287,6 +299,8 @@ package "proxies" #DDDDDD {
     + T get(int index)
     + int size()
     + remove(T obj)
+    + List<T> getRawList()
+    # {abstract} void init() 
   }
 
   class ExamProxyList {
@@ -366,7 +380,7 @@ package "controllers" #DDDDDD {
     + Subject createSubject(CreateSubjectDTO dto)
     + List<Exam> getExamsForSubject(SecurityContext securityContext)
     + Exam createExam(String subjectId, CreateExamDTO dto)
-    + Subject updateSubject(String subjectId, CreateSubjectDTO dto)
+    + Subject updateSubject(String subjectId, HttpHeaders headers, CreateSubjectDTO dto)
     + List<Instructor> getInstructors(String subjectId)
     + Response addInstructorToSubject(String subjectId, String instructorId)
     + Response addStudentToSubject(String subjectId, String studentId)
@@ -388,19 +402,19 @@ package "controllers" #DDDDDD {
 
   class ExamController {
     + Exam getExam(String slug)
-    + Exam updateExam(String examId, CreateExamDTO dto)
+    + Exam updateExam(String examId, HttpHeaders headers, CreateExamDTO dto)
     + Response deletExam(String examId)
     + Question createQuestion(String examId, CreateQuestionDTO dto)
     + List<Question> getQuestions(String examId)
-    + ExamSubmission submitExam(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
-    + ExamSubmission updateExamSubmission(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
+    + ExamSubmission createSubmission(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
+    + ExamSubmission updateSubmission(String examId, String studentId, SecurityContext securityContext, HttpHeaders headers, UpdateExamSubmissionDTO dto)
     + List<ExamSubmission> getSubmissions(String examId, SecurityContext securityContext)
   }
 
   OptionController o-- services.OptionService : - optionService
 
   class OptionController {
-    + Option updateOption(String optionId, CreateOptionDTO dto)
+    + Option updateOption(String optionId, HttpHeaders headers, CreateOptionDTO dto)
     + Response deleteOption(String optionId)
   }
 
@@ -408,10 +422,19 @@ package "controllers" #DDDDDD {
   QuestionController o-- services.OptionService : - optionService
 
   class QuestionController {
-    + Question updateQuestion(String questionId, CreateQuestionDTO dto)
+    + Question updateQuestion(String questionId, HttpHeaders headers, CreateQuestionDTO dto)
     + Response deleteExam(String questionId)
     + List<Option> getOptions(String questionId)
     + Option createOption(String questionId, CreateOptionDTO dto)
+    + QuestionSubmission createSubmission(
+        String questionId,
+        String examSubmissionId,
+        CreateQuestionSubmissionDTO dto)
+    + QuestionSubmission updateSubmission(
+        String questionId,
+        String examSubmissionId,
+        HttpHeaders headers,
+        UpdateQuestionSubmissionDTO dto)
   }
 }
 
@@ -445,6 +468,7 @@ package "dtos" #DDDDDD {
   class CreateQuestionSubmissionDTO {
     + String questionId
     + String answer
+    + Integer marks
   }
 
   class CreateSubjectDTO {
@@ -464,6 +488,15 @@ package "dtos" #DDDDDD {
   class SignInUserDTO {
     + String email
     + String password
+  }
+  
+  class UpdateExamSubmissionDTO {
+    + Integer marks
+  }
+
+  class UpdateQuestionSubmissionDTO {
+    + String questionId
+    + Integer marks
   }
 }
 
@@ -488,16 +521,17 @@ package "services" #DDDDDD {
   UserService o-- mappers.StudentMapper : - studentMapper
 
   class UserService {
-    + List<User> getUsers() {String name,
+    + List<User> getUsers() 
+    + User registerUser(String name,
         String email,
         String password,
         String type)
-    + User registerUser(
     + List<Instructor> getInstructorsForSubject(UUID subjectId)
     + List<Student> getStudentsForSubject(UUID subjectId)
   }
 
   ExamService o-- mappers.ExamMapper : - examMapper
+  ExamService o-- mappers.ExamSubmissionMapper : - examSubmissionMapper
 
   class ExamService {
     + Exam getExam(String slug)
@@ -512,11 +546,20 @@ package "services" #DDDDDD {
         String description,
         Date startTime,
         Date finishTime,
-        UUID examId)
+        UUID examId,
+        String eTag)
     + void deleteExam(UUID examId)
     + ExamSubmission createSubmission(UUID examId,
         UUID studentId,
+        Integer marks,
         List<CreateQuestionSubmissionDTO> answers)
+    + List<ExamSubmission> getSubmissions(UUID examId)
+    + ExamSubmission getSubmissionForUser(UUID examId, UUID userId)
+    + ExamSubmission updateSubmission(
+        UUID examId,
+        UUID studentId,
+        Integer marks,
+        String eTag)
   }
 
   QuestionService o-- mappers.QuestionMapper : - questionMapper
@@ -529,9 +572,20 @@ package "services" #DDDDDD {
         List<CreateOptionDTO> options)
     + Question updateQuestion(String question,
         int marks,
-        UUID questionId)
+        UUID questionId,
+        String eTag)
     + void deleteQuestion(UUID questionId)
     + List<Question> getQuestionsForExam(UUID examId)
+    + QuestionSubmission createSubmission(
+        UUID questionId,
+        UUID examSubmissionId,
+        String answer,
+        Integer marks)
+    + QuestionSubmission updateSubmission(
+        UUID questionId,
+        UUID examSubmissionId,
+        Integer marks,
+        String eTag)
   }
 
   SubjectService o-- mappers.SubjectMapper : - subjectMapper
@@ -555,7 +609,8 @@ package "services" #DDDDDD {
         UUID[] students)
     + Subject updateSubject(String name,
         String description,
-        UUID subjectId)
+        UUID subjectId,
+        String eTag)
   }
 
   OptionService o-- mappers.OptionMapper : - optionMapper
@@ -566,7 +621,8 @@ package "services" #DDDDDD {
         UUID questionId)
     + Option updateOption(UUID optionId,
         String answer,
-        boolean correct)
+        boolean correct,
+        String eTag)
     + void deleteOption(UUID optionId)
     + List<Option> getOptionsForQuestion(UUID questionId)
   }
@@ -594,8 +650,10 @@ package "mappers" #DDDDDD {
 
   abstract class Mapper {
     + {static} <T extends Model> Mapper<T> getMapper(Class<?> klass)
+    + T findById(UUID id, boolean forUpdate)
     + T findById(UUID id)
-    # T findByProp(String prop, Object value)
+    # T findByProp(String prop, Object value, boolean forUpdate)
+    + List<T> findAll(boolean forUpdate)
     + List<T> findAll()
     + {abstract} void insert(T obj)
     + {abstract} void update(T obj)
@@ -607,7 +665,7 @@ package "mappers" #DDDDDD {
 
   abstract class AbstractUserMapper {
     - {static} String tableName
-    + User findByEmail(String email)
+    + User findByEmail(String email, boolean forUpdate)
     # String getTableName()
     # {abstract} String getType()
   }
@@ -620,28 +678,35 @@ package "mappers" #DDDDDD {
   }
 
   class StudentMapper {
+    + List<Student> findAllForSubject(UUID id, boolean forUpdate)
     + List<Student> findAllForSubject(UUID id)
   }
 
   class InstructorMapper {
+    + List<Instructor> findAllForSubject(UUID id, boolean forUpdate)
     + List<Instructor> findAllForSubject(UUID id)
   }
 
   class EnrolmentMapper {
     - {static} String tableName
+    + Enrolment findByRelationIds(UUID studentId,UUID subjectId, boolean forUpdate)
     + Enrolment findByRelationIds(UUID studentId,UUID subjectId)
     + void deleteByRelationIds(UUID studentId,UUID subjectId)
   }
 
   class SubjectMapper {
     - {static} String tableName
+    + Subject findBySlug(String slug, boolean forUpdate)
     + Subject findBySlug(String slug)
+    + List<Subject> findAllForStudent(UUID id, boolean forUpdate)
     + List<Subject> findAllForStudent(UUID id)
+    + List<Subject> findAllForInstructor(UUID id, boolean forUpdate)
     + List<Subject> findAllForInstructor(UUID id)
   }
 
   class InstructorSubjectMapper {
     - {static} String tableName
+    + InstructorSubject findByRelationIds(UUID instructorId, UUID subjectId, boolean forUpdate)
     + InstructorSubject findByRelationIds(UUID instructorId, UUID subjectId)
     + void deleteByRelationIds(UUID instructorId, UUID subjectId)
   }
@@ -653,10 +718,12 @@ package "mappers" #DDDDDD {
 
   class OptionMapper {
     - {static} String tableName
+    + List<Option> findAllForQuestion(UUID id, boolean forUpdate)
     + List<Option> findAllForQuestion(UUID id)
   }
 
   class QuestionMapper {
+    + List<Question> findAllForExam(UUID id, boolean forUpdate)
     + List<Question> findAllForExam(UUID id)
   }
 
@@ -668,22 +735,31 @@ package "mappers" #DDDDDD {
 
   class QuestionSubmissionMapper {
     - {static} String tableName
+    + QuestionSubmission findByRelationIds(UUID questionId, UUID examSubmissionId, boolean forUpdate)
     + QuestionSubmission findByRelationIds(UUID questionId, UUID examSubmissionId)
+    + List<QuestionSubmission> findAllForExamSubmission(UUID id, boolean forUpdate)
     + List<QuestionSubmission> findAllForExamSubmission(UUID id)
+    + List<QuestionSubmission> findAllForQuestion(UUID id, boolean forUpdate)
     + List<QuestionSubmission> findAllForQuestion(UUID id)
   }
 
   class ExamSubmissionMapper {
     - {static} String tableName
+    + ExamSubmission findByRelationIds(UUID studentId, UUID examId, boolean forUpdate)
     + ExamSubmission findByRelationIds(UUID studentId, UUID examId)
+    + List<ExamSubmission> findAllForExam(UUID id, boolean forUpdate)
     + List<ExamSubmission> findAllForExam(UUID id)
+    + List<ExamSubmission> findAllForStudent(UUID id, boolean forUpdate)
     + List<ExamSubmission> findAllForStudent(UUID id)
   }
 
   class ExamMapper {
     - {static} String tableName
+    + Exam findBySlug(String slug, boolean forUpdate)
     + Exam findBySlug(String slug)
+    + List<Exam> findAllForSubject(UUID id, boolean forUpdate)
     + List<Exam> findAllForSubject(UUID id)
+    + List<Exam> findAllPublishedExams(UUID id, boolean forUpdate)
     + List<Exam> findAllPublishedExams(UUID id)
   }
 }
@@ -694,7 +770,7 @@ package "shared" #DDDDDD {
     - Connection connection
     - {static} String connectionUrl
     - DBConnection()
-    + {static} DBConnection getInstance()
+    + {static} DBConnection getCurrent()
     + Connection getConnection()
     + void close()
   }
@@ -703,10 +779,12 @@ package "shared" #DDDDDD {
     - {static} IdentityMap identityMap
     - Map<UUID, Model> map
     - IdentityMap()
-    + {static} getInstance()
+    + static void newCurrent()
+    + {static} IdentityMap getCurrent()
     + Model get(UUID id)
     + void put(UUID id, Model obj)
     + void remove(UUID id)
+    + static void reset()
   }
 
   class Seeds {
@@ -720,15 +798,42 @@ package "shared" #DDDDDD {
 
   class UnitOfWork {
     - {static} ThreadLocal<UnitOfWork> current
+    - List<Model> newObjects
+    - List<Model> dirtyObjects
+    - List<Model> deletedObjects
     + {static} void newCurrent()
-    + {static} void setCurrent(UnitOfWork uow)
     + {static} UnitOfWork getCurrent()
     - boolean objectInAnyList(Model obj)
     + void registerNew(Model obj)
     + void registerDirty(Model obj)
     + void registerDeleted(Model obj)
+    + void rollback() 
     + void commit()
+    + {static} void reset()
   }
+}
+
+package "exceptions" #DDDDDD {
+  RuntimeException <|-- ConflictException
+  RuntimeException <|-- PreconditionFailedException
+
+  class ConflictException {
+  }
+
+  class PreconditionFailedException {
+  }    
+
+  package "mappers" #DDDDDD {
+    class ConflictExceptionMapper {
+    }
+
+    class PreconditionFailedExceptionMapper {
+    }
+  }
+}
+
+class Application {
+  + Application()
 }
 
 @enduml
