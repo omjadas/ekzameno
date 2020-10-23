@@ -92,7 +92,11 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           handleHide();
         })
         .catch((e: Error) => {
-          setErrorMessage("Failed to update subject");
+          if (e.message === "412") {
+            setErrorMessage("Subject has been updated on server");
+          } else {
+            setErrorMessage("Failed to update subject");
+          }
           console.error(e);
         });
     } else {

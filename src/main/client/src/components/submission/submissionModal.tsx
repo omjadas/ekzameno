@@ -101,7 +101,11 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
         })
         .then(handleHide)
         .catch((e: Error) => {
-          setErrorMessage("Failed to mark submission");
+          if (e.message === "412") {
+            setErrorMessage("Submission has been updated on server");
+          } else {
+            setErrorMessage("Failed to update submission");
+          }
           console.error(e);
         });
     }
