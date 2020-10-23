@@ -6,6 +6,7 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import javax.annotation.Priority;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Cookie;
@@ -25,6 +26,7 @@ import io.jsonwebtoken.security.Keys;
  * Filter to determine whether requests are authenticated.
  */
 @Provider
+@Priority(0)
 @Protected
 public class AuthFilter implements ContainerRequestFilter {
     private final Key key = Keys.hmacShaKeyFor(

@@ -15,15 +15,13 @@ export const Subjects = (): JSX.Element => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (subjectsStatus === "idle") {
-      dispatch(fetchSubjects())
-        .then(unwrapResult)
-        .catch((e: Error) => {
-          setErrorMessage("Failed to retrieve subjects");
-          console.error(e);
-        });
-    }
-  }, [dispatch, subjectsStatus]);
+    dispatch(fetchSubjects())
+      .then(unwrapResult)
+      .catch((e: Error) => {
+        setErrorMessage("Failed to retrieve subjects");
+        console.error(e);
+      });
+  }, [dispatch]);
 
   if (subjectsStatus !== "finished") {
     return <Loader />;

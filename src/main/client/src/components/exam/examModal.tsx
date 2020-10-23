@@ -64,7 +64,11 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
           handleHide();
         })
         .catch((e: Error) => {
-          setErrorMessage("Failed to update exam");
+          if (e.message === "412") {
+            setErrorMessage("Exam has been updated on server");
+          } else {
+            setErrorMessage("Failed to update exam");
+          }
           console.error(e);
         });
     } else {

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Button, Container, Jumbotron } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchSubject, selectSubjectBySlug, selectSubjectsStatus } from "../../redux/slices/subjectsSlice";
+import { fetchSubject, selectSubjectBySlug } from "../../redux/slices/subjectsSlice";
 import { fetchInstructorsForSubject, fetchStudentsForSubject, selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 import { ExamModal } from "../exam/examModal";
@@ -15,11 +15,10 @@ import styles from "./subject.module.scss";
 export const Subject = (): JSX.Element => {
   const { slug } = useParams<{slug: string}>();
   const dispatch = useAppDispatch();
-  const subjectsStatus = useSelector(selectSubjectsStatus);
   const subject = useSelector(selectSubjectBySlug(slug));
   const [examModalShow, setExamModalShow] = useState(false);
   const [subjectModalShow, setSubjectModalShow] = useState(false);
-  const me = useSelector(selectMe);
+  const meType = useSelector(selectMe)?.type;
   const subjectId = subject?.id;
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -27,13 +26,13 @@ export const Subject = (): JSX.Element => {
     dispatch(fetchSubject(slug))
       .then(unwrapResult)
       .catch((e: Error) => {
-        setErrorMessage("Failed to retrieve exam");
+        setErrorMessage("Failed to retrieve subject");
         console.error(e);
       });
   }, [dispatch, slug]);
 
   useEffect(() => {
-    if (subjectId !== undefined) {
+    if (subjectId !== undefined && meType === "INSTRUCTOR") {
       dispatch(fetchInstructorsForSubject(subjectId))
         .then(unwrapResult)
         .catch((e: Error) => {
@@ -47,7 +46,7 @@ export const Subject = (): JSX.Element => {
           console.error(e);
         });
     }
-  }, [dispatch, subjectId, subjectsStatus]);
+  }, [dispatch, subjectId, meType]);
 
   if (errorMessage !== null) {
     return (
@@ -69,7 +68,7 @@ export const Subject = (): JSX.Element => {
         <h1>{subject.name}</h1>
         <p>{subject.description}</p>
         {
-          me?.type === "INSTRUCTOR" &&
+          meType === "INSTRUCTOR" &&
             <>
               <Button onClick={() => setSubjectModalShow(true)} className="mr-2">
                 Edit Subject

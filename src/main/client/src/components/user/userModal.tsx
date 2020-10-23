@@ -80,17 +80,17 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
 
   return (
     <Modal show={props.show} onHide={handleHide} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          Create User
+        </Modal.Title>
+      </Modal.Header>
       {
         errorMessage !== null &&
           <Alert variant="danger">
             {errorMessage}
           </Alert>
       }
-      <Modal.Header closeButton>
-        <Modal.Title>
-          Create User
-        </Modal.Title>
-      </Modal.Header>
       <Formik
         initialValues={{
           name: "",
