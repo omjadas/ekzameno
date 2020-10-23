@@ -232,9 +232,11 @@ package "models" #DDDDDD {
     + UUID questionId
     + UUID examSubmissionId
     - Integer marks
-    + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId)
-    + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId)
+    + QuestionSubmission(UUID id,String answer,UUID questionId,UUID examSubmissionId, Integer marks)
+    + QuestionSubmission(String answer,UUID questionId,UUID examSubmissionId, Integer marks)
     + String getAnswer()
+    + Integer getMarks()
+    + void setMarks(Integer marks)
     + void setAnswer(String answer)
     + UUID getQuestionId()
     + UUID getExamSubmissionId()
