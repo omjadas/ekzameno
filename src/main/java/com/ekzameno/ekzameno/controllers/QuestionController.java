@@ -3,6 +3,7 @@ package com.ekzameno.ekzameno.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -46,6 +47,7 @@ public class QuestionController {
      */
     @Path("/{questionId}")
     @PUT
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Question updateQuestion(
@@ -69,6 +71,7 @@ public class QuestionController {
      */
     @Path("/{questionId}")
     @DELETE
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteExam(
@@ -88,6 +91,7 @@ public class QuestionController {
      */
     @Path("/{questionId}/options")
     @GET
+    @RolesAllowed({ "instructor", "student" })
     @Produces(MediaType.APPLICATION_JSON)
     public List<Option> getOptions(@PathParam("questionId") String questionId) {
         return optionService.getOptionsForQuestion(UUID.fromString(questionId));
@@ -102,6 +106,7 @@ public class QuestionController {
      */
     @Path("/{questionId}/options")
     @POST
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Option createOption(
@@ -126,6 +131,7 @@ public class QuestionController {
      */
     @Path("/{questionId}/submissions/{examSubmissionId}")
     @POST
+    @RolesAllowed({ "instructor", "student" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public QuestionSubmission createSubmission(
@@ -153,6 +159,7 @@ public class QuestionController {
      */
     @Path("/{questionId}/submissions/{examSubmissionId}")
     @PUT
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public QuestionSubmission updateSubmission(

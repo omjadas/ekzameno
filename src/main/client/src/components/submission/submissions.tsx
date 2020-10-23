@@ -8,7 +8,7 @@ import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
 import { createExamSubmission, ExamSubmissionState, fetchExamSubmissions, selectExamSubmissionsForExam, updateExamSubmission } from "../../redux/slices/examSubmissionsSlice";
 import { fetchQuestions, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectSubjectById, SubjectState } from "../../redux/slices/subjectsSlice";
-import { fetchUsers, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
+import { fetchStudentsForSubject, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { Loader } from "../loader/loader";
 import { SubmissionModal } from "./submissionModal";
@@ -44,6 +44,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   const subject = useSelector<RootState, SubjectState | undefined>(
     state => selectSubjectById(state, exam?.subjectId ?? "")
   );
+  const subjectId = subject?.id;
   const [examSubmissionsLoading, setExamSubmissionsLoading] = useState(true);
   const [questionsLoading, setQuestionsLoading] = useState(true);
 
@@ -73,39 +74,21 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
         setExamSubmissionsLoading(false);
       })
       .catch((e: Error) => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
-        } else if (e.message === "404") {
-          setErrorMessage("Failed to fetch exam submissions");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        }
+        setErrorMessage("Failed to fetch submissions");
         console.error(e);
       });
   }, [dispatch, props.examId]);
 
   useEffect(() => {
-    if (usersStatus === "idle" && me !== undefined) {
-      dispatch(fetchUsers())
+    if (me?.type === "INSTRUCTOR" && subjectId !== undefined) {
+      dispatch(fetchStudentsForSubject(subjectId))
         .then(unwrapResult)
         .catch((e: Error) => {
-          if (e.message === "400") {
-            setErrorMessage("Bad Request");
-          } else if (e.message === "401") {
-            setErrorMessage("Unauthorized Request");
-          } else if (e.message === "412") {
-            setErrorMessage("Client Error");
-          } else if (e.message === "500") {
-            setErrorMessage("Internal Server Error");
-          }
+          setErrorMessage("Failed to fetch students");
           console.error(e);
         });
     }
-  }, [dispatch, usersStatus, me]);
+  }, [dispatch, me, subjectId]);
 
   useEffect(() => {
     dispatch(fetchQuestions(props.examId))
@@ -114,17 +97,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
         setQuestionsLoading(false);
       })
       .catch((e: Error) => {
-        if (e.message === "400") {
-          setErrorMessage("Bad Request");
-        } else if (e.message === "401") {
-          setErrorMessage("Unauthorized Request");
-        } else if (e.message === "404") {
-          setErrorMessage("Failed to fetch questions");
-        } else if (e.message === "412") {
-          setErrorMessage("Client Error");
-        } else if (e.message === "500") {
-          setErrorMessage("Internal Server Error");
-        }
+        setErrorMessage("Failed to fetch questions");
         console.error(e);
       });
   }, [props.examId, dispatch]);
@@ -157,7 +130,11 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
         }))
           .then(unwrapResult)
           .catch((e: Error) => {
-            setErrorMessage("Failed to submit marks");
+            if (e.message === "412") {
+              setErrorMessage("Submissions have been updated on the server");
+            } else {
+              setErrorMessage("Failed to submit marks");
+            }
             console.error(e);
           });
       }

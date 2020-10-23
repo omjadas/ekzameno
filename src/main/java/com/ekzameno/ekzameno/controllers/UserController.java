@@ -2,6 +2,7 @@ package com.ekzameno.ekzameno.controllers;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -29,6 +30,7 @@ public class UserController {
      * @return all users
      */
     @GET
+    @RolesAllowed({ "administrator", "instructor" })
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getUsers() {
         return userService.getUsers();
@@ -41,6 +43,7 @@ public class UserController {
      * @return response to the client.
      */
     @POST
+    @RolesAllowed({ "administrator" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(CreateUserDTO dto) {

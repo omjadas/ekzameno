@@ -162,7 +162,11 @@ export const QuestionModal = (
           handleHide();
         })
         .catch((e: Error) => {
-          setErrorMessage("Failed to update question");
+          if (e.message === "412") {
+            setErrorMessage("Question has been updated on server");
+          } else {
+            setErrorMessage("Failed to update question");
+          }
           console.error(e);
         });
     } else {

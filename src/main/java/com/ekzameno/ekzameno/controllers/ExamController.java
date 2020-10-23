@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.ForbiddenException;
@@ -48,6 +49,7 @@ public class ExamController {
      */
     @Path("/{slug}")
     @GET
+    @RolesAllowed({ "instructor", "student" })
     @Produces(MediaType.APPLICATION_JSON)
     public Exam getExam(@PathParam("slug") String slug) {
         return examService.getExam(slug);
@@ -63,6 +65,7 @@ public class ExamController {
      */
     @Path("/{examId}")
     @PUT
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Exam updateExam(
@@ -88,6 +91,7 @@ public class ExamController {
      */
     @Path("/{examId}")
     @DELETE
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteExam(@PathParam("examId") String examId) {
@@ -106,6 +110,7 @@ public class ExamController {
      */
     @Path("/{examId}/questions")
     @POST
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Question createQuestion(
@@ -129,6 +134,7 @@ public class ExamController {
      */
     @Path("/{examId}/questions")
     @GET
+    @RolesAllowed({ "instructor", "student" })
     @Produces(MediaType.APPLICATION_JSON)
     public List<Question> getQuestions(@PathParam("examId") String examId) {
         return questionService.getQuestionsForExam(UUID.fromString(examId));
@@ -145,9 +151,10 @@ public class ExamController {
      */
     @Path("/{examId}/submissions/{studentId}")
     @POST
+    @RolesAllowed({ "instructor", "student" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ExamSubmission submitExam(
+    public ExamSubmission createSubmission(
         @PathParam("examId") String examId,
         @PathParam("studentId") String studentId,
         @Context SecurityContext securityContext,
@@ -180,9 +187,10 @@ public class ExamController {
      */
     @Path("/{examId}/submissions/{studentId}")
     @PUT
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ExamSubmission updateExamSubmission(
+    public ExamSubmission updateSubmission(
         @PathParam("examId") String examId,
         @PathParam("studentId") String studentId,
         @Context SecurityContext securityContext,
@@ -210,6 +218,7 @@ public class ExamController {
      */
     @Path("/{examId}/submissions")
     @GET
+    @RolesAllowed({ "instructor", "student" })
     @Produces(MediaType.APPLICATION_JSON)
     public List<ExamSubmission> getSubmissions(
         @PathParam("examId") String examId,
