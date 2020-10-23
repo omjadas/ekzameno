@@ -254,12 +254,12 @@ package "models" #DDDDDD {
     - Integer marks
     - UUID studentId
     - UUID examId
-    + ExamSubmission(UUID id, int marks, UUID studentId, UUID examId)
-    + ExamSubmission(int marks, UUID studentId, UUID examId)
-    + int getMarks()
+    + ExamSubmission(UUID id, Integer marks, UUID studentId, UUID examId)
+    + ExamSubmission(Integer marks, UUID studentId, UUID examId)
+    + Integer getMarks()
     + ProxyList<QuestionSubmission> getQuestionSubmissions()
     - List<QuestionSubmission> getRawQuestionSubmissions()
-    + void setMarks(int marks)
+    + void setMarks(Integer marks)
     + UUID getStudentId()
     + UUID getExamId()
     + Student getStudent()
@@ -404,8 +404,8 @@ package "controllers" #DDDDDD {
     + Response deletExam(String examId)
     + Question createQuestion(String examId, CreateQuestionDTO dto)
     + List<Question> getQuestions(String examId)
-    + ExamSubmission submitExam(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
-    + ExamSubmission updateExamSubmission(String examId, String studentId, SecurityContext securityContext, HttpHeaders headers, CreateExamSubmissionDTO dto)
+    + ExamSubmission createSubmission(String examId, String studentId, SecurityContext securityContext, CreateExamSubmissionDTO dto)
+    + ExamSubmission updateSubmission(String examId, String studentId, SecurityContext securityContext, HttpHeaders headers, CreateExamSubmissionDTO dto)
     + List<ExamSubmission> getSubmissions(String examId, SecurityContext securityContext)
   }
 
@@ -828,6 +828,12 @@ package "exceptions" #DDDDDD {
   }
   
   class PreconditionFailedExceptionMapper implements ExceptionMapper {
+  }
+}
+
+package "ekzameno" #DDDDDD {
+  class Application extends ResourceConfig {
+    + Application()
   }
 }
 
