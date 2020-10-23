@@ -46,6 +46,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   const multipleChoiceQuestionIds = questions
     .filter(q => q.type === "MULTIPLE_CHOICE")
     .map(q => q.id);
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [loadingSubmissions, setLoadingSubmissions] = useState(true);
 
   const joinedMultipleChoiceQuestionIds = multipleChoiceQuestionIds.join("");
@@ -54,6 +55,9 @@ export const Questions = (props: QuestionProps): JSX.Element => {
   useEffect(() => {
     dispatch(fetchQuestions(props.examId))
       .then(unwrapResult)
+      .then(() => {
+        setLoadingQuestions(false);
+      })
       .catch(e => {
         console.error(e);
       });
@@ -81,7 +85,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
       });
   }, [dispatch, props.examId]);
 
-  if (me === undefined || exam?.questionIds === undefined || loadingSubmissions) {
+  if (me === undefined || loadingQuestions || loadingSubmissions) {
     return <Loader />;
   }
 

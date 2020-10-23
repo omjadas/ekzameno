@@ -12,17 +12,17 @@ export const Home = (): JSX.Element => {
     <Container className={styles.totalArea}>
       <div className={styles.align}>
         <Image src={ekzamenoLogo} alt="Logo" className={styles.image}/>
-        <h1> Welcome to Ekzameno </h1>
+        <h1>Welcome to Ekzameno</h1>
         <br/>
-        <h4> This tool will allow you to browse through the subjects </h4>
-        <h4> you are enroled in and see past and upcoming exams </h4>
-        <h4> as well as view your grades. </h4>
+        <h4>This tool will allow you to browse through the subjects</h4>
+        <h4>you are enrolled in and see past and upcoming exams</h4>
+        <h4>as well as view your grades.</h4>
         {
           me === undefined &&
             <>
               <br/>
               <br/>
-              <h3> Sign in to start your exams.</h3>
+              <h3>Sign in to start your exams.</h3>
             </>
         }
       </div>

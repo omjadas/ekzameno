@@ -30,7 +30,7 @@ public class UserController {
      * @return all users
      */
     @GET
-    @RolesAllowed({ "administrator" })
+    @RolesAllowed({ "administrator", "instructor" })
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getUsers() {
         return userService.getUsers();

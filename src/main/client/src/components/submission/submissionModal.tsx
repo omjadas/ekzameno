@@ -42,9 +42,6 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
       questionSubmissions[q.questionId] = q;
     });
 
-  console.log(props.studentId);
-  console.log(questionSubmissions);
-
   const questions = useSelector(selectQuestionsForExam(props.examId));
 
   const handleHide = (): void => {

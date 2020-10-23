@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import * as yup from "yup";
 import { addSubject, updateSubject } from "../../redux/slices/subjectsSlice";
-import { fetchUsers, selectInstructors, selectMe, selectStudents, selectUsersStatus } from "../../redux/slices/usersSlice";
+import { fetchUsers, selectInstructors, selectMe, selectStudents } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
 
 export interface SubjectModalProps {
@@ -47,14 +47,13 @@ const FormSchema = yup.object().shape({
 
 export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
-  const usersStatus = useSelector(selectUsersStatus);
   const students = useSelector(selectStudents);
   const instructors = useSelector(selectInstructors);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const me = useSelector(selectMe);
+  const meType = useSelector(selectMe)?.type;
 
   useEffect(() => {
-    if (usersStatus === "idle" && me !== undefined) {
+    if (meType !== "STUDENT") {
       dispatch(fetchUsers())
         .then(unwrapResult)
         .catch((e: Error) => {
@@ -62,7 +61,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
           console.error(e);
         });
     }
-  }, [dispatch, usersStatus, me]);
+  }, [dispatch, meType]);
 
   const handleHide = (): void => {
     setErrorMessage(null);

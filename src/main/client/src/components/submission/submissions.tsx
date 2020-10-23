@@ -8,7 +8,7 @@ import { ExamState, selectExamById } from "../../redux/slices/examsSlice";
 import { createExamSubmission, ExamSubmissionState, fetchExamSubmissions, selectExamSubmissionsForExam, updateExamSubmission } from "../../redux/slices/examSubmissionsSlice";
 import { fetchQuestions, selectQuestionsForExam } from "../../redux/slices/questionsSlice";
 import { selectSubjectById, SubjectState } from "../../redux/slices/subjectsSlice";
-import { fetchUsers, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
+import { fetchStudentsForSubject, selectMe, selectUsersByIds, selectUsersStatus } from "../../redux/slices/usersSlice";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { Loader } from "../loader/loader";
 import { SubmissionModal } from "./submissionModal";
@@ -44,6 +44,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   const subject = useSelector<RootState, SubjectState | undefined>(
     state => selectSubjectById(state, exam?.subjectId ?? "")
   );
+  const subjectId = subject?.id;
   const [examSubmissionsLoading, setExamSubmissionsLoading] = useState(true);
   const [questionsLoading, setQuestionsLoading] = useState(true);
 
@@ -89,8 +90,8 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   }, [dispatch, props.examId]);
 
   useEffect(() => {
-    if (usersStatus === "idle" && me !== undefined) {
-      dispatch(fetchUsers())
+    if (me?.type === "INSTRUCTOR" && subjectId !== undefined) {
+      dispatch(fetchStudentsForSubject(subjectId))
         .then(unwrapResult)
         .catch((e: Error) => {
           if (e.message === "400") {
@@ -105,7 +106,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           console.error(e);
         });
     }
-  }, [dispatch, usersStatus, me]);
+  }, [dispatch, me, subjectId]);
 
   useEffect(() => {
     dispatch(fetchQuestions(props.examId))
