@@ -3,6 +3,7 @@ package com.ekzameno.ekzameno.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -88,6 +89,7 @@ public class SubjectController {
      * @return Response to the client
      */
     @POST
+    @RolesAllowed({ "administrator" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Subject createSubject(CreateSubjectDTO dto) {
@@ -131,6 +133,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}/exams")
     @POST
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Exam createExam(
@@ -156,6 +159,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}")
     @PUT
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Subject updateSubject(
@@ -179,6 +183,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}/instructors")
     @GET
+    @RolesAllowed({ "instructor" })
     @Produces(MediaType.APPLICATION_JSON)
     public List<Instructor> getInstructors(
         @PathParam("subjectId") String subjectId
@@ -195,6 +200,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}/instructors/{instructorId}")
     @POST
+    @RolesAllowed({ "instructor" })
     @Produces(MediaType.APPLICATION_JSON)
     public Response addInstructorToSubject(
         @PathParam("subjectId") String subjectId,
@@ -217,6 +223,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}/students/{studentId}")
     @POST
+    @RolesAllowed({ "instructor" })
     @Produces(MediaType.APPLICATION_JSON)
     public Response addStudentToSubject(
         @PathParam("subjectId") String subjectId,
@@ -239,6 +246,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}/instructors/{instructorId}")
     @DELETE
+    @RolesAllowed({ "instructor" })
     public Response deleteInstructorFromSubject(
         @PathParam("subjectId") String subjectId,
         @PathParam("instructorId") String instructorId
@@ -258,6 +266,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}/students")
     @GET
+    @RolesAllowed({ "instructor" })
     @Produces(MediaType.APPLICATION_JSON)
     public List<Student> getStudents(@PathParam("subjectId") String subjectId) {
         return userService.getStudentsForSubject(UUID.fromString(subjectId));
@@ -272,6 +281,7 @@ public class SubjectController {
      */
     @Path("/{subjectId}/students/{studentId}")
     @DELETE
+    @RolesAllowed({ "instructor" })
     public Response deleteStudentFromSubject(
         @PathParam("subjectId") String subjectId,
         @PathParam("studentId") String studentId

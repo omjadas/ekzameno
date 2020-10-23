@@ -2,6 +2,7 @@ package com.ekzameno.ekzameno.controllers;
 
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
@@ -36,6 +37,7 @@ public class OptionController {
      */
     @Path("/{optionId}")
     @PUT
+    @RolesAllowed({ "instructor" })
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Option updateOption(
@@ -59,6 +61,7 @@ public class OptionController {
      */
     @Path("/{optionId}")
     @DELETE
+    @RolesAllowed({ "instructor" })
     public Response deleteOption(@PathParam("optionId") String optionId) {
         optionService.deleteOption(UUID.fromString(optionId));
         return Response.status(Response.Status.NO_CONTENT).build();
