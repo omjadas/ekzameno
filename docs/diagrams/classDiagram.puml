@@ -823,10 +823,12 @@ package "exceptions" #DDDDDD {
   class PreconditionFailedException {
   }    
 
-  class ConflictExceptionMapper {
-  }
-  
-  class PreconditionFailedExceptionMapper {
+  package "mappers" #DDDDDD {
+    class ConflictExceptionMapper {
+    }
+
+    class PreconditionFailedExceptionMapper {
+    }
   }
 }
 
