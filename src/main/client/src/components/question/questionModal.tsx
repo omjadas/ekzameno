@@ -46,7 +46,7 @@ const selectOptions: { value: QuestionType, label: string }[] = [
   { value: "SHORT_ANSWER", label: "Short Answer" },
 ];
 
-const FormSchema = yup.lazy((obj: any) => {
+const FormSchema = yup.lazy(((obj: FormValues) => {
   const common = {
     question: yup.string().required("Question is a required field."),
     marks: yup.number().min(1, "Marks must be greater than 1.").required("Marks is a required field."),
@@ -72,10 +72,10 @@ const FormSchema = yup.lazy((obj: any) => {
                 }
 
                 return true;
-              }
+              },
             )
             .required("Option is a required field."),
-        })
+        }),
       )
         .min(1)
         .required(""),
@@ -88,16 +88,16 @@ const FormSchema = yup.lazy((obj: any) => {
           }
 
           return true;
-        }
+        },
       ).required("Correct Option is a required field."),
     });
   }
 
   return yup.object().shape(common);
-});
+}) as any);
 
 export const QuestionModal = (
-  props: UpdateQuestionModalProps | CreateQuestionModalProps
+  props: UpdateQuestionModalProps | CreateQuestionModalProps,
 ): JSX.Element => {
   const dispatch = useAppDispatch();
   const options = useSelector(selectOptionsByIds((props as UpdateQuestionModalProps).optionIds ?? []));
@@ -110,6 +110,7 @@ export const QuestionModal = (
 
   const handleSubmit = (values: FormValues): Promise<void> => {
     if ("id" in props) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
       const deletedOptions = options.filter(o => !values.options.map((o: any) => o.id).includes(o.id));
 
       return dispatch(updateQuestion({
@@ -136,7 +137,7 @@ export const QuestionModal = (
                   },
                   eTag: option.meta.eTag,
                 }))
-                  .then(unwrapResult)
+                  .then(unwrapResult),
               );
             } else {
               newPromises.push(
@@ -147,7 +148,7 @@ export const QuestionModal = (
                     correct: values.correctOption === i + 1,
                   },
                 }))
-                  .then(unwrapResult)
+                  .then(unwrapResult),
               );
             }
           });
@@ -236,7 +237,7 @@ export const QuestionModal = (
             errors,
             touched,
           }) => (
-            <Form id="createQuestion" onSubmit={handleSubmit as any}>
+            <Form id="createQuestion" onSubmit={handleSubmit}>
               <Modal.Body>
                 <FormikControl
                   type="text"
@@ -252,7 +253,7 @@ export const QuestionModal = (
                   <Select
                     options={selectOptions}
                     name="type"
-                    value={values.type as any}
+                    value={values.type}
                     onChange={option => setFieldValue("type", option)}
                     isDisabled={"id" in props || isSubmitting}
                     onBlur={handleBlur} />
@@ -301,7 +302,7 @@ export const QuestionModal = (
                                     </Button>
                                   </InputGroup.Append>
                                   <Form.Control.Feedback
-                                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-ignore
                                     className={
                                       touched.options

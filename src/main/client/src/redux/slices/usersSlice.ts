@@ -59,7 +59,7 @@ export const fetchInstructorsForSubject = createAsyncThunk(
     }
 
     return { instructors: await res.json() as UserState[], subjectId };
-  }
+  },
 );
 
 export const fetchStudentsForSubject = createAsyncThunk(
@@ -76,7 +76,7 @@ export const fetchStudentsForSubject = createAsyncThunk(
     }
 
     return { students: await res.json() as UserState[], subjectId };
-  }
+  },
 );
 
 export const addUser = createAsyncThunk("users/addUser", async (user: CreateUser) => {
@@ -114,7 +114,7 @@ export const signIn = createAsyncThunk(
     }
 
     return res.json() as Promise<UserState>;
-  }
+  },
 );
 
 export const signOut = createAsyncThunk(
@@ -127,7 +127,7 @@ export const signOut = createAsyncThunk(
     if (!res.ok) {
       throw new Error(res.status.toString());
     }
-  }
+  },
 );
 
 export const usersSlice = createSlice({

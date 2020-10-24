@@ -110,10 +110,14 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
       }
       <Formik
         initialValues={{
-          name: (props as any).name ?? "",
-          description: (props as any).description ?? "",
-          startTime: (props as any).startTime === undefined ? "" : new Date(new Date((props as any).startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
-          finishTime: (props as any).finishTime === undefined ? "" : new Date(new Date((props as any).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+          name: (props as UpdateExamModalProps).name ?? "",
+          description: (props as UpdateExamModalProps).description ?? "",
+          startTime: (props as UpdateExamModalProps).startTime === undefined
+            ? ""
+            : new Date(new Date((props as UpdateExamModalProps).startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+          finishTime: (props as UpdateExamModalProps).finishTime === undefined
+            ? ""
+            : new Date(new Date((props as UpdateExamModalProps).finishTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
         }}
         validationSchema={FormSchema}
         onSubmit={handleSubmit}
@@ -123,7 +127,7 @@ export const ExamModal = (props: UpdateExamModalProps | CreateExamModalProps): J
             handleSubmit,
             isSubmitting,
           }) => (
-            <Form id="createExam" onSubmit={handleSubmit as any}>
+            <Form id="createExam" onSubmit={handleSubmit}>
               <Modal.Body>
                 <FormikControl
                   type="text"

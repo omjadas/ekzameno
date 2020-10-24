@@ -52,7 +52,7 @@ export const fetchQuestions = createAsyncThunk(
     }
 
     return res.json() as Promise<QuestionState[]>;
-  }
+  },
 );
 
 export const addQuestion = createAsyncThunk(
@@ -71,7 +71,7 @@ export const addQuestion = createAsyncThunk(
     }
 
     return res.json() as Promise<QuestionState>;
-  }
+  },
 );
 
 export const updateQuestion = createAsyncThunk(
@@ -99,7 +99,7 @@ export const updateQuestion = createAsyncThunk(
     }
 
     return res.json() as Promise<QuestionState>;
-  }
+  },
 );
 
 export const deleteQuestion = createAsyncThunk(
@@ -117,7 +117,7 @@ export const deleteQuestion = createAsyncThunk(
     }
 
     return questionId;
-  }
+  },
 );
 
 export const questionsSlice = createSlice({

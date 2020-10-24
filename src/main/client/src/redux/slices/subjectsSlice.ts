@@ -125,7 +125,7 @@ export const updateSubject = createAsyncThunk(
       deletedStudents,
       newStudents,
     };
-  }
+  },
 );
 
 export const subjectsSlice = createSlice({
@@ -199,7 +199,7 @@ export const {
   selectById: selectSubjectById,
   selectIds: selectSubjectIds,
 } = subjectsAdapter.getSelectors<RootState>(
-  state => state.subjects
+  state => state.subjects,
 );
 
 export const selectSubjectBySlug = (slug: string) => {

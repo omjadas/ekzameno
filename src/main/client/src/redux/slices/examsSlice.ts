@@ -45,7 +45,7 @@ export const fetchExams = createAsyncThunk(
     }
 
     return res.json() as Promise<ExamState[]>;
-  }
+  },
 );
 
 export const fetchExam = createAsyncThunk("exams/fetchExam", async (slug: string) => {
@@ -78,7 +78,7 @@ export const addExam = createAsyncThunk(
     }
 
     return res.json() as Promise<ExamState>;
-  }
+  },
 );
 
 export const updateExam = createAsyncThunk(
@@ -98,7 +98,7 @@ export const updateExam = createAsyncThunk(
     }
 
     return res.json() as Promise<ExamState>;
-  }
+  },
 );
 
 export const deleteExam = createAsyncThunk(
@@ -116,7 +116,7 @@ export const deleteExam = createAsyncThunk(
     }
 
     return examId;
-  }
+  },
 );
 
 export const examsSlice = createSlice({

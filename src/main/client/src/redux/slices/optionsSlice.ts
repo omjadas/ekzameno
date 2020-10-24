@@ -35,7 +35,7 @@ export const fetchOptions = createAsyncThunk(
     }
 
     return res.json() as Promise<OptionState[]>;
-  }
+  },
 );
 
 export const addOption = createAsyncThunk(
@@ -54,7 +54,7 @@ export const addOption = createAsyncThunk(
     }
 
     return res.json() as Promise<OptionState>;
-  }
+  },
 );
 
 export const updateOption = createAsyncThunk(
@@ -82,7 +82,7 @@ export const updateOption = createAsyncThunk(
     }
 
     return res.json() as Promise<OptionState>;
-  }
+  },
 );
 
 export const deleteOption = createAsyncThunk(
@@ -100,7 +100,7 @@ export const deleteOption = createAsyncThunk(
     }
 
     return optionId;
-  }
+  },
 );
 
 export const optionsSlice = createSlice({
