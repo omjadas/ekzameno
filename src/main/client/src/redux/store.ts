@@ -44,7 +44,7 @@ export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
 export const useAppDispatch = () => useDispatch<typeof store.dispatch>();
 
 /* eslint-disable @typescript-eslint/indent */
