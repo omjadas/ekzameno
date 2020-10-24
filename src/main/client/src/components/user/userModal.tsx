@@ -39,7 +39,7 @@ const FormSchema = yup.object().shape({
     "Passwords do not match.",
     function(password) {
       return password === this.resolve(yup.ref("password"));
-    }
+    },
   ).required(""),
   type: yup.object().shape({
     label: yup.string().required(),
@@ -111,7 +111,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
             errors,
             touched,
           }) => (
-            <Form id="createUser" onSubmit={handleSubmit as any}>
+            <Form id="createUser" onSubmit={handleSubmit}>
               <Modal.Body>
                 <FormikControl
                   type="text"
@@ -134,7 +134,7 @@ export const UserModal = (props: UserModalProps): JSX.Element => {
                   <Select
                     options={selectOptions}
                     name="type"
-                    value={values.type as any}
+                    value={values.type}
                     onChange={option => setFieldValue("type", option)}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />

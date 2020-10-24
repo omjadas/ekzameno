@@ -32,7 +32,7 @@ export const fetchExamSubmissions = createAsyncThunk(
     }
 
     return res.json() as Promise<ExamSubmissionState[]>;
-  }
+  },
 );
 
 export const createExamSubmission = createAsyncThunk(
@@ -61,7 +61,7 @@ export const createExamSubmission = createAsyncThunk(
     }
 
     return res.json() as Promise<ExamSubmissionState>;
-  }
+  },
 );
 
 export const updateExamSubmission = createAsyncThunk(
@@ -91,7 +91,7 @@ export const updateExamSubmission = createAsyncThunk(
     }
 
     return res.json() as Promise<ExamSubmissionState>;
-  }
+  },
 );
 
 export const examSubmissionsSlice = createSlice({

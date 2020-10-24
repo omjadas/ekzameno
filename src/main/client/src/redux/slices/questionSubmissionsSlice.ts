@@ -49,7 +49,7 @@ export const createQuestionSubmission = createAsyncThunk(
     }
 
     return res.json() as Promise<QuestionSubmissionState>;
-  }
+  },
 );
 
 export const updateQuestionSubmission = createAsyncThunk(
@@ -79,7 +79,7 @@ export const updateQuestionSubmission = createAsyncThunk(
     }
 
     return res.json() as Promise<QuestionSubmissionState>;
-  }
+  },
 );
 
 export const questionSubmissionsSlice = createSlice({
@@ -89,13 +89,13 @@ export const questionSubmissionsSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(fetchExamSubmissions.fulfilled, (state, action) => {
       action.payload.forEach(submission => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         questionSubmissionsAdapter.upsertMany(state, submission.questionSubmissions);
       });
     });
     builder.addCase(createExamSubmission.fulfilled, (state, action) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       questionSubmissionsAdapter.upsertMany(state, action.payload.questionSubmissions);
     });
@@ -113,13 +113,13 @@ export const {
   selectById: selectQuestionSubmissionById,
   selectIds: selectQuestionSubmissionIds,
 } = questionSubmissionsAdapter.getSelectors<RootState>(
-  state => state.questionSubmissions
+  state => state.questionSubmissions,
 );
 
 export const selectQuestionSubmissionsForExamSubmission = (examSubmissionId?: string) => {
   return (state: RootState): QuestionSubmissionState[] => {
     return selectAllQuestionSubmissions(state)
-      .filter(QuestionSubmission => QuestionSubmission.examSubmissionId === examSubmissionId);
+      .filter(questionSubmission => questionSubmission.examSubmissionId === examSubmissionId);
   };
 };
 
@@ -128,7 +128,7 @@ export const selectQuestionSubmissionsByIds = (ids: string[]) => {
     return ids
       .map(id => selectQuestionSubmissionById(state, id))
       .filter(
-        questionSubmission => questionSubmission !== undefined
+        questionSubmission => questionSubmission !== undefined,
       ) as QuestionSubmissionState[];
   };
 };

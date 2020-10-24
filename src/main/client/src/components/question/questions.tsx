@@ -33,11 +33,11 @@ interface FormValues {
 export const Questions = (props: QuestionProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const exam = useSelector<RootState, ExamState | undefined>(
-    state => selectExamById(state, props.examId)
+    state => selectExamById(state, props.examId),
   );
   const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
   const questionSubmissions = useSelector(
-    selectQuestionSubmissionsForExamSubmission(examSubmissions[0]?.id)
+    selectQuestionSubmissionsForExamSubmission(examSubmissions[0]?.id),
   );
   const questions = useSelector(selectQuestionsForExam(props.examId));
   const [questionModalShow, setQuestionModalShow] = useState<string | null>(null);
@@ -192,7 +192,7 @@ export const Questions = (props: QuestionProps): JSX.Element => {
             handleBlur,
             values,
           }) => (
-            <Form id="answerExam" onSubmit={handleSubmit as any}>
+            <Form id="answerExam" onSubmit={handleSubmit}>
               <fieldset disabled={disabled}>
                 {
                   questions.map((question, i) => {
@@ -208,12 +208,14 @@ export const Questions = (props: QuestionProps): JSX.Element => {
                               label: option.answer,
                             }))}
                             name={`answers[${i}].answer`}
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             value={{
                               value: values.answers[i]?.answer,
                               label: values.answers[i]?.answer,
                             } as any}
                             onChange={option => setFieldValue(
                               `answers[${i}].answer`,
+                              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                               option.value,
                             )}
                             isDisabled={isSubmitting || disabled}

@@ -26,11 +26,11 @@ interface FormValues {
 export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const student = useSelector<RootState, UserState | undefined>(
-    state => selectUserById(state, props.studentId)
+    state => selectUserById(state, props.studentId),
   );
   const me = useSelector(selectMe);
   const exam = useSelector<RootState, ExamState | undefined>(
-    state => selectExamById(state, props.examId)
+    state => selectExamById(state, props.examId),
   );
   const examSubmission = useSelector(selectExamSubmissionsForExam(exam?.id))
     .find(submission => submission.studentId === props.studentId);
@@ -96,7 +96,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
                   eTag: questionSubmissions[answer.questionId]!.meta.eTag,
                 })).then(unwrapResult);
               }
-            })
+            }),
           );
         })
         .then(handleHide)
@@ -142,7 +142,7 @@ export const SubmissionModal = (props: SubmissionModalProps): JSX.Element => {
             isSubmitting,
             handleSubmit,
           }) => (
-            <Form onSubmit={handleSubmit as any}>
+            <Form onSubmit={handleSubmit}>
               <fieldset disabled={me?.type === "STUDENT"}>
                 <Modal.Body>
                   {

@@ -166,7 +166,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
             errors,
             touched,
           }) => (
-            <Form id="createSubject" onSubmit={handleSubmit as any}>
+            <Form id="createSubject" onSubmit={handleSubmit}>
               <Modal.Body>
                 <FormikControl
                   type="text"
@@ -182,7 +182,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
                     isMulti
                     options={instructors.map(i => ({ label: i.name, value: i.id }))}
                     name="instructors"
-                    value={values.instructors as any}
+                    value={values.instructors}
                     onChange={option => setFieldValue("instructors", option ?? [])}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />
@@ -196,7 +196,7 @@ export const SubjectModal = (props: UpdateSubjectModalProps | SubjectModalProps)
                     isMulti
                     options={students.map(s => ({ label: s.name, value: s.id }))}
                     name="students"
-                    value={values.students as any}
+                    value={values.students}
                     onChange={option => setFieldValue("students", option ?? [])}
                     isDisabled={isSubmitting}
                     onBlur={handleBlur} />

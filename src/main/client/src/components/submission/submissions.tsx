@@ -36,13 +36,13 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
   const usersStatus = useSelector(selectUsersStatus);
   const me = useSelector(selectMe);
   const exam = useSelector<RootState, ExamState | undefined>(
-    state => selectExamById(state, props.examId)
+    state => selectExamById(state, props.examId),
   );
   const examSubmissions = useSelector(selectExamSubmissionsForExam(exam?.id));
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const questions = useSelector(selectQuestionsForExam(props.examId));
   const subject = useSelector<RootState, SubjectState | undefined>(
-    state => selectSubjectById(state, exam?.subjectId ?? "")
+    state => selectSubjectById(state, exam?.subjectId ?? ""),
   );
   const subjectId = subject?.id;
   const [examSubmissionsLoading, setExamSubmissionsLoading] = useState(true);
@@ -175,7 +175,7 @@ export const Submissions = (props: SubmissionsProps): JSX.Element => {
           errors,
           values,
         }) => (
-          <Form onSubmit={handleSubmit as any}>
+          <Form onSubmit={handleSubmit}>
             <Table striped bordered hover>
               <thead>
                 <tr>

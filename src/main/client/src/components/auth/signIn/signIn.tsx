@@ -66,7 +66,7 @@ export const SignIn = (props: Props): JSX.Element => {
           }) => (
             <Form
               id="signIn"
-              onSubmit={handleSubmit as any}>
+              onSubmit={handleSubmit}>
               <Modal.Body>
                 <FormikControl
                   label="Email"

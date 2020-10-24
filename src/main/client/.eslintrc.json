@@ -37,13 +37,39 @@
       }
     ],
     "camelcase": "off",
-    "@typescript-eslint/camelcase": [
+    "@typescript-eslint/naming-convention": [
       "error",
       {
-        "properties": "always"
+        "selector": "variableLike",
+        "format": [
+          "camelCase"
+        ],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "variable",
+        "modifiers": [
+          "const"
+        ],
+        "format": [
+          "camelCase",
+          "UPPER_CASE",
+          "PascalCase"
+        ]
+      },
+      {
+        "selector": "typeLike",
+        "format": [
+          "PascalCase"
+        ]
+      },
+      {
+        "selector": "enumMember",
+        "format": [
+          "UPPER_CASE"
+        ]
       }
     ],
-    "@typescript-eslint/class-name-casing": "error",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {

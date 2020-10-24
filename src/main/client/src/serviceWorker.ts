@@ -16,8 +16,8 @@ const isLocalhost = Boolean(
     window.location.hostname === "[::1]" ||
     // 127.0.0.0/8 are considered localhost for IPv4.
     /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/.exec(
-      window.location.hostname
-    )
+      window.location.hostname,
+    ),
 );
 
 type Config = {
@@ -42,7 +42,7 @@ function registerValidSW(swUrl: string, config?: Config): void {
               // content until all client tabs are closed.
               console.log(
                 "New content is available and will be used when all " +
-                  "tabs for this page are closed. See https://bit.ly/CRA-PWA."
+                  "tabs for this page are closed. See https://bit.ly/CRA-PWA.",
               );
 
               // Execute callback
@@ -82,8 +82,8 @@ function checkValidServiceWorker(swUrl: string, config?: Config): void {
         (contentType !== null && contentType !== undefined && !contentType.includes("javascript"))
       ) {
         // No service worker found. Probably a different app. Reload the page.
-        navigator.serviceWorker.ready.then(registration => {
-          registration.unregister().then(() => {
+        void navigator.serviceWorker.ready.then(registration => {
+          void registration.unregister().then(() => {
             window.location.reload();
           });
         });
@@ -94,7 +94,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config): void {
     })
     .catch(() => {
       console.log(
-        "No internet connection found. App is running in offline mode."
+        "No internet connection found. App is running in offline mode.",
       );
     });
 }
@@ -104,7 +104,7 @@ export function register(config?: Config): void {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(
       process.env.PUBLIC_URL,
-      window.location.href
+      window.location.href,
     );
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
@@ -122,10 +122,10 @@ export function register(config?: Config): void {
 
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
-        navigator.serviceWorker.ready.then(() => {
+        void navigator.serviceWorker.ready.then(() => {
           console.log(
             "This web app is being served cache-first by a service " +
-              "worker. To learn more, visit https://bit.ly/CRA-PWA"
+              "worker. To learn more, visit https://bit.ly/CRA-PWA",
           );
         });
       } else {
@@ -140,9 +140,9 @@ export function unregister(): void {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.ready
       .then(registration => {
-        registration.unregister();
+        return registration.unregister();
       })
-      .catch(error => {
+      .catch((error: Error) => {
         console.error(error.message);
       });
   }
