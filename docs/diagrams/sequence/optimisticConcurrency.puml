@@ -1,0 +1,23 @@
+@startuml Optimistic Concurrency
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 130
+skinparam sequenceParticipant underline
+
+participant "examMapper" as A
+participant "eTag" as B
+
+-> A: getExam(slug)
+activate A
+
+A -> B: getMeta()
+activate B
+
+B --> A: return new Meta()
+deactivate B
+
+<-- A: return
+deactivate A
+
+@enduml

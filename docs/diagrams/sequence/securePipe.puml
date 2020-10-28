@@ -1,0 +1,23 @@
+@startuml Secure Pipe
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 130
+skinparam sequenceParticipant underline
+
+participant "ABC" as A
+participant "BCA" as B
+
+-> A: ABC
+activate A
+
+A -> B: BCA
+activate B
+
+B --> A: return
+deactivate B
+
+<-- A: return
+deactivate A
+
+@enduml

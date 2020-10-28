@@ -1,0 +1,23 @@
+@startuml Authentication Enforcer
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 130
+skinparam sequenceParticipant underline
+
+participant "AuthConroller" as A
+participant "AuthService" as B
+
+-> A: signin(SignInUserDTO dto)
+activate A
+
+A -> B: authenticateUser(dto.email, dto.password)
+activate B
+
+B --> A: User
+deactivate B
+
+<-- A: Response
+deactivate A
+
+@enduml
