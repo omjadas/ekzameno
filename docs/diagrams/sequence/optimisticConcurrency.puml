@@ -2,22 +2,34 @@
 
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 20
-skinparam maxmessagesize 130
+skinparam maxmessagesize 180
 skinparam sequenceParticipant underline
 
-participant "examMapper" as A
-participant "eTag" as B
+participant "SubjectController" as A
+participant "SubjectService" as B
 
--> A: getExam(slug)
+-> A: updateSubject(subjectId, headers, dto)
 activate A
 
-A -> B: getMeta()
+A -> B: updateSubject(name, description, subjectId, eTag)
 activate B
 
-B --> A: return new Meta()
-deactivate B
+alt subject.hashCode() == eTag
 
-<-- A: return
-deactivate A
+    B --> A: Subject
+    deactivate B
+
+    <-- A: Subject
+    deactivate A
+
+else 
+
+    B --> A: PreConditionFailedException
+    deactivate B
+
+    <-- A: HTTP 412
+    deactivate A
+
+end
 
 @enduml

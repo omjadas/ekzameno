@@ -2,22 +2,15 @@
 
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 20
-skinparam maxmessagesize 130
+skinparam maxmessagesize 180
 skinparam sequenceParticipant underline
 
-participant "ABC" as A
-participant "BCA" as B
+participant "Heroku" as A
 
--> A: ABC
+-> A: https://swen90007-ekzameno.herokuapp.com/
 activate A
 
-A -> B: BCA
-activate B
-
-B --> A: return
-deactivate B
-
-<-- A: return
+<-- A: index.html
 deactivate A
 
 @enduml
