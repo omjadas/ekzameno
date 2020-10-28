@@ -1,0 +1,35 @@
+@startuml Authentication Enforcer
+
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 130
+skinparam sequenceParticipant underline
+
+participant "AuthFilter" as A
+participant "UserMapper" as B
+participant "SubjectController" as C
+
+-> A: filter(requestContext)
+activate A
+
+alt
+    A -> B: findById(subject)
+    activate B
+
+    B --> A: User
+    deactivate B
+
+    -> C: getSubjects()
+    activate C
+    
+    <-- C: List<Subject> 
+    deactivate C
+
+else catch SQLException
+
+    <-- A: HTTP 401
+    deactivate A
+
+end
+
+@enduml
