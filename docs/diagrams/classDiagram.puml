@@ -58,7 +58,7 @@ package "models" #DDDDDD {
   Student o-- proxies.ProxyList : - subjects
   Student o-- proxies.ProxyList : - examSubmissions
 
-  class Student #white {
+  class Student {
     + {static} String TYPE
     + Student(UUID id, String email, String name, String passwordHash)
     + Student(String email, String name, String passwordHash)
@@ -457,7 +457,7 @@ package "dtos" #DDDDDD {
     + boolean correct
   }
 
-  class CreateQuestionDTO #white {
+  class CreateQuestionDTO {
     + String question
     + String type
     + int marks
@@ -520,7 +520,7 @@ package "services" #DDDDDD {
   UserService o-- mappers.InstructorMapper : - instructorMapper
   UserService o-- mappers.StudentMapper : - studentMapper
 
-  class UserService #white {
+  class UserService {
     + List<User> getUsers() 
     + User registerUser(String name,
         String email,
