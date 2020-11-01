@@ -648,7 +648,7 @@ package "mappers" #DDDDDD {
   AbstractQuestionMapper <|-- ShortAnswerQuestionMapper
   AbstractQuestionMapper <|-- MultipleChoiceQuestionMapper
 
-  abstract class Mapper {
+  abstract class Mapper #white {
     + {static} <T extends Model> Mapper<T> getMapper(Class<?> klass)
     + T findById(UUID id, boolean forUpdate)
     + T findById(UUID id)
