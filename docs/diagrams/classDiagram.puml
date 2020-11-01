@@ -300,7 +300,7 @@ package "proxies" #DDDDDD {
     + int size()
     + remove(T obj)
     + List<T> getRawList()
-    # {abstract} void init() 
+    # {abstract} void init()
   }
 
   class ExamProxyList {
@@ -489,7 +489,7 @@ package "dtos" #DDDDDD {
     + String email
     + String password
   }
-  
+
   class UpdateExamSubmissionDTO #white {
     + Integer marks
   }
@@ -521,7 +521,7 @@ package "services" #DDDDDD {
   UserService o-- mappers.StudentMapper : - studentMapper
 
   class UserService {
-    + List<User> getUsers() 
+    + List<User> getUsers()
     + User registerUser(String name,
         String email,
         String password,
@@ -807,7 +807,7 @@ package "shared" #DDDDDD {
     + void registerNew(Model obj)
     + void registerDirty(Model obj)
     + void registerDeleted(Model obj)
-    + void rollback() 
+    + void rollback()
     + void commit()
     + {static} void reset()
   }
@@ -821,7 +821,7 @@ package "exceptions" #DDDDDD {
   }
 
   class PreconditionFailedException #white {
-  }    
+  }
 
   package "exceptionMappers" #DDDDDD {
     class ConflictExceptionMapper #white {
