@@ -76,7 +76,7 @@ package "models" #DDDDDD {
     + void setToDate(Date toDate)
   }
 
-  abstract class Model {
+  abstract class Model #white {
     - UUID id
     + Model()
     + Model(UUID id)
@@ -227,7 +227,7 @@ package "models" #DDDDDD {
   QuestionSubmission o-- Question : - question
   QuestionSubmission o-- ExamSubmission : - examSubmission
 
-  class QuestionSubmission {
+  class QuestionSubmission #white {
     + String answer
     + UUID questionId
     + UUID examSubmissionId
@@ -252,7 +252,7 @@ package "models" #DDDDDD {
   ExamSubmission o-- Student : - student
   ExamSubmission o-- Exam : - exam
 
-  class ExamSubmission {
+  class ExamSubmission #white {
     - Integer marks
     - UUID studentId
     - UUID examId
@@ -272,7 +272,7 @@ package "models" #DDDDDD {
     + void setExam(Exam exam)
   }
 
-  class meta {
+  class meta #white {
     + String eTag
     + Meta(String eTag)
   }
@@ -291,7 +291,7 @@ package "proxies" #DDDDDD {
   ProxyList <|-- InstructorProxyList
   ProxyList <|-- OptionProxyList
 
-  abstract class ProxyList {
+  abstract class ProxyList #white {
     # UUID id
     + ProxyList(UUID id)
     + void add(T obj)
@@ -374,7 +374,7 @@ package "controllers" #DDDDDD {
   SubjectController o-- services.ExamService : - examService
   SubjectController o-- services.UserService : - userService
 
-  class SubjectController{
+  class SubjectController #white {
     + List<Subject> getSubjects(SecurityContext securityContext)
     + Subject getSubject(String slug)
     + Subject createSubject(CreateSubjectDTO dto)
@@ -400,7 +400,7 @@ package "controllers" #DDDDDD {
   ExamController o-- services.ExamService : - examService
   ExamController o-- services.QuestionService : - questionService
 
-  class ExamController {
+  class ExamController #white {
     + Exam getExam(String slug)
     + Exam updateExam(String examId, HttpHeaders headers, CreateExamDTO dto)
     + Response deletExam(String examId)
@@ -413,7 +413,7 @@ package "controllers" #DDDDDD {
 
   OptionController o-- services.OptionService : - optionService
 
-  class OptionController {
+  class OptionController #white {
     + Option updateOption(String optionId, HttpHeaders headers, CreateOptionDTO dto)
     + Response deleteOption(String optionId)
   }
@@ -421,7 +421,7 @@ package "controllers" #DDDDDD {
   QuestionController o-- services.QuestionService : - questionService
   QuestionController o-- services.OptionService : - optionService
 
-  class QuestionController {
+  class QuestionController #white {
     + Question updateQuestion(String questionId, HttpHeaders headers, CreateQuestionDTO dto)
     + Response deleteExam(String questionId)
     + List<Option> getOptions(String questionId)
@@ -465,7 +465,7 @@ package "dtos" #DDDDDD {
 
   CreateQuestionDTO o-- CreateOptionDTO : + options
 
-  class CreateQuestionSubmissionDTO {
+  class CreateQuestionSubmissionDTO #white {
     + String questionId
     + String answer
     + Integer marks
@@ -490,11 +490,11 @@ package "dtos" #DDDDDD {
     + String password
   }
   
-  class UpdateExamSubmissionDTO {
+  class UpdateExamSubmissionDTO #white {
     + Integer marks
   }
 
-  class UpdateQuestionSubmissionDTO {
+  class UpdateQuestionSubmissionDTO #white {
     + String questionId
     + Integer marks
   }
@@ -533,7 +533,7 @@ package "services" #DDDDDD {
   ExamService o-- mappers.ExamMapper : - examMapper
   ExamService o-- mappers.ExamSubmissionMapper : - examSubmissionMapper
 
-  class ExamService {
+  class ExamService #white {
     + Exam getExam(String slug)
     + List<Exam> getExamsForSubject(UUID subjectId)
     + List<Exam> getPublishedExamsForSubject(UUID subjectId)
@@ -564,7 +564,7 @@ package "services" #DDDDDD {
 
   QuestionService o-- mappers.QuestionMapper : - questionMapper
 
-  class QuestionService {
+  class QuestionService #white {
     + Question createQuestion(UUID examId,
         String question,
         int marks,
@@ -592,7 +592,7 @@ package "services" #DDDDDD {
   SubjectService o-- mappers.EnrolmentMapper : - enrolmentMapper
   SubjectService o-- mappers.InstructorSubjectMapper : - instructorSubjectMapper
 
-  class SubjectService {
+  class SubjectService #white {
     + List<Subject> getSubjects()
     + Subject getSubject(String slug)
     + List<Subject> getSubjectsForInstructor(UUID id)
@@ -615,7 +615,7 @@ package "services" #DDDDDD {
 
   OptionService o-- mappers.OptionMapper : - optionMapper
 
-  class OptionService {
+  class OptionService #white {
     + Option createOption(String answer,
         boolean correct,
         UUID questionId)
@@ -663,7 +663,7 @@ package "mappers" #DDDDDD {
     # {abstract} String getTableName()
   }
 
-  abstract class AbstractUserMapper {
+  abstract class AbstractUserMapper #white {
     - {static} String tableName
     + User findByEmail(String email, boolean forUpdate)
     # String getTableName()
@@ -677,24 +677,24 @@ package "mappers" #DDDDDD {
   class AdministratorMapper {
   }
 
-  class StudentMapper {
+  class StudentMapper #white {
     + List<Student> findAllForSubject(UUID id, boolean forUpdate)
     + List<Student> findAllForSubject(UUID id)
   }
 
-  class InstructorMapper {
+  class InstructorMapper #white {
     + List<Instructor> findAllForSubject(UUID id, boolean forUpdate)
     + List<Instructor> findAllForSubject(UUID id)
   }
 
-  class EnrolmentMapper {
+  class EnrolmentMapper #white {
     - {static} String tableName
     + Enrolment findByRelationIds(UUID studentId,UUID subjectId, boolean forUpdate)
     + Enrolment findByRelationIds(UUID studentId,UUID subjectId)
     + void deleteByRelationIds(UUID studentId,UUID subjectId)
   }
 
-  class SubjectMapper {
+  class SubjectMapper #white {
     - {static} String tableName
     + Subject findBySlug(String slug, boolean forUpdate)
     + Subject findBySlug(String slug)
@@ -704,7 +704,7 @@ package "mappers" #DDDDDD {
     + List<Subject> findAllForInstructor(UUID id)
   }
 
-  class InstructorSubjectMapper {
+  class InstructorSubjectMapper #white {
     - {static} String tableName
     + InstructorSubject findByRelationIds(UUID instructorId, UUID subjectId, boolean forUpdate)
     + InstructorSubject findByRelationIds(UUID instructorId, UUID subjectId)
@@ -716,13 +716,13 @@ package "mappers" #DDDDDD {
     # {abstract} String getType()
   }
 
-  class OptionMapper {
+  class OptionMapper #white {
     - {static} String tableName
     + List<Option> findAllForQuestion(UUID id, boolean forUpdate)
     + List<Option> findAllForQuestion(UUID id)
   }
 
-  class QuestionMapper {
+  class QuestionMapper #white {
     + List<Question> findAllForExam(UUID id, boolean forUpdate)
     + List<Question> findAllForExam(UUID id)
   }
@@ -733,7 +733,7 @@ package "mappers" #DDDDDD {
   class MultipleChoiceQuestionMapper {
   }
 
-  class QuestionSubmissionMapper {
+  class QuestionSubmissionMapper #white {
     - {static} String tableName
     + QuestionSubmission findByRelationIds(UUID questionId, UUID examSubmissionId, boolean forUpdate)
     + QuestionSubmission findByRelationIds(UUID questionId, UUID examSubmissionId)
@@ -743,7 +743,7 @@ package "mappers" #DDDDDD {
     + List<QuestionSubmission> findAllForQuestion(UUID id)
   }
 
-  class ExamSubmissionMapper {
+  class ExamSubmissionMapper #white {
     - {static} String tableName
     + ExamSubmission findByRelationIds(UUID studentId, UUID examId, boolean forUpdate)
     + ExamSubmission findByRelationIds(UUID studentId, UUID examId)
@@ -753,7 +753,7 @@ package "mappers" #DDDDDD {
     + List<ExamSubmission> findAllForStudent(UUID id)
   }
 
-  class ExamMapper {
+  class ExamMapper #white {
     - {static} String tableName
     + Exam findBySlug(String slug, boolean forUpdate)
     + Exam findBySlug(String slug)
@@ -765,7 +765,7 @@ package "mappers" #DDDDDD {
 }
 
 package "shared" #DDDDDD {
-  class DBConnection {
+  class DBConnection #white {
     - {static} ThreadLocal<DBConnection> dbConnection
     - Connection connection
     - {static} String connectionUrl
@@ -775,7 +775,7 @@ package "shared" #DDDDDD {
     + void close()
   }
 
-  class IdentityMap {
+  class IdentityMap #white {
     - {static} IdentityMap identityMap
     - Map<UUID, Model> map
     - IdentityMap()
@@ -796,7 +796,7 @@ package "shared" #DDDDDD {
     + {static} void main(String[] args)
   }
 
-  class UnitOfWork {
+  class UnitOfWork #white {
     - {static} ThreadLocal<UnitOfWork> current
     - List<Model> newObjects
     - List<Model> dirtyObjects
@@ -817,22 +817,22 @@ package "exceptions" #DDDDDD {
   RuntimeException <|-- ConflictException
   RuntimeException <|-- PreconditionFailedException
 
-  class ConflictException {
+  class ConflictException #white {
   }
 
-  class PreconditionFailedException {
+  class PreconditionFailedException #white {
   }    
 
-  package "mappers" #DDDDDD {
-    class ConflictExceptionMapper {
+  package "exceptionMappers" #DDDDDD {
+    class ConflictExceptionMapper #white {
     }
 
-    class PreconditionFailedExceptionMapper {
+    class PreconditionFailedExceptionMapper #white {
     }
   }
 }
 
-class Application {
+class Application #white {
   + Application()
 }
 
