@@ -4,7 +4,9 @@ import { Alert, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchExams, selectExamsForSubject } from "../../redux/slices/examsSlice";
+import { selectMe } from "../../redux/slices/usersSlice";
 import { useAppDispatch } from "../../redux/store";
+import { Loader } from "../loader/loader";
 import styles from "./exams.module.scss";
 
 interface ExamsProps {
@@ -14,11 +16,16 @@ interface ExamsProps {
 export const Exams = (props: ExamsProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loadingExams, setLoadingExams] = useState(true);
   const exams = useSelector(selectExamsForSubject(props.subjectId));
+  const me = useSelector(selectMe);
 
   useEffect(() => {
     dispatch(fetchExams(props.subjectId))
       .then(unwrapResult)
+      .then(() => {
+        setLoadingExams(false);
+      })
       .catch(e => {
         setErrorMessage("Failed to retrieve exams");
         console.error(e);
@@ -33,6 +40,10 @@ export const Exams = (props: ExamsProps): JSX.Element => {
     );
   }
 
+  if (me === undefined || loadingExams) {
+    return <Loader />;
+  }
+
   return (
     <div className={styles.wrapper}>
       {
@@ -41,9 +52,15 @@ export const Exams = (props: ExamsProps): JSX.Element => {
             <Card key={exam.id}>
               <Card.Body>
                 <Card.Title>
-                  <Link to={`/exams/${exam.slug}`}>
-                    {exam.name}
-                  </Link>
+                  {
+                    me.type === "ADMINISTRATOR"
+                      ? exam.name
+                      : (
+                        <Link to={`/exams/${exam.slug}`}>
+                          {exam.name}
+                        </Link>
+                      )
+                  }
                 </Card.Title>
                 <Card.Text>{exam.description}</Card.Text>
               </Card.Body>
