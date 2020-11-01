@@ -465,7 +465,7 @@ package "dtos" #DDDDDD {
 
   CreateQuestionDTO o-- CreateOptionDTO : + options
 
-  class CreateQuestionSubmissionDTO {
+  class CreateQuestionSubmissionDTO #white {
     + String questionId
     + String answer
     + Integer marks
