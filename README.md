@@ -5,7 +5,7 @@
 
 ## Table of Contents
 
-- [swen90007-group1](#swen90007-group1)
+- [ekzameno](#ekzameno)
   - [Table of Contents](#table-of-contents)
   - [Contributors](#contributors)
   - [Development Information](#development-information)
