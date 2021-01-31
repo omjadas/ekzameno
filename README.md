@@ -51,7 +51,7 @@ docker-compose down -v
 For the development workflow, the team has decided to follow a feature branch
 strategy.
 
-Each time an addition needs to be made to the code in the master branch, a new
+Each time an addition needs to be made to the code in the main branch, a new
 branch is to be created with a meaningful name that incorporates the nature of
 the change and the name and ID of the corresponding issue in Jira, for example:
 
