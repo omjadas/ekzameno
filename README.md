@@ -1,7 +1,7 @@
 # ekzameno
 
-![Build](https://github.com/omjadas/swen90007-group1/workflows/Build/badge.svg?branch=master)
-![Lint](https://github.com/omjadas/swen90007-group1/workflows/Lint/badge.svg?branch=master)
+![Build](https://github.com/omjadas/swen90007-group1/workflows/Build/badge.svg)
+![Lint](https://github.com/omjadas/swen90007-group1/workflows/Lint/badge.svg)
 
 ## Table of Contents
 
